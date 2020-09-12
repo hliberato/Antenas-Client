@@ -11,7 +11,6 @@
         </div>
         <div class="list">
             <div v-for="team in teams" :key="team.id" :id="team.id">
-
                 <div class="project-view__box">
                     <div div class="box__body project-body">
                         <div>
@@ -98,35 +97,18 @@ export default {
             console.log(medal)
         })
 
-        // TeamService.getTeam(12)
-        //         .then( teams => { 
-        //             this.teams = teams;
-        //             console.log("===");
-        //             console.log(this.teams);
-        //             console.log("===");
-        //         })
-
-
         EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
-            console.log(projectId);
-            if (projectId == undefined) {
-                projectId = 1;
-            }
             TeamService.getTeam(projectId)
                 .then( teams => { 
                     this.teams = teams;
-                    console.log("===");
                     console.log(this.teams);
-                    console.log("===");
                 })
-
-            console.log(this.teams);
         })
     },
     methods: {
         leaveEvaluation() {
-            EventBus.$emit('EVALUATE_STUDENTS_CLOSE');
             console.log(this.teams)
+            EventBus.$emit('EVALUATE_STUDENTS_CLOSE');
         },
 
         selectAllTeam(team) {
@@ -165,6 +147,7 @@ export default {
 .box-input {
     margin-left: 10px;
 }
+
 .project-view {
     &__box {
         max-height: 100%;

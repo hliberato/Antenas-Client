@@ -41,6 +41,15 @@
                 hide-details="auto">
             </v-text-field>
         </div>
+        <div class="login-form__field" v-if="role != '' || !signUp">
+            <v-text-field 
+                v-model="passwordConfirm" 
+                label="Confirmação da senha" 
+                :rules="rules" 
+                type="password"
+                hide-details="auto">
+            </v-text-field>
+        </div>
         
         <div class="login-form__field" v-if="role != '' && signUp">
             <v-text-field 
@@ -115,6 +124,7 @@ export default {
             email: '',
             name: '',
             password: '',
+            passwordConfirm: '',
             cpf: '',
             ra: '',
             city: '',
@@ -159,6 +169,13 @@ export default {
             event.preventDefault();
             
             if (this.signUp) {
+                if (this.passwordConfirm !== this.password) {
+                    console.log(this.passwordConfirm)
+                    console.log(this.password)
+                    alert("As senhas não coincidem.");
+                    return;
+                }
+
                 UserService
                     .registUser({
                         name: this.name,
