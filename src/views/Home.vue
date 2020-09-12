@@ -11,10 +11,10 @@
       <v-main class="justify-center ">
         <div class="home__wrapper">
           <v-row >
-            <v-col v-if="evaluateStudents" cols="4">
+            <v-col v-if="evaluateStudents" cols="4" class="medal-list">
                 <medal-list/>
             </v-col>
-            <v-col v-if="evaluateStudents" cols="8">
+            <v-col v-if="evaluateStudents" cols="8" class="medal-list">
                 <evaluation/>
             </v-col>
 
@@ -118,5 +118,9 @@ export default {
       margin-left: spacing(4);
       flex-grow: 1;
     }
+  }
+
+  .medal-list {
+      max-height: 100%;
   }
 </style>

@@ -90,11 +90,6 @@ export default {
         transition: background-color .2s ease-in-out;
         font-size: 14px;
 
-        .status {
-            height: 100%;
-            width: 6px;
-        }
-
         .content {
             font-size: 12px;
             display: flex;
@@ -109,25 +104,6 @@ export default {
                 line-height: 0 !important;
                 font-weight: 600;
                 padding-top: 11px;
-            }
-
-            .description {
-                white-space: nowrap;
-                max-width: 384px;
-                color: #848484;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                margin: 6px 0 0 0 !important;
-            }
-
-            .updated {
-                color: #C9C9C9;
-                margin-top: 10px;
-                font-weight: 300;
-
-                strong {
-                    margin-left: 8px;
-                }
             }
         }
     }
@@ -144,8 +120,8 @@ export default {
 
     &__list {
         max-height: 100%;
-        height: 384px;
-        overflow-y: auto;
+        height: calc(100% - 20px - (#{42px} * 2));
+        overflow-y: auto;;
     }
 }
 </style>

@@ -84,11 +84,11 @@
                         <div v-for="member in team.studentTeamList" :key="member.id" class="team-member">
                             <div class="student-flex-box">
                                 <div>
-                                    <div> {{ member.student.name }} </div>
+                                    <div class="member-name"> {{ member.student.name }} </div>
                                     <div class="role-view"> {{ member.role }} </div>
                                 </div>
 
-                                <a @click.prevent="removeStudent(member.student.id)"> 
+                                <a @click.prevent="removeStudent(member.student.id)" v-if="$store.getters.isStudent"> 
                                     <i class="material-icons material-icons-padding">close</i>
                                 </a>
                             </div>
@@ -470,7 +470,6 @@ export default {
 }
 
 .material-icons-padding {
-    padding-left: 10px;
     padding-right: 10px;
     padding-top: 8px;
     color: #6e6e6e;
@@ -479,6 +478,10 @@ export default {
 .col {
     padding-bottom: 0px;
     padding-top: 0px;
+}
+
+.member-name {
+    padding-right: 18px;
 }
 
 .box-team {

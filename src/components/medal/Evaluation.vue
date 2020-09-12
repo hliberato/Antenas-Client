@@ -9,51 +9,68 @@
                 </a>
             </div>
         </div>
-        <div v-for="team in teams" :key="team.id" :id="team.id">
+        <div class="list">
+            <div v-for="team in teams" :key="team.id" :id="team.id">
 
-            <div class="project-view__box">
-                <div div class="box__body project-body">
-                    <div class="evaluation-form">
+                <div class="project-view__box">
+                    <div div class="box__body project-body">
                         <div>
-                            {{ team.name }}
-                        </div>
-                        <div class="student flex-box" v-for="studentTeam in team.studentTeamList" :key="studentTeam.id">
-                            <div >
-                                <div class="flex-box">
-                                    <v-checkbox 
-                                        v-model="selectedStudents" 
-                                        :label="studentTeam.student.name"
-                                        hide-details
-                                        :value="studentTeam.student.id"
-                                    />
-                                    <span class="student-role"> {{ studentTeam.role }} </span>
-                                </div>
+                            <div class="group-title flex-box">
+                                <v-checkbox 
+                                    :label="team.name"
+                                    hide-details
+                                    :value="team.id"
+                                    @click="selectAllTeam(team)"
+                                />
 
-                                <div v-for="medal in studentTeam.studentMedals" :key="medal.id">
-                                    <v-img :src="medal.picture" :title="medal.name" class="medal-style" />
-                                </div>
+                                <v-spacer></v-spacer>
+
+                                <span class="project-link link" @click="upenUrl(team.projectUrl)">
+                                    Abrir projeto 
+                                </span>
                             </div>
-                            <v-spacer></v-spacer>
-                            <div>
-                                <div class="flex-box inputs">
-                                    <div class="box-input">
-                                        <div>
-                                            <div class="input-label"> Proatividade </div>
-                                            <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
-                                        </div>
-                                        <div> 
-                                            <div class="input-label"> Autonomia </div>
-                                            <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
-                                        </div>
+                        </div>
+        
+                        <div class="evaluation-form">
+                            <div class="student flex-box" v-for="studentTeam in team.studentTeamList" :key="studentTeam.id">
+                                <div >
+                                    <div class="flex-box">
+                                        <v-checkbox 
+                                            v-model="selectedStudents" 
+                                            :label="studentTeam.student.name"
+                                            hide-details
+                                            :value="studentTeam.student.id"
+                                            :id="`checkbox-${studentTeam.student.id}`"
+                                        />
+                                        <span class="student-role"> {{ studentTeam.role }} </span>
                                     </div>
-                                    <div class="box-input">
-                                        <div>
-                                            <div class="input-label"> Colaboração </div>
-                                            <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+
+                                    <div v-for="medal in studentTeam.studentMedals" :key="medal.id">
+                                        <v-img :src="medal.picture" :title="medal.name" class="medal-style" />
+                                    </div>
+                                </div>
+                                <v-spacer></v-spacer>
+                                <div>
+                                    <div class="flex-box inputs">
+                                        <div class="box-input">
+                                            <div>
+                                                <div class="input-label"> Proatividade </div>
+                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                            </div>
+                                            <div> 
+                                                <div class="input-label"> Autonomia </div>
+                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                            </div>
                                         </div>
-                                        <div>
-                                            <div class="input-label"> Entrega de resultado </div>
-                                            <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                        <div class="box-input">
+                                            <div>
+                                                <div class="input-label"> Colaboração </div>
+                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                            </div>
+                                            <div>
+                                                <div class="input-label"> Entrega de resultado </div>
+                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -69,7 +86,7 @@
 <script>
 import TeamService from '@/services/TeamService'
 import EventBus from '@/helpers/EventBus.js'
-// import $ from 'jQuery'
+import $ from 'jQuery'
 
 export default {
     name: 'evaluation',
@@ -103,6 +120,18 @@ export default {
 
         leaveEvaluation() {
             EventBus.$emit('EVALUATE_STUDENTS_CLOSE');
+        },
+
+        selectAllTeam(team) {
+            team.studentTeamList.forEach(studentTeam => {
+                $(`#checkbox-${studentTeam.student.id}`).click();
+            })
+        },
+
+        upenUrl(url) {
+            if (url) {
+                window.open(url)
+            }
         },
     },
 	data() {
@@ -181,6 +210,15 @@ textarea:focus, input:focus{
     margin-top: 10px;
 }
 
+.group-title {
+    background-color: #eaf0ff;
+    border: solid 1px #a3b8ec;
+    border-bottom: solid 0px #a3b8ec;
+    border-radius: 15px 15px 0px 0px;
+    padding: 10px 10px 0px 10px;
+
+}
+
 .medal-style {
     border: 1px solid #C1BBBB;
     border-radius: 6px;
@@ -188,6 +226,21 @@ textarea:focus, input:focus{
     width: 35px;
     flex: none;
         margin: 5px 5px 5px 0px;
+}
+
+.project-link {
+    font-size: 8px;
+}
+
+.link {
+    color: blue;
+    cursor: pointer;
+    padding-top: 4%;
+    
+}
+
+.link:hover {
+    font-weight: 600;
 }
 
 .close {
@@ -202,5 +255,11 @@ textarea:focus, input:focus{
 
 .theme--light.v-label {
     color: rgba(0, 0, 0, 0.75);
+}
+
+.list {
+    max-height: 100%;
+    height: calc(100% - 20px - (#{16px} * 2));
+    overflow-y: auto;
 }
 </style>
