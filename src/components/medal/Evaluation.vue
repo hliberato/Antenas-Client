@@ -93,33 +93,40 @@ export default {
 	components: {
     },
     mounted() {
-        TeamService
-            .getTeam(1)
-                .then( teams => { 
-                    this.teams = teams 
-                })
 
         EventBus.$on('ASSIGN_MEDAL', (medal) => {
             console.log(medal)
         })
 
-        EventBus.$on('EVALUATION', (projectId) => {
-            TeamService
-                .getTeam(projectId)
-                    .then( teams => { 
-                        this.teams = teams 
-                    })
+        // TeamService.getTeam(12)
+        //         .then( teams => { 
+        //             this.teams = teams;
+        //             console.log("===");
+        //             console.log(this.teams);
+        //             console.log("===");
+        //         })
+
+
+        EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
+            console.log(projectId);
+            if (projectId == undefined) {
+                projectId = 1;
+            }
+            TeamService.getTeam(projectId)
+                .then( teams => { 
+                    this.teams = teams;
+                    console.log("===");
+                    console.log(this.teams);
+                    console.log("===");
+                })
+
+            console.log(this.teams);
         })
     },
     methods: {
-        // checkChildren(teamId) {
-        //     $(`#${teamId}`).children(':input').attr('aria-checked', true);
-        //     console.log($(`#${teamId}`).children(':input'))
-        //     console.log(this.$refs.1);
-        // },
-
         leaveEvaluation() {
             EventBus.$emit('EVALUATE_STUDENTS_CLOSE');
+            console.log(this.teams)
         },
 
         selectAllTeam(team) {
