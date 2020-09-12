@@ -1,7 +1,13 @@
 <template>
     <div class="box ">
         <div class="box__header " >
-                <div> Carro Voador </div>
+            <div> Carro Voador </div>
+
+            <div class="mr-2">   
+                <a href @click.prevent="leaveEvaluation()" class="close">
+                    <i class="material-icons close">close</i>
+                </a>
+            </div>
         </div>
 
         <div  class="project-view__box">
@@ -87,7 +93,6 @@ export default {
                     .then( teams => { 
                         this.teams = teams 
                         console.log(teams)
-                        alert("event_bus")
                     })
         })
     },
@@ -97,6 +102,10 @@ export default {
         //     console.log($(`#${teamId}`).children(':input'))
         //     console.log(this.$refs.1);
         // },
+
+        leaveEvaluation() {
+            EventBus.$emit('EVALUATE_STUDENTS_CLOSE');
+        },
     },
 	data() {
 		return {
@@ -181,6 +190,11 @@ textarea:focus, input:focus{
     width: 35px;
     flex: none;
         margin: 5px 5px 5px 0px;
+}
+
+.close {
+    margin-right: 2%;
+    color: #6e6e6e;
 }
 
 .v-input--selection-controls {

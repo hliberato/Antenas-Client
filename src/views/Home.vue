@@ -69,6 +69,9 @@ export default {
           this.evaluateStudents = !this.evaluateStudents;
           EventBus.$emit('EVALUATION', projectId);
       });
+      EventBus.$on('EVALUATE_STUDENTS_CLOSE', () => {
+          this.evaluateStudents = !this.evaluateStudents;
+      });
   },
   methods: {
     deselectProject() {
