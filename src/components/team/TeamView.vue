@@ -100,6 +100,7 @@
                                 <v-text-field 
                                     v-model="team.communicationLink" 
                                     label="Link de comunicação" 
+                                    :rules="rules.link"
                                     append-icon="link"
                                     hide-details="auto">
                                 </v-text-field>
@@ -109,7 +110,7 @@
                                 <span 
                                     class="material-icons material-icons-p25 pointer " 
                                     v-if="$store.getters.isStudent"
-                                    @click="submit(team)"> 
+                                    @click="saveLink(team, team.communicationLink)"> 
                                     save 
                                 </span>
                             </v-col>
@@ -121,6 +122,7 @@
                                     v-model="team.projectUrl" 
                                     label="Link do projeto" 
                                     append-icon="link"
+                                    :rules="rules.link"
                                     hide-details="auto">
                                 </v-text-field>
                             </v-col>
@@ -129,7 +131,7 @@
                                 <span 
                                     class="material-icons material-icons-p25 pointer " 
                                     v-if="$store.getters.isStudent"
-                                    @click="submit(team)"> 
+                                    @click="saveLink(team, team.projectUrl)"> 
                                     save 
                                 </span>
                             </v-col>
@@ -268,6 +270,18 @@ export default {
                 { value: 'Dev', label: 'Dev'},
                 { value: 'Scrum Master', label: 'Scrum Master'},
             ],
+            rules: {
+                link: [
+                    link => (link.includes("http://") || link.includes("https://")) || 'É necessário que o link possua http:// ou https://',
+                    link => !!link || 'Campo obrigatório',
+                ],
+
+                semester_rules: [
+                    semester => !!semester || 'Campo obrigatório',
+                    semester => (semester && semester < 7) || 'Insira um semestre válido.',
+                    semester => (semester && semester > 0 ) || 'Insira um semestre válido.'
+                ]
+            }
         }
     },
     methods: {
@@ -278,6 +292,7 @@ export default {
                         this.teams = teams 
                     })
         },
+        
         submit(team) {
             let updatedTeams = team; 
             
@@ -304,25 +319,38 @@ export default {
                     }, 
                     this.role)
                 this.createTeam = false;
-            }
+            }   
         },
+
         getSudentOptions() {
             return [...this.students.map(student => ({ label: student.name, value: student.id }))];
         },
+
         getLink(link) {
             return link ? link : "A equipe ainda não adicionou um Link.";
         },
+
         getClassTextField() {
             let class1 = "input-link"
             return [class1]
         },
+
         upenUrl(url) {
             if (url) {
                 window.open(url)
             }
         },
+
         removeStudent(student) {
             TeamService.removeStudent(student)
+        },
+
+        saveLink(team, link) {
+            if ((!link.includes("http://") && !link.includes("https://")) || !link) {
+                alert("Link incorreto")
+            } else {
+                this.submit(team);
+            }
         }
     }
 }
