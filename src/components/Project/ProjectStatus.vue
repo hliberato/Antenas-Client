@@ -6,7 +6,7 @@
                 {{ getButtonContent() }}
             </a>
         </div>
-        <ProgressStep :length="9" :progress="this.project.progress" :tips="getTips()"/>
+        <ProgressStep :length="9" :progress="this.project.progress" :tips="getTips()" v-if="!$store.getters.isStudent"/>
 
         <div class="project-status__popup" v-if="popupActive">
             <a  href 

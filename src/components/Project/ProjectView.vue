@@ -47,9 +47,12 @@
 
             <div v-if="tabSelected === 'project'" class="project-view__box">
                 <div class="box__body project-body">
-                    <ProjectStatus class="project-view__phase" :project="project" />
+                    <ProjectStatus class="project-view__phase" :project="project" v-if="!$store.getters.isStudent" />
 
-                    <br> <br> 
+                    <div v-if="!$store.getters.isStudent">
+                        <br> <br> 
+                    </div>
+                    
                     <ProjectUpdateForm 
                         v-if="projectStatus === 'WAITING' && !project.refused"
                         :project="project"
