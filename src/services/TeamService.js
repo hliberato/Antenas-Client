@@ -30,8 +30,12 @@ export default {
             .then(() => {
                 alert("Equipe atualizada")
             })
-            .catch(() => {
-                alert("Ocorreu um erro ao atualizar a equipe")
+            .catch((err) => {
+                if (err.response.status == 409) {
+                    alert("Este aluno já pertence a uma equpe.")
+                } else {
+                    alert("Ocorreu um erro ao atualizar a equipe")
+                }
             })
         } else {
             alert("Você não possui autorização para executar esta ação.")
