@@ -9,11 +9,11 @@
                 </a>
             </div>
         </div>
+        <div v-for="team in teams" :key="team.id" :id="team.id">
 
-        <div  class="project-view__box">
-            <div class="box__body project-body">
-                <div class="evaluation-form">
-                    <div v-for="team in teams" :key="team.id" :id="team.id">
+            <div class="project-view__box">
+                <div div class="box__body project-body">
+                    <div class="evaluation-form">
                         <div>
                             {{ team.name }}
                         </div>
@@ -77,11 +77,10 @@ export default {
     },
     mounted() {
         TeamService
-                .getTeam(1)
-                    .then( teams => { 
-                        this.teams = teams 
-                        console.log(teams)
-                    })
+            .getTeam(1)
+                .then( teams => { 
+                    this.teams = teams 
+                })
 
         EventBus.$on('ASSIGN_MEDAL', (medal) => {
             console.log(medal)
@@ -92,7 +91,6 @@ export default {
                 .getTeam(projectId)
                     .then( teams => { 
                         this.teams = teams 
-                        console.log(teams)
                     })
         })
     },
