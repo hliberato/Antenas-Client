@@ -15,7 +15,7 @@
                 <medal-list/>
             </v-col>
             <v-col v-if="evaluateStudents" cols="8" class="medal-list">
-                <evaluation />
+                <evaluation :projectId="projectId"/>
             </v-col>
 
 
@@ -65,12 +65,10 @@ export default {
     Evaluation,
   },
   mounted() {
-      EventBus.$on('EVALUATE_STUDENTS', () => {
-          this.evaluateStudents = !this.evaluateStudents;
-      });
-      
-      EventBus.$on('EVALUATE_STUDENTS_CLOSE', () => {
-          this.evaluateStudents = !this.evaluateStudents;
+      EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
+        this.projectId = projectId;
+        console.log(projectId);
+        this.evaluateStudents = !this.evaluateStudents;
       });
   },
   methods: {

@@ -83,32 +83,46 @@
 </template>
 
 <script>
-import TeamService from '@/services/TeamService'
+// import TeamService from '@/services/TeamService'
 import EventBus from '@/helpers/EventBus.js'
 import $ from 'jQuery'
 
 export default {
     name: 'evaluation',
-	components: {
+	props: {
+        projectId: Number,
+    },
+    watch: {
+        projectId: function (newQuestion, oldQuestion) {
+            console.log(newQuestion, oldQuestion)
+        }
+
+        // projectId: function (newId) {
+        //     console.log("teste");
+        //     TeamService.getTeam(newId)
+        //         .then( teams => { 
+        //             this.teams = teams;
+        //         })
+        // }
     },
     mounted() {
 
-        EventBus.$on('ASSIGN_MEDAL', (medal) => {
-            console.log(medal)
-        })
+        // EventBus.$on('ASSIGN_MEDAL', (medal) => {
+        //     console.log(medal)
+        // })
 
-        EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
-            TeamService.getTeam(projectId)
-                .then( teams => { 
-                    this.teams = teams;
-                    console.log(this.teams);
-                })
-        })
+        // EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
+        //     TeamService.getTeam(projectId)
+        //         .then( teams => { 
+        //             this.teams = teams;
+        //             console.log(this.teams);
+        //         })
+        // })
     },
     methods: {
         leaveEvaluation() {
             console.log(this.teams)
-            EventBus.$emit('EVALUATE_STUDENTS_CLOSE');
+            EventBus.$emit('EVALUATE_STUDENTS');
         },
 
         selectAllTeam(team) {
