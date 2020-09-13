@@ -67,7 +67,6 @@ export default {
   mounted() {
       EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
         this.projectId = projectId;
-        console.log(projectId);
         this.evaluateStudents = !this.evaluateStudents;
       });
   },

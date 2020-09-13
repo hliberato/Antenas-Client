@@ -83,7 +83,7 @@
 </template>
 
 <script>
-// import TeamService from '@/services/TeamService'
+import TeamService from '@/services/TeamService'
 import EventBus from '@/helpers/EventBus.js'
 import $ from 'jQuery'
 
@@ -92,10 +92,10 @@ export default {
 	props: {
         projectId: Number,
     },
-    watch: {
-        projectId: function (newQuestion, oldQuestion) {
-            console.log(newQuestion, oldQuestion)
-        }
+    // watch: {
+    //     projectId: function (newQuestion, oldQuestion) {
+    //         console.log(newQuestion, oldQuestion)
+    //     }
 
         // projectId: function (newId) {
         //     console.log("teste");
@@ -104,9 +104,14 @@ export default {
         //             this.teams = teams;
         //         })
         // }
-    },
-    mounted() {
-
+    // },
+    updated() {
+ console.log("teste");
+        TeamService.getTeam(this.projectId)
+                .then( teams => { 
+                    this.teams = teams;
+                    console.log(this.teams);
+                })
         // EventBus.$on('ASSIGN_MEDAL', (medal) => {
         //     console.log(medal)
         // })

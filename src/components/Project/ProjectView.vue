@@ -23,6 +23,17 @@
                         Avaliar alunos
                     </v-btn>
 
+                    <v-btn
+                        v-if="($store.getters.isRepresentative && project.refused ) " 
+                        small 
+                        color="#4472E9" 
+                        type="button"  
+                        class="white--text" 
+                        @click="deleteProject()"
+                    >
+                        Excluir projeto
+                    </v-btn>
+
                     <div v-if="project && ($store.getters.isTeacher || $store.getters.isCadi) && project.progress == 7" class="mr-3">
                         <v-btn
                             v-if="($store.getters.isCadi && project.open) || ($store.getters.isTeacher && !project.open) " 
@@ -233,6 +244,10 @@ export default {
                 }
             }
         },
+
+        deleteProject()  {
+            ProjectService.deleteProject(this.project.id);
+        }
     },
 	data() {
 		return {

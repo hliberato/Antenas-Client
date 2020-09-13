@@ -41,7 +41,7 @@
                 hide-details="auto">
             </v-text-field>
         </div>
-        <div class="login-form__field" v-if="role != '' || signUp">
+        <div class="login-form__field" v-if="role != '' && signUp">
             <v-text-field 
                 v-model="passwordConfirm" 
                 label="Confirmação da senha" 

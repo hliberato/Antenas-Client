@@ -72,27 +72,17 @@ export default {
 
     updateProject(project, approved) {
         return new Promise(resolve => {
+            if (store.getters.isCadi && [2, 4].includes(project.progress)) {
+                project.refused = !approved;
 
-            // for (let index = 0; index < projects.length; index++) {
-                
-                // if (projects[index].id === project.id) {
-    
-                    if (store.getters.isCadi && [2, 4].includes(project.progress)) {
-                        project.refused = !approved;
-    
-                        if (approved) {
-                            project.progress = project.progress + 1;
-                        }
-                    }
-    
-                    if (store.getters.isRepresentative && project.progress === 3) {
-                        project.progress = 4;
-                    }
-    
-                    // projects[index] = project;
-                    // break;
-                // }
-            // }
+                if (approved) {
+                    project.progress = project.progress + 1;
+                }
+            }
+
+            if (store.getters.isRepresentative && project.progress === 3) {
+                project.progress = 4;
+            }
             
             http.post("/project/update", project)
                 .then(() => {
@@ -102,5 +92,16 @@ export default {
                 });
             resolve(project);
         });
-    }
+    },
+
+    deleteProject(id) {
+        return http
+            .delete(`/project/${id}`)
+            .then(() => {
+                alert("Projeto excluído com sucesso")
+            }).err(() => {
+                alert("O projeto não pôde ser excluido.")
+            })
+    },
+
 };
