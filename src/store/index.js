@@ -19,6 +19,7 @@ const state = {
 		7: 'Entrega',
 		8: 'Avaliação',
 		9: 'Finalizado'
+		
 	},
 	
 	projects: [],
