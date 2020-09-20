@@ -2,14 +2,14 @@
     <div class="project-status">
         <div :class="getAccessClass()">
             <span class="project-status__label">{{ getLabel() }}:</span>
-            <a href class="project-status__button" @click.prevent="showPopup()">
+            <a class="project-status__button" >
                 {{ getButtonContent() }}
             </a>
         </div>
         
         <ProgressStep :length="9" :progress="this.project.progress" :tips="getTips()" v-if="!$store.getters.isStudent"/>
 
-        <div class="project-status__popup" v-if="popupActive">
+        <!-- <div class="project-status__popup" v-if="popupActive">
             <a  href 
                 @click.prevent="hidePopup()" 
                 class="close-icon" >
@@ -17,12 +17,12 @@
             </a>
 
             <Timeline :progress="project.progress" />
-        </div>
+        </div> -->
     </div>
 </template>
 
 <script>
-import Timeline from '@/components/Timeline.vue';
+// import Timeline from '@/components/Timeline.vue';
 import ProgressStep from '@/components/progress-steps/progress-step.vue'
 import store from '../../store/index'
 
@@ -39,16 +39,15 @@ export default {
         }
     },
     components: {
-        Timeline,
         ProgressStep
     },
     methods: {
-        showPopup () {
-            this.popupActive = true;
-        },
-        hidePopup () {
-            this.popupActive = false;
-        },
+        // showPopup () {
+        //     this.popupActive = true;
+        // },
+        // hidePopup () {
+        //     this.popupActive = false;
+        // },
         getAccessClass () {
             if (this.projectStatus) {
                 let base = 'project-status__access';
@@ -66,6 +65,11 @@ export default {
         },
         getButtonContent () {
             if (['WAITING', 'PENDING'].includes(this.projectStatus)) {
+                if (this.project.progress === 5 && this.$store.getters.isRepresentative && this.project.meeting.possibleDate.length == 0) {
+                    return `${this.phases[this.project.progress]} - Aguardando informações.`
+                } else if (this.project.progress === 5 && this.$store.getters.isCadi && this.project.meeting.possibleDate.length > 0) {
+                    return `${this.phases[this.project.progress]} - Aguardando representante.`
+                }
                 return this.phases[this.project.progress];
             }
             else if (this.project.refused) {

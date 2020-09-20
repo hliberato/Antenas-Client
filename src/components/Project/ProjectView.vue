@@ -91,7 +91,7 @@
                             <p class="text">{{ project.notes }}</p>
                         </div>
 
-                        <div class="project-view__field" v-if="project && project.meeting.chosenDate">
+                        <div class="project-view__field" v-if="project && project.meeting.chosenDate && $store.getters.isCadi || $store.getters.isRepresentative">
                             <p class="label">Reunião de projeto:</p>
                             <p class="text text-mb-0">
                                 <strong>Local:</strong> {{ project.meeting.address.street }}, {{ project.meeting.address.number }} - {{ project.meeting.address.city }}
@@ -170,7 +170,12 @@ export default {
         },
 
         getButtonText() {
-            return this.$store.getters.isCadi ? "Finalizar projeto" : "Iniciar projeto"
+            if (this.$store.getters.isTeacher) {
+                if (!this.project.open) {
+                    return "Iniciar projeto"
+                }
+                return "Finalizar projeto"
+            }
         },
 
         getDatetime(chosenDate) {
@@ -270,6 +275,11 @@ export default {
     color: #A6A6A6;
     font-weight: 400;
     font-size: 12px;
+    margin-top: 2px;
+}
+
+.v-application p {
+    margin-bottom: 0px;
 }
 
 .v-tab {

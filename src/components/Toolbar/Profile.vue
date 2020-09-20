@@ -2,7 +2,10 @@
     <a class="profile">
         <div class="profile__info">
             <v-row>
-                <span class="profile__name">{{ user.name }}</span>
+                <div>
+                    <div class="profile__name">{{ user.name }}</div>
+                    <div class="role-info">{{ getUserRole() }}</div>
+                </div>
                 <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
 
                 <v-menu origin="center center" transition="scale-transition" bottom offset-y >
@@ -42,6 +45,18 @@ export default {
                 this.$store.commit('LOGOUT_CURRENT_USER');
             this.$router.push('/');
             }
+        },
+
+        getUserRole() {
+            if (this.$store.getters.isCadi) {
+                return "CADI"
+            } else if (this.$store.getters.isRepresentative) {
+                return "Representante"
+            } else if (this.$store.getters.isTeacher) {
+                return "Professor"
+            } else if (this.$store.getters.isStudent){
+                return "Aluno"
+            }
         }
     }
 }
@@ -56,6 +71,12 @@ export default {
 
     .v-application {
         font-family: "Open Sans", "Work Sans", sans-serif !important;
+    }
+
+    .role-info {
+        color: #848484;
+        font-weight: 400;
+        font-size: 12px;
     }
 
     .profile {
