@@ -245,9 +245,6 @@ export default {
             .getStudentsUsers()
                 .then(students => {
                     this.students = students.filter(student => {
-                        // console.log("student: ", student)
-                        // console.log("USER_ROLE: ", localStorage.getItem('USER_ROLE'))
-                        // console.log("USER_ID: ", localStorage.getItem('USER_ID'))
                         return student.id.toString() !== localStorage.getItem('USER_ID').toString();
                     })
                 })
@@ -329,7 +326,6 @@ export default {
         },
 
         getSudentOptions() {
-            console.log([...this.students.map(student => ({ label: student.name, value: student.id }))])
             return [...this.students.map(student => ({ label: student.name, value: student.id }))];
         },
 
@@ -350,7 +346,6 @@ export default {
 
         removeStudent(student) {
             TeamService.removeStudent(student).then(() => {
-                alert("atualiza, caraio")
                 this.updateTeams(this.projectId);
             })
         },

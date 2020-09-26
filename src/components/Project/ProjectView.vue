@@ -79,6 +79,14 @@
                             </p>
                         </div>
 
+                        <div class="project-view__field" v-if="project && project.semester">
+                            <p class="label">Aplicado no {{ project.semester }}º semestre</p>
+                        </div>
+                        <div class="project-view__field" v-if="project && project.semester">
+                            <span class="label">Professor responsável: </span>
+                            <span class="text">{{ project.teacher.name }}</span>
+                        </div>
+
                         <div class="project-view__field" v-if="project && project.shortDescription" v-on:selectProject="showAlert">
                             <p class="label">Descrição breve:</p>
                             <p class="text">{{ project.shortDescription }}</p>
@@ -99,9 +107,7 @@
                             <p class="text">{{ project.notes }}</p>
                         </div>
 
-                        <div class="project-view__field" v-if="project && project.semester">
-                            <p class="label">Aplicado no {{ project.semester }}º semestre</p>
-                        </div>
+                        
                     </div>
                 </div>
             </div>

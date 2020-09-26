@@ -241,6 +241,10 @@ export default {
             return [...this.teachers.map(teacher => ({ label: teacher.name, value: teacher.id }))];
         },
         buttonDisabled() {
+            if (this.$store.getters.isRepresentative && this.project.progress === 3 
+                && this.updatedProject.completeDescription && this.updatedProject.technologyDescription) {
+                return false;
+            }
             if (this.$store.getters.isCadi && this.project.progress === 6 
                 && this.selectedTeacher && this.semester) {
                 return false;
