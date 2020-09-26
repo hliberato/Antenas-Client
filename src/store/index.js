@@ -2,8 +2,6 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import UserService from '@/services/UserService.js'
 import ProjectService from '@/services/ProjectService.js'
-import { updateProject } from '@/helpers/Utils.js';
-import EventBus from '@/helpers/EventBus.js';
 import 'vue-datetime/dist/vue-datetime.css'
 
 Vue.use(Vuex)
@@ -43,17 +41,6 @@ const mutations = {
 
 	ADD_PROJECTS(state, projects) {
 		state.projects = state.projects.concat(projects);
-	},
-
-	UPDATE_PROJECT(state, project) {
-		for (let index = 0; index < state.projects.length; index++) {
-			
-			if (state.projects[index].id === project.id) {
-				updateProject(state.projects[index], project);
-				EventBus.$emit('PROJECT-UPDATED');
-				break;
-			}
-		}
 	},
 
 	SELECT_PROJECT(state, projectId) {

@@ -34,7 +34,7 @@
                         Excluir projeto
                     </v-btn>
 
-                    <div v-if="project && ($store.getters.isTeacher || $store.getters.isCadi) && project.progress == 7" class="mr-3">
+                    <div v-if="project && ($store.getters.isTeacher) && project.progress == 7" class="mr-3">
                         <v-btn
                             v-if="($store.getters.isCadi && project.open) || ($store.getters.isTeacher && !project.open) " 
                             small 
@@ -71,6 +71,17 @@
                     />
                     
                     <div class="project-view">
+                        <div class="project-view__field"
+                            v-if="showMeetingDetails()">
+                            <p class="label">Local e data da reunião:</p>
+                            <p class="text text-mb-0">
+                                <strong>Local:</strong> {{ project.meeting.address.street }}, {{ project.meeting.address.number }} - {{ project.meeting.address.city }}
+                            </p>
+                            <p class="text">
+                                <strong>Data e horario:</strong> {{ getDatetime(project.meeting.chosenDate) }}
+                            </p>
+                        </div>
+
                         <div class="project-view__field" v-if="project && project.shortDescription" v-on:selectProject="showAlert">
                             <p class="label">Descrição breve:</p>
                             <p class="text">{{ project.shortDescription }}</p>
@@ -89,16 +100,6 @@
                         <div class="project-view__field" v-if="project && project && project.notes">
                             <p class="label">Notas adicionais:</p>
                             <p class="text">{{ project.notes }}</p>
-                        </div>
-
-                        <div class="project-view__field" v-if="project && project.meeting.chosenDate && $store.getters.isCadi || $store.getters.isRepresentative">
-                            <p class="label">Reunião de projeto:</p>
-                            <p class="text text-mb-0">
-                                <strong>Local:</strong> {{ project.meeting.address.street }}, {{ project.meeting.address.number }} - {{ project.meeting.address.city }}
-                            </p>
-                            <p class="text">
-                                <strong>Data e horario:</strong> {{ getDatetime(project.meeting.chosenDate) }}
-                            </p>
                         </div>
 
                         <div class="project-view__field" v-if="project && project.semester">
@@ -179,8 +180,11 @@ export default {
         },
 
         getDatetime(chosenDate) {
-            let date = new Date(chosenDate);
-            return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+            if (chosenDate) {
+                let date = new Date(chosenDate);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+            }
+            return 'A definir'
         },
 
         closeProject() {
@@ -203,6 +207,12 @@ export default {
             ProjectService.updateProject(this.project).then(() => {
                 setTimeout(() => this.updated = false, 5000);
             });
+        },
+
+        showMeetingDetails() {
+            return (this.project && this.project.meeting && 
+            (this.project.progress == 5 || this.project.progress == 6) && 
+            (this.$store.getters.isCadi || this.$store.getters.isRepresentative));
         },
 
         getProjectStatus(project)  {
@@ -265,7 +275,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .close {
     margin-right: 2%;
     color: #6e6e6e;

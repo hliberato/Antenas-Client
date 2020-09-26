@@ -15,12 +15,14 @@ export default {
             .post('/login', { email, password })
             .then(res => {
                 localStorage.setItem('USER_ROLE', res.data.authorizations[0].name);
+                console.log(res.data)
                 store.commit('SET_CURRENT_USER', {
                     token: res.data.token,
                     user: {
                         name: res.data.name,
                         role: res.data.authorizations[0].name,
                         email: res.data.email,
+                        photo: res.data.photo,
                         id: res.data.id
                     }
                 });

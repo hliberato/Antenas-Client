@@ -94,31 +94,31 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  .content {
+.content {
+  max-height: 100%;
+}
+
+.home {
+  &__wrapper {
+    display: flex;
+    max-width: 1080px;
+    width: 90%;
+    margin: 25px auto;
+    height: calc(100vh - 70px - #{32px } * 2);
+  }
+
+  &__projects,
+  &__project-view {
+    height: 100%;
+  }
+
+  &__project-view {
+    margin-left: spacing(4);
+    flex-grow: 1;
+  }
+}
+
+.medal-list {
     max-height: 100%;
-  }
-
-  .home {
-    &__wrapper {
-      display: flex;
-      max-width: 1080px;
-      width: 90%;
-      margin: 25px auto;
-      height: calc(100vh - 70px - #{32px } * 2);
-    }
-
-    &__projects,
-    &__project-view {
-      height: 100%;
-    }
-
-    &__project-view {
-      margin-left: spacing(4);
-      flex-grow: 1;
-    }
-  }
-
-  .medal-list {
-      max-height: 100%;
-  }
+}
 </style>

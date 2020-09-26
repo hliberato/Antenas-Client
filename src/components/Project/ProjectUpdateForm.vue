@@ -12,6 +12,7 @@
                 v-model="updatedProject.completeDescription"
                 rows="4"
                 outlined
+                :maxlength="1000"
                 counter
                 label="Descrição completa">
             </v-textarea>
@@ -22,6 +23,7 @@
                 v-model="updatedProject.technologyDescription"
                 rows="4"
                 counter
+                :maxlength="1000"
                 outlined
                 label="Descrição da tecnologia">
             </v-textarea>
@@ -122,6 +124,7 @@
                 color="#4472E9"
                 class="white--text ml-87" 
                 type="button"  
+                :disabled="buttonDisabled()"
                 @click="submit(true)">
                 Salvar
             </v-btn>
@@ -160,6 +163,7 @@
 import ProjectService from '@/services/ProjectService.js';
 import UserService from '@/services/UserService.js';
 import { Datetime } from 'vue-datetime';
+import EventBus from '@/helpers/EventBus.js'
 import $ from 'jQuery'
 
 export default {
@@ -199,11 +203,14 @@ export default {
             if (this.updated) {
                 return 'Atualizações enviadas com sucesso!';
             } else if (this.$store.getters.isRepresentative) {
+                if (this.project.progress == 5) {
+                    return 'Selecione uma data a para a reunião:';
+                }
                 return 'Atualize as informações do seu projeto para prosseguir:';
             } else if (this.$store.getters.isCadi && [2, 4].includes(this.project.progress)) {
                 return 'Leia as especificações do projeto e decida se ele está apto a continuar:';
             } else if (this.$store.getters.isCadi && this.project.progress === 5) {
-                return 'Escolha opções de datas para uma reunião com o representante do projeto:';
+                return 'Insira informações sobre a reunião:';
             } else if (this.$store.getters.isCadi && this.project.progress === 6) {
                 return 'Selecione o semestre em qual o projeto será realizado e um professor para ser o responsável:';
             } 
@@ -233,6 +240,22 @@ export default {
         getTeachersOptions() {
             return [...this.teachers.map(teacher => ({ label: teacher.name, value: teacher.id }))];
         },
+        buttonDisabled() {
+            if (this.$store.getters.isCadi && this.project.progress === 6 
+                && this.selectedTeacher && this.semester) {
+                return false;
+            }
+            if (this.getMeetingOptions().length > 0 && this.chosenDate) {
+                return false;
+            }
+            if (this.updatedProject.progress == 5 && this.$store.getters.isCadi && (this.updatedProject.meeting.address.zipCode.length > 0 ||
+            this.updatedProject.meeting.address.city.length > 0 || this.updatedProject.meeting.address.street.length > 0 ||
+            this.updatedProject.meeting.address.number || this.updatedProject.meeting.possibleDate.length > 0)) {
+                return false;
+            }
+
+            return true;
+        },
         submit(approved) {
             if (this.$store.getters.isCadi && this.updatedProject.progress == 6) {
                 this.updatedProject.teacher = {
@@ -260,8 +283,14 @@ export default {
                 this.selectedStudent = null;
                 this.deliver = {};
                 this.updated = true;
+                EventBus.$emit('UPDATE_PROJECT_LIST');
                 setTimeout(() => this.updated = false, 5000);
             });
+        },
+        updateProject() {
+            ProjectService.getProjectById(this.project.id).then((project) => {
+                this.project = project;
+            })
         },
         forceTwoChars(number) {
             return ("0" + number).slice(-2);

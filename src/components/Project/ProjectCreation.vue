@@ -12,13 +12,23 @@
                 <form @submit.prevent="submitProject">
                     <v-text-field 
                         label="Titulo"
+                        :maxlength="30"
+                        counter
                         v-model="project.title"/>
-                    
-                    <v-text-field 
-                        label="Descrição curta"
-                        v-model="project.shortDescription"/>
 
                     <v-textarea
+                        :maxlength="1000"
+                        clearable
+                        counter
+                        clear-icon="cancel"
+                        v-model="project.shortDescription"
+                        rows="4"
+                        outlined
+                        label="Descrição curta">
+                    </v-textarea>
+
+                    <v-textarea
+                        :maxlength="300"
                         clearable
                         counter
                         clear-icon="cancel"
@@ -39,6 +49,7 @@
 
 <script>
 import ProjectService from '@/services/ProjectService.js'
+import EventBus from '@/helpers/EventBus.js'
 
 export default {
     name: 'ProjectView',
@@ -54,8 +65,8 @@ export default {
         submitProject() {
             ProjectService
                 .addProject(this.project)
-                .then(project => {
-                    this.$emit('created', project);
+                .then(() => {
+                    EventBus.$emit('UPDATE_PROJECT_LIST');
                     this.closeCreation();
                 });
         }

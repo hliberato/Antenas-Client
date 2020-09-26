@@ -6,7 +6,19 @@
                     <div class="profile__name">{{ user.name }}</div>
                     <div class="role-info">{{ getUserRole() }}</div>
                 </div>
-                <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+
+                <div class="avatar ">
+                    <v-avatar size="36px">
+                    <img
+                        v-if="user.photo != undefined && user.photo.length > 0"
+                        alt="Avatar"
+                        :src="getUserPhoto()"
+                    >
+                    <div v-else >
+                        {{ getUserInitials() }}
+                    </div>
+                </v-avatar>
+                </div>
 
                 <v-menu origin="center center" transition="scale-transition" bottom offset-y >
                     <template v-slot:activator="{ on, attrs }">
@@ -47,7 +59,12 @@ export default {
             }
         },
 
+        getUserPhoto() {
+            return this.user.photo;
+        },
+
         getUserRole() {
+            console.log(this.user)
             if (this.$store.getters.isCadi) {
                 return "CADI"
             } else if (this.$store.getters.isRepresentative) {
@@ -57,6 +74,11 @@ export default {
             } else if (this.$store.getters.isStudent){
                 return "Aluno"
             }
+        },
+
+        getUserInitials() {
+            let splitedName = this.user.name.split(' ')
+            return (splitedName[0].charAt(0) + splitedName[splitedName.length - 1].charAt(0)).toUpperCase()
         }
     }
 }
@@ -77,6 +99,17 @@ export default {
         color: #848484;
         font-weight: 400;
         font-size: 12px;
+    }
+
+    .v-avatar {
+        background-color: #4472e9;
+        color: white;
+        font-weight: 700;
+    }
+
+    .avatar {
+        margin-left: 10px;
+        margin-top: 1%;
     }
 
     .profile {

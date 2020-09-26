@@ -68,7 +68,7 @@ export default {
                 if (this.project.progress === 5 && this.$store.getters.isRepresentative && this.project.meeting.possibleDate.length == 0) {
                     return `${this.phases[this.project.progress]} - Aguardando informações.`
                 } else if (this.project.progress === 5 && this.$store.getters.isCadi && this.project.meeting.possibleDate.length > 0) {
-                    return `${this.phases[this.project.progress]} - Aguardando representante.`
+                    return `${this.phases[this.project.progress]} (Aguardando representante)`
                 }
                 return this.phases[this.project.progress];
             }

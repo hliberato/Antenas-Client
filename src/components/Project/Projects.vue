@@ -33,7 +33,6 @@
                                 <strong  >{{ phase(project.progress) }} </strong>
                             </div>
                         </div>
-
                     </div>
                 </a>
             </li>
@@ -51,19 +50,23 @@ export default {
 	components: {
     },
     mounted() {
-        EventBus.$on('PROJECT-UPDATED', () => {
-            this.$forceUpdate();
+        EventBus.$on('UPDATE_PROJECT_LIST', () => {
+            this.updateProjects();
         });
 
-        ProjectService
-            .getProjects().then(res => {
-                this.projects = res;
-            })
+        this.updateProjects();
     },
 
     methods: {
         phase(progress) {
             return this.$store.state.phases[progress];
+        },
+
+        updateProjects() {
+            ProjectService
+            .getProjects().then(res => {
+                this.projects = res;
+            })
         },
 
         addZero(number) {

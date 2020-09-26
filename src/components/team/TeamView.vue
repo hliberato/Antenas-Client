@@ -307,9 +307,10 @@ export default {
                     });
                 }
 
-                TeamService.updateTeam(updatedTeams);
+                TeamService.updateTeam(updatedTeams).then(() => {
+                    this.updateTeams(this.projectId);
+                });
                 this.addMember = false;
-                this.updateTeams(this.projectId);
 
             } else {
                 TeamService.addTeam(
@@ -317,7 +318,9 @@ export default {
                         project: {id: this.projectId},
                         name: this.teamName
                     }, 
-                    this.role)
+                    this.role).then(() => {
+                        this.updateTeams(this.projectId);
+                    })
                 this.createTeam = false;
             }   
         },
@@ -342,7 +345,10 @@ export default {
         },
 
         removeStudent(student) {
-            TeamService.removeStudent(student)
+            TeamService.removeStudent(student).then(() => {
+                alert("atualiza, caraio")
+                this.updateTeams(this.projectId);
+            })
         },
 
         saveLink(team, link) {
