@@ -55,7 +55,7 @@ export default {
         click(option) {
             if (option == "Sair") {
                 this.$store.commit('LOGOUT_CURRENT_USER');
-            this.$router.push('/');
+                this.$router.push('/');
             }
         },
 

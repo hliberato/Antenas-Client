@@ -150,15 +150,20 @@ export default {
     },
     mounted() {
         EventBus.$on('selectProject', (id) => {
-            ProjectService.getProjectById(id)
-                .then((res) => {
-                    this.project = res
-                })
+            this.projectId = id;
+            this.updateProject()
         });
     },
     methods: {
         selectTab(tab) {
             this.tabSelected = tab;
+        },
+
+        updateProject() {
+            ProjectService.getProjectById(this.projectId)
+                .then((res) => {
+                    this.project = res
+                })
         },
 
         evaluateStudents() {
@@ -208,6 +213,7 @@ export default {
             }
 
             ProjectService.updateProject(this.project).then(() => {
+                this.updateProject();
                 setTimeout(() => this.updated = false, 5000);
             });
         },
@@ -272,6 +278,7 @@ export default {
             students: [],
             project: null,
             tabSelected: "project",
+            projectID: null,
         };
 	}
 }

@@ -25,7 +25,7 @@ export default {
     },
 
     updateTeam(team) {
-        if (store.getters.isStudent) {
+        if (store.getters.isStudent || store.getters.isTeacher) {
             http.put("/team", team)
             .then(() => {
                 alert("Equipe atualizada")

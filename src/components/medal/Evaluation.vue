@@ -9,6 +9,10 @@
                 </a>
             </div>
         </div>
+
+        <v-btn small color="#4472E9" class="white--text save-button" type="submit" @click="submit()">
+            Salvar
+        </v-btn>
         <div class="list">
             <div v-for="team in teams" :key="team.id" :id="team.id">
                 <div class="project-view__box">
@@ -25,7 +29,7 @@
                                 <v-spacer></v-spacer>
 
                                 <span class="project-link link" @click="upenUrl(team.projectUrl)">
-                                    Abrir projeto 
+                                    Abrir url do projeto 
                                 </span>
                             </div>
                         </div>
@@ -54,21 +58,21 @@
                                         <div class="box-input">
                                             <div>
                                                 <div class="input-label"> Proatividade </div>
-                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.proactivity" min="0" max="5"/>
                                             </div>
                                             <div> 
                                                 <div class="input-label"> Autonomia </div>
-                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.autonomy" min="0" max="5"/>
                                             </div>
                                         </div>
                                         <div class="box-input">
                                             <div>
                                                 <div class="input-label"> Colaboração </div>
-                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.collaboration" min="0" max="5"/>
                                             </div>
                                             <div>
                                                 <div class="input-label"> Entrega de resultado </div>
-                                                <input type="number" class="custom-input" v-model="proactivity" min="0" max="5"/>
+                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.resultsDeliver" min="0" max="5"/>
                                             </div>
                                         </div>
                                     </div>
@@ -92,41 +96,25 @@ export default {
 	props: {
         projectId: Number,
     },
-    // watch: {
-    //     projectId: function (newQuestion, oldQuestion) {
-    //         console.log(newQuestion, oldQuestion)
-    //     }
-
-        // projectId: function (newId) {
-        //     console.log("teste");
-        //     TeamService.getTeam(newId)
-        //         .then( teams => { 
-        //             this.teams = teams;
-        //         })
-        // }
-    // },
-    updated() {
- console.log("teste");
+    mounted() {
         TeamService.getTeam(this.projectId)
-                .then( teams => { 
-                    this.teams = teams;
-                    console.log(this.teams);
+            .then(teams => { 
+                this.teams = teams;
+                this.teams.forEach((team) => {
+                    team.studentTeamList.forEach((studentTeam) => {
+                        studentTeam.evaluations = {
+                        proactivity: "",
+                        resultsDeliver: "",
+                        autonomy: "",
+                        collaboration: ""
+                        };
+                    })
                 })
-        // EventBus.$on('ASSIGN_MEDAL', (medal) => {
-        //     console.log(medal)
-        // })
+            })
 
-        // EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
-        //     TeamService.getTeam(projectId)
-        //         .then( teams => { 
-        //             this.teams = teams;
-        //             console.log(this.teams);
-        //         })
-        // })
     },
     methods: {
         leaveEvaluation() {
-            console.log(this.teams)
             EventBus.$emit('EVALUATE_STUDENTS');
         },
 
@@ -140,6 +128,19 @@ export default {
             if (url) {
                 window.open(url)
             }
+        },
+
+        submit() {
+            this.teams.forEach((team) => {
+                team.studentTeamList.forEach((studentTeam) => {
+                    studentTeam.evaluations = [studentTeam.evaluations]
+                })
+            })
+
+            this.teams.forEach((team) => {
+                console.log(team);
+                TeamService.updateTeam(team)
+            })
         },
     },
 	data() {
@@ -165,6 +166,12 @@ export default {
 
 .box-input {
     margin-left: 10px;
+}
+
+.save-button {
+    display: flex;
+    margin-right: 25px;
+    margin-top: 10px;
 }
 
 .project-view {
@@ -238,7 +245,7 @@ textarea:focus, input:focus{
 }
 
 .project-link {
-    font-size: 8px;
+    font-size: 13px;
 }
 
 .link {
@@ -246,10 +253,6 @@ textarea:focus, input:focus{
     cursor: pointer;
     padding-top: 4%;
     
-}
-
-.link:hover {
-    font-weight: 600;
 }
 
 .close {
