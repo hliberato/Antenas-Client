@@ -10,7 +10,6 @@
                     </v-tabs>
                 </div>
                 
-
                 <div class="flex-box">
                     <v-btn
                         v-if="($store.getters.isTeacher && !project.open && project.progress == 8) " 
@@ -33,10 +32,8 @@
                     >
                         Excluir projeto
                     </v-btn>
-
                     <div v-if="project && ($store.getters.isTeacher) && project.progress == 7" class="mr-3">
                         <v-btn
-                            v-if="($store.getters.isCadi && project.open) || ($store.getters.isTeacher && !project.open) " 
                             small 
                             color="#4472E9" 
                             type="button"  
@@ -46,7 +43,7 @@
                             {{ getButtonText() }}
                         </v-btn>
 
-                        <p class="started-project" v-if="$store.getters.isTeacher && project && this.project.open" >Projeto iniciado</p>
+                        <p class="started-project" v-if="$store.getters.isTeacher && project && this.project.open && !project.progress == 7" >Projeto iniciado</p>
                     </div>
                     <div class="mr-2">   
                         <a href @click.prevent="closeProject()" class="close">

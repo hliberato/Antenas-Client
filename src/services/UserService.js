@@ -15,6 +15,8 @@ export default {
             .post('/login', { email, password })
             .then(res => {
                 localStorage.setItem('USER_ROLE', res.data.authorizations[0].name);
+                localStorage.setItem('USER_ID', res.data.authorizations[0].id);
+                console.log(">>>>>", localStorage.getItem('USER_ID'))
                 console.log(res.data)
                 store.commit('SET_CURRENT_USER', {
                     token: res.data.token,
@@ -22,12 +24,11 @@ export default {
                         name: res.data.name,
                         role: res.data.authorizations[0].name,
                         email: res.data.email,
-                        photo: res.data.photo,
                         id: res.data.id
                     }
                 });
             }).catch(() => {
-                // this.$emit('errorEvent', 'Login ou senha incorretos')
+                alert("Login ou senha incorretos")
             });
     },
 

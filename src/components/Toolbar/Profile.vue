@@ -64,7 +64,6 @@ export default {
         },
 
         getUserRole() {
-            console.log(this.user)
             if (this.$store.getters.isCadi) {
                 return "CADI"
             } else if (this.$store.getters.isRepresentative) {
