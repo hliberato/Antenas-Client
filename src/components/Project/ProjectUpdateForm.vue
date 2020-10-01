@@ -326,15 +326,13 @@ export default {
             let cep = this.updatedProject.meeting.address.zipCode
             let address = undefined;
             if(/^[0-9]{5}-[0-9]{3}$/.test(cep) || /^[0-9]{5}[0-9]{3}$/.test(cep)) {
-                $.getJSON("https://viacep.com.br/ws/" + cep + "/json/", function(res) {
+                $.getJSON(`https://viacep.com.br/ws/${cep}/json/`, function(res) {
                     address = res; 
                 }).then(() =>{
-                    console.log(address)
-                this.updatedProject.meeting.address.city = address.localidade
-                this.updatedProject.meeting.address.street = address.logradouro
-                this.updatedProject.meeting.address.neighborhood = address.bairro
-                this.updatedProject.meeting.address.zipCode = address.cep
-                console.log(this.updatedProject.meeting);
+                    this.updatedProject.meeting.address.city = address.localidade
+                    this.updatedProject.meeting.address.street = address.logradouro
+                    this.updatedProject.meeting.address.neighborhood = address.bairro
+                    this.updatedProject.meeting.address.zipCode = address.cep
                 })
                 
             }

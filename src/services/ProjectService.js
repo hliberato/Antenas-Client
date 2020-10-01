@@ -1,6 +1,5 @@
 import http from '../helpers/Http'
 import store from '../store/index'
-import $ from 'jQuery'
 
 export default {
 
@@ -103,11 +102,4 @@ export default {
                 alert("O projeto não pôde ser excluido.")
             })
     },
-
-    findAddress(cep) {
-        return $.getJSON(`http://cep.la/${cep}/json/`)
-
-        // return http.get(`http://cep.la/${cep}/json/`)
-    }
-
 };
