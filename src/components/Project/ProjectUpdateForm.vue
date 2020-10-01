@@ -32,6 +32,7 @@
 
         <fieldset class="project-update-form__section" v-if="updatedProject.progress === 5 && $store.getters.isCadi && !updatedProject.meeting.chosenDate">
             <v-text-field 
+                @blur='findAddressByCep()'
                 label="Local da reunião - CEP"
                 v-model="updatedProject.meeting.address.zipCode"/>
 
@@ -42,6 +43,10 @@
             <v-text-field 
                 label="Local da reunião - Rua"
                 v-model="updatedProject.meeting.address.street"/>
+
+                <v-text-field 
+                label="Local da reunião - Bairro"
+                v-model="updatedProject.meeting.address.neighborhood"/>
 
             <v-text-field 
                 label="Local da reunião - Numero"
@@ -317,6 +322,20 @@ export default {
             (this.project.progress === 5 && this.$store.getters.isRepresentative && this.project.meeting.possibleDate) ||
             (this.project.progress === 6 && this.$store.getters.isCadi);
         },
+        findAddressByCep() {
+            // let cep = this.updatedProject.meeting.address.zipCode
+            // console.log(this.updatedProject)
+            // if(/^[0-9]{5}-[0-9]{3}$/.test(cep) || /^[0-9]{5}[0-9]{3}$/.test(cep)) {
+            //     $.getJSON("https://viacep.com.br/ws/" + cep + "/json/", function(address) {
+            //         console.log(address)
+            //         console.log(this.updatedProject)
+            //         this.updatedProject.meeting.address.city = address.localidade
+            //         this.updatedProject.meeting.address.street = address.logradouro
+            //         // this.updatedProject.meeting.address.neighborhood = address.bairro
+            //         this.updatedProject.meeting.address.zipCode = address.cep
+            //     });
+            // }
+        }
     },
     data() {
         return {

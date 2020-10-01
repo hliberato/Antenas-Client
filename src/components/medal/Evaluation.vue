@@ -131,14 +131,14 @@ export default {
         },
 
         submit() {
-            this.teams.forEach((team) => {
+            let updatedTeam = this.teams;
+            updatedTeam.forEach((team) => {
                 team.studentTeamList.forEach((studentTeam) => {
                     studentTeam.evaluations = [studentTeam.evaluations]
                 })
             })
 
-            this.teams.forEach((team) => {
-                console.log(team);
+            updatedTeam.forEach((team) => {
                 TeamService.updateTeam(team)
             })
         },

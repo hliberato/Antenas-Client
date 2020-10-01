@@ -95,13 +95,16 @@ export default {
     },
 
     deleteProject(id) {
-        return http
-            .delete(`/project/${id}`)
+        return http.delete(`/project/${id}`)
             .then(() => {
                 alert("Projeto excluído com sucesso")
             }).err(() => {
                 alert("O projeto não pôde ser excluido.")
             })
     },
+
+    findAddress(cep) {
+        return http.get(`http://cep.la/${cep}`)
+    }
 
 };
