@@ -71,9 +71,16 @@
                         <div class="project-view__field"
                             v-if="showMeetingDetails()">
                             <p class="label">Local e data da reunião:</p>
-                            <p class="text text-mb-0">
-                                <strong>Local:</strong> {{ project.meeting.address.street }}, {{ project.meeting.address.number }} - {{ project.meeting.address.city }}
-                            </p>
+                            <div class="text text-mb-0">
+                                {{ project.meeting.address.neighborhood }} 
+                                {{ project.meeting.address.neighborhood && (project.meeting.address.street || project.meeting.address.number) ? ',' : ''}} 
+                                {{ project.meeting.address.street }}
+                                {{ project.meeting.address.number  ? ',' : '' }} 
+                                {{ project.meeting.address.number }}
+                                <div>
+                                    {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
+                                </div> 
+                            </div>
                             <p class="text">
                                 <strong>Data e horario:</strong> {{ getDatetime(project.meeting.chosenDate) }}
                             </p>
@@ -87,7 +94,7 @@
                             <span class="text">{{ project.teacher.name }}</span>
                         </div>
 
-                        <div class="project-view__field" v-if="project && project.shortDescription" v-on:selectProject="showAlert">
+                        <div class="project-view__field" v-if="project && project.shortDescription">
                             <p class="label">Descrição breve:</p>
                             <p class="text">{{ project.shortDescription }}</p>
                         </div>
@@ -163,15 +170,12 @@ export default {
             ProjectService.getProjectById(this.projectId)
                 .then((res) => {
                     this.project = res
+                    this.project.meeting.address.number = undefined;
                 })
         },
 
         evaluateStudents() {
             EventBus.$emit('EVALUATE_STUDENTS', this.project.id);
-        },
-
-        showAlert(event) {
-            console.log(event)
         },
 
         getMembersList(ids) {

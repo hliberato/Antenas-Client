@@ -1,5 +1,6 @@
 import http from '../helpers/Http'
 import store from '../store/index'
+import $ from 'jQuery'
 
 export default {
 
@@ -104,7 +105,9 @@ export default {
     },
 
     findAddress(cep) {
-        return http.get(`http://cep.la/${cep}`)
+        return $.getJSON(`http://cep.la/${cep}/json/`)
+
+        // return http.get(`http://cep.la/${cep}/json/`)
     }
 
 };

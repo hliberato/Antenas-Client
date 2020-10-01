@@ -44,7 +44,7 @@
                 label="Local da reunião - Rua"
                 v-model="updatedProject.meeting.address.street"/>
 
-                <v-text-field 
+            <v-text-field 
                 label="Local da reunião - Bairro"
                 v-model="updatedProject.meeting.address.neighborhood"/>
 
@@ -323,18 +323,21 @@ export default {
             (this.project.progress === 6 && this.$store.getters.isCadi);
         },
         findAddressByCep() {
-            // let cep = this.updatedProject.meeting.address.zipCode
-            // console.log(this.updatedProject)
-            // if(/^[0-9]{5}-[0-9]{3}$/.test(cep) || /^[0-9]{5}[0-9]{3}$/.test(cep)) {
-            //     $.getJSON("https://viacep.com.br/ws/" + cep + "/json/", function(address) {
-            //         console.log(address)
-            //         console.log(this.updatedProject)
-            //         this.updatedProject.meeting.address.city = address.localidade
-            //         this.updatedProject.meeting.address.street = address.logradouro
-            //         // this.updatedProject.meeting.address.neighborhood = address.bairro
-            //         this.updatedProject.meeting.address.zipCode = address.cep
-            //     });
-            // }
+            let cep = this.updatedProject.meeting.address.zipCode
+            let address = undefined;
+            if(/^[0-9]{5}-[0-9]{3}$/.test(cep) || /^[0-9]{5}[0-9]{3}$/.test(cep)) {
+                $.getJSON("https://viacep.com.br/ws/" + cep + "/json/", function(res) {
+                    address = res; 
+                }).then(() =>{
+                    console.log(address)
+                this.updatedProject.meeting.address.city = address.localidade
+                this.updatedProject.meeting.address.street = address.logradouro
+                this.updatedProject.meeting.address.neighborhood = address.bairro
+                this.updatedProject.meeting.address.zipCode = address.cep
+                console.log(this.updatedProject.meeting);
+                })
+                
+            }
         }
     },
     data() {

@@ -50,7 +50,6 @@ export default {
       return {
           signUp: true,
           showError: false,
-          showAlert: false,
           showSuccess: false,
       };
   },
