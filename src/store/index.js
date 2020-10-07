@@ -15,8 +15,8 @@ const state = {
 		5: 'Reunião',
 		6: 'Designar responsável',
 		7: 'Entrega',
-		8: 'Avaliação',
-		9: 'Finalizado'
+		// 8: 'Avaliação',
+		8: 'Finalizado'
 		
 	},
 	

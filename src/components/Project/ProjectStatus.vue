@@ -88,7 +88,7 @@ export default {
                 'Reunião',
                 'Designar responsável',
                 'Entrega',
-                'Avaliação',
+                // 'Avaliação',
                 'Finalizado'
             ]
             

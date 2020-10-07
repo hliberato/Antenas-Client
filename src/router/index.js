@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import store from '@/store'
 import Landing from '../views/Landing.vue';
 import Home from '../views/Home.vue';
+import RegistrationInfo from '../views/RegistrationInfo.vue';
 
 Vue.use(VueRouter)
 
@@ -19,6 +20,14 @@ const routes = [
 		path: '/home',
 		name: 'Home',
 		component: Home,
+		meta: {
+			public: false
+		}
+	},
+	{
+		path: '/dados-cadastrais',
+		name: 'Dados cadastrais',
+		component: RegistrationInfo,
 		meta: {
 			public: false
 		}
