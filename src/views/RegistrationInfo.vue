@@ -23,47 +23,64 @@
 
                   <div class=" box__body">
                     <v-text-field 
-                        v-model="name" 
+                        v-model="user.name" 
                         label="Nome completo" 
-                        :rules="rules" 
                         hide-details="auto">
                     </v-text-field>
 
                     <v-text-field 
-                        v-model="email" 
+                        v-model="user.email" 
                         label="E-mail" 
-                        :rules="rules" 
                         hide-details="auto">
                     </v-text-field>
 
                     <v-text-field 
-                        v-model="ra" 
+                        v-model="user.ra" 
                         label="R.A" 
-                        :rules="rules" 
                         hide-details="auto">
                     </v-text-field>
 
                     <v-text-field 
-                        v-model="city" 
+                        v-model="user.city" 
                         label="Cidade" 
-                        :rules="rules" 
                         hide-details="auto">
                     </v-text-field>
 
                     <v-text-field 
-                        v-model="linkedIn" 
+                        v-model="user.linkedIn" 
                         label="LinkedIn" 
-                        :rules="rules" 
                         hide-details="auto">
                     </v-text-field>
 
-                    <v-text-field 
-                        v-model="Biography" 
-                        label="Biografia" 
-                        :rules="rules" 
-                        hide-details="auto">
-                    </v-text-field>
+                    <v-textarea
+                        :maxlength="300"
+                        clearable
+                        counter
+                        clear-icon="cancel"
+                        v-model="user.biography"
+                        rows="4"
+                        outlined
+                        class="biography-input"
+                        label="Biografia">
+                        
+                    </v-textarea>
+
+                    <v-file-input
+                      label="Foto de perfil"
+                      chips
+                      small-chips
+                      truncate-length="50"
+                      v-model="user.photo"
+                    ></v-file-input>
                   </div>
+
+                    <div class="row">
+                      <v-spacer></v-spacer>
+                      <v-btn small color="#4472E9" class="white--text button" type="submit">
+                        Salvar
+                      </v-btn>
+                    </div>
+                  
                    
                 </div>
             </v-col>
@@ -80,24 +97,27 @@ import Profile from '@/components/Toolbar/Profile.vue';
 import Menu from '@/components/Menu/Menu.vue'
 
 export default {
-    name: 'RegistrationInfo',
-    components: {
+  name: 'RegistrationInfo',
+  components: {
     Logo,
     Profile,
     Menu,
   }, 
   data() {
-      return {
+      return { 
         user: {
-          name,
-          // email,
-          // ra,
-          // city,
-          // linkedIn,
-          // biography,
-          // photo
+          name: '',
+          email: '',
+          ra: '',
+          city: '',
+          linkedIn: '',
+          biography: '',
+          photo: '',
+          photoFile: '',
         }
-      }
+      };
+  },
+  methods: {
   }
 }
 </script>
@@ -105,6 +125,14 @@ export default {
 <style scoped lang="scss">
 .content {
   max-height: 100%;
+}
+
+.button {
+  margin-right: 40px;
+}
+
+.biography-input {
+  margin-top: 20px
 }
 
 .home {

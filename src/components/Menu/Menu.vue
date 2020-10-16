@@ -20,7 +20,7 @@ export default {
             this.updateitems();
         });
 
-        this.updateitems();
+        // this.updateitems();
     },
 
     methods: {
