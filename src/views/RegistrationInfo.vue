@@ -16,7 +16,56 @@
                 <Menu></Menu>
             </v-col>
             <v-col cols="8" class="medal-list">
-                info
+                <div class="box items">
+                  <div class="box__header " >
+                    Informações pessoais
+                  </div>
+
+                  <div class=" box__body">
+                    <v-text-field 
+                        v-model="name" 
+                        label="Nome completo" 
+                        :rules="rules" 
+                        hide-details="auto">
+                    </v-text-field>
+
+                    <v-text-field 
+                        v-model="email" 
+                        label="E-mail" 
+                        :rules="rules" 
+                        hide-details="auto">
+                    </v-text-field>
+
+                    <v-text-field 
+                        v-model="ra" 
+                        label="R.A" 
+                        :rules="rules" 
+                        hide-details="auto">
+                    </v-text-field>
+
+                    <v-text-field 
+                        v-model="city" 
+                        label="Cidade" 
+                        :rules="rules" 
+                        hide-details="auto">
+                    </v-text-field>
+
+                    <v-text-field 
+                        v-model="linkedIn" 
+                        label="LinkedIn" 
+                        :rules="rules" 
+                        hide-details="auto">
+                    </v-text-field>
+
+                    <v-text-field 
+                        v-model="Biography" 
+                        label="Biografia" 
+                        :rules="rules" 
+                        hide-details="auto">
+                    </v-text-field>
+                  </div>
+                   
+                </div>
             </v-col>
           </v-row>
         </div>
@@ -36,7 +85,20 @@ export default {
     Logo,
     Profile,
     Menu,
-  },
+  }, 
+  data() {
+      return {
+        user: {
+          name,
+          // email,
+          // ra,
+          // city,
+          // linkedIn,
+          // biography,
+          // photo
+        }
+      }
+  }
 }
 </script>
 

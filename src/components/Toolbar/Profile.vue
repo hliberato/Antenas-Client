@@ -7,7 +7,7 @@
                     <div class="role-info">{{ getUserRole() }}</div>
                 </div>
 
-                <div class="avatar ">
+                <div class="avatar" v-if="user.name">
                     <v-avatar size="36px">
                     <img
                         v-if="user.photo != undefined && user.photo.length > 0"
@@ -48,7 +48,7 @@ export default {
     },
     data() {
         return {
-            options_menu: ["Medalhas", "Dados Cadastrais", "Sair"]
+            options_menu: [/*"Medalhas", */"Dados Cadastrais", "Sair"]
         }
     },
     methods: {
@@ -56,6 +56,8 @@ export default {
             if (option == "Sair") {
                 this.$store.commit('LOGOUT_CURRENT_USER');
                 this.$router.push('/');
+            } else if (option == 'Dados Cadastrais') {
+                this.$router.push('/dados-cadastrais')
             }
         },
 
@@ -76,8 +78,11 @@ export default {
         },
 
         getUserInitials() {
-            let splitedName = this.user.name.split(' ')
-            return (splitedName[0].charAt(0) + splitedName[splitedName.length - 1].charAt(0)).toUpperCase()
+            if (this.user.name) {
+                let splitedName = this.user.name.split(' ')
+                return (splitedName[0].charAt(0) + splitedName[splitedName.length - 1].charAt(0)).toUpperCase()
+            }
+            return '';
         }
     }
 }
