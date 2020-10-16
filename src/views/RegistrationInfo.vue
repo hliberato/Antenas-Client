@@ -66,7 +66,7 @@
                     </v-textarea>
 
                     <v-file-input
-                      label="Foto de perfil"
+                      label="Foto do perfil"
                       chips
                       small-chips
                       truncate-length="50"
