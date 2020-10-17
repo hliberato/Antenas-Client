@@ -1,10 +1,12 @@
 <template>
 	<div class="box items">
-        <div>
-            <div class="menu-item" @click="view(1)"> Informações pessoais </div>
-            <div class="menu-item" @click="view(2)"> Informações profissionais </div>
-            <div class="menu-item" @click="view(3)"> Informações Acadêmicas </div>
-        </div>
+        <div class="menu-item" @click="view('Informações pessoais')"> Informações pessoais </div>
+        <div class="menu-item" @click="view('Informações profissionais')"> Informações profissionais </div>
+        <div class="menu-item" @click="view('Informações Acadêmicas')"> Informações Acadêmicas </div>
+        <!-- {{menu_items}}
+        <div V-for='item in menu_items' :key='item.title'>
+            <div class="menu-item" @click="view(item.title)"> {{ item.title }} </div>
+        </div> -->
 	</div>
 </template>
 
@@ -13,26 +15,20 @@ import EventBus from '@/helpers/EventBus.js'
 
 export default {
 	name: 'items',
-	components: {
+	props: {
+        menu_items: undefined
     },
-    mounted() {
-        EventBus.$on('UPDATE_item_LIST', () => {
-            this.updateitems();
-        });
-
-        // this.updateitems();
-    },
-
     methods: {
         view(item) {
-            this.item = item
+            EventBus.$emit(item)
+            console.log(item)
         }
     },
-	data() {
+    data() {
         return {
-            item: 1,
-        };
-	}
+            item: String,
+        }
+    }
 }
 </script>
 

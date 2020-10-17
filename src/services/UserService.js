@@ -65,7 +65,6 @@ export default {
             .get(`user`)
             .then(res => {
                 const user = res.data;
-                console.log('a')
 
                 return {
                     id: user.id,

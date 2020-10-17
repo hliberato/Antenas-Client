@@ -13,76 +13,15 @@
         <div class="home__wrapper">
           <v-row >
             <v-col cols="4" class="medal-list">
-                <Menu></Menu>
+                <Menu :menu_items='menu_items'/>
             </v-col>
             <v-col cols="8" class="medal-list">
-                <div class="box items">
-                  <div class="box__header " >
-                    Informações pessoais
-                  </div>
-
-                  <div class=" box__body">
-                    <v-text-field 
-                        v-model="user.name" 
-                        label="Nome completo" 
-                        hide-details="auto">
-                    </v-text-field>
-
-                    <v-text-field 
-                        v-model="user.email" 
-                        label="E-mail" 
-                        hide-details="auto">
-                    </v-text-field>
-
-                    <v-text-field 
-                        v-model="user.ra" 
-                        label="R.A" 
-                        hide-details="auto">
-                    </v-text-field>
-
-                    <v-text-field 
-                        v-model="user.city" 
-                        label="Cidade" 
-                        hide-details="auto">
-                    </v-text-field>
-
-                    <v-text-field 
-                        v-model="user.linkedIn" 
-                        label="LinkedIn" 
-                        hide-details="auto">
-                    </v-text-field>
-
-                    <v-textarea
-                        :maxlength="300"
-                        clearable
-                        counter
-                        clear-icon="cancel"
-                        v-model="user.biography"
-                        rows="4"
-                        outlined
-                        class="biography-input"
-                        label="Biografia">
-                        
-                    </v-textarea>
-
-                    <v-file-input
-                      label="Foto do perfil"
-                      chips
-                      small-chips
-                      truncate-length="50"
-                      v-model="user.photo"
-                    ></v-file-input>
-                  </div>
-
-                    <div class="row">
-                      <v-spacer></v-spacer>
-                      <v-btn small color="#4472E9" class="white--text button" type="submit">
-                        Salvar
-                      </v-btn>
-                    </div>
-                  
-                   
+              <div class="box items">
+                <div class="box__header " >
+                  {{ page_title }}
                 </div>
+                <PersonalInfo v-if="page_title == 'Informações pessoais'"/>
+              </div>
             </v-col>
           </v-row>
         </div>
@@ -95,6 +34,8 @@
 import Logo from '@/components/Logo/Logo.vue';
 import Profile from '@/components/Toolbar/Profile.vue';
 import Menu from '@/components/Menu/Menu.vue'
+import PersonalInfo from '@/components/UserInfo/PersonalInfo.vue'
+import EventBus from '@/helpers/EventBus.js'
 
 export default {
   name: 'RegistrationInfo',
@@ -102,26 +43,35 @@ export default {
     Logo,
     Profile,
     Menu,
+    PersonalInfo,
   }, 
   data() {
       return { 
-        user: {
-          name: '',
-          email: '',
-          ra: '',
-          city: '',
-          linkedIn: '',
-          biography: '',
-          photo: '',
-          photoFile: '',
-        }
+        menu_items: [ 
+          { title: 'Informações pessoais' },
+          { title: 'Informações profissionais' },
+          { title: 'Informações Acadêmicas' } 
+        ],
+        page_title: 'Informações pessoais'
       };
   },
-  methods: {
-  }
+  mounted() {
+      EventBus.$on('Informações pessoais', () => {
+        this.page_title = 'Informações pessoais';
+      });
+
+      EventBus.$on('Informações profissionais', () => {
+        this.page_title = 'Informações profissionais';
+      });
+
+      EventBus.$on('Informações Acadêmicas', () => {
+        this.page_title = 'Informações Acadêmicas';
+      });
+
+    },
 }
 </script>
-
+            
 <style scoped lang="scss">
 .content {
   max-height: 100%;
