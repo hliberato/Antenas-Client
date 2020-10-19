@@ -116,5 +116,15 @@ export default {
             }).catch(() => {
                 alert("Erro ao carregar informações do aluno")
             });
-    }
+    },
+
+    getUser() {
+        return http
+            .get(`user`)
+            .then(res => {
+                return res.data;
+            }).catch(() => {
+                alert("Erro ao carregar informações do usuario")
+            });
+    },
 };
