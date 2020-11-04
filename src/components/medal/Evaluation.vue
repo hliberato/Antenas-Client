@@ -1,89 +1,152 @@
 <template>
-    <div class="box ">
-        <div class="box__header " >
-            <div> Carro Voador </div>
+  <div class="box ">
+    <div class="box__header ">
+      <div> Carro Voador </div>
 
-            <div class="mr-2">   
-                <a href @click.prevent="leaveEvaluation()" class="close">
-                    <i class="material-icons close">close</i>
-                </a>
-            </div>
-        </div>
-
-        <v-btn small color="#4472E9" class="white--text save-button" type="submit" @click="submit()">
-            Salvar
-        </v-btn>
-        <div class="list">
-            <div v-for="team in teams" :key="team.id" :id="team.id">
-                <div class="project-view__box">
-                    <div div class="box__body project-body">
-                        <div>
-                            <div class="group-title flex-box">
-                                <v-checkbox 
-                                    :label="team.name"
-                                    hide-details
-                                    :value="team.id"
-                                    @click="selectAllTeam(team)"
-                                />
-
-                                <v-spacer></v-spacer>
-
-                                <span class="project-link link" @click="upenUrl(team.projectUrl)">
-                                    Abrir url do projeto 
-                                </span>
-                            </div>
-                        </div>
-        
-                        <div class="evaluation-form">
-                            <div class="student flex-box" v-for="studentTeam in team.studentTeamList" :key="studentTeam.id">
-                                <div >
-                                    <div class="flex-box">
-                                        <v-checkbox 
-                                            v-model="selectedStudents" 
-                                            :label="studentTeam.student.name"
-                                            hide-details
-                                            :value="studentTeam.student.id"
-                                            :id="`checkbox-${studentTeam.student.id}`"
-                                        />
-                                        <span class="student-role"> {{ studentTeam.role }} </span>
-                                    </div>
-
-                                    <div v-for="medal in studentTeam.studentMedals" :key="medal.id">
-                                        <v-img :src="medal.picture" :title="medal.name" class="medal-style" />
-                                    </div>
-                                </div>
-                                <v-spacer></v-spacer>
-                                <div>
-                                    <div class="flex-box inputs">
-                                        <div class="box-input">
-                                            <div>
-                                                <div class="input-label"> Proatividade </div>
-                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.proactivity" min="0" max="5"/>
-                                            </div>
-                                            <div> 
-                                                <div class="input-label"> Autonomia </div>
-                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.autonomy" min="0" max="5"/>
-                                            </div>
-                                        </div>
-                                        <div class="box-input">
-                                            <div>
-                                                <div class="input-label"> Colaboração </div>
-                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.collaboration" min="0" max="5"/>
-                                            </div>
-                                            <div>
-                                                <div class="input-label"> Entrega de resultado </div>
-                                                <input type="number" class="custom-input" v-model="studentTeam.evaluations.resultsDeliver" min="0" max="5"/>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div class="mr-2">
+        <a
+          href
+          class="close"
+          @click.prevent="leaveEvaluation()"
+        >
+          <i class="material-icons close">close</i>
+        </a>
+      </div>
     </div>
+
+    <v-btn
+      small
+      color="#4472E9"
+      class="white--text save-button"
+      type="submit"
+      @click="submit()"
+    >
+      Salvar
+    </v-btn>
+    <div class="list">
+      <div
+        v-for="team in teams"
+        :id="team.id"
+        :key="team.id"
+      >
+        <div class="project-view__box">
+          <div
+            div
+            class="box__body project-body"
+          >
+            <div>
+              <div class="group-title flex-box">
+                <v-checkbox
+                  :label="team.name"
+                  hide-details
+                  :value="team.id"
+                  @click="selectAllTeam(team)"
+                />
+
+                <v-spacer />
+
+                <span
+                  class="project-link link"
+                  @click="upenUrl(team.projectUrl)"
+                >
+                  Abrir url do projeto
+                </span>
+              </div>
+            </div>
+
+            <div class="evaluation-form">
+              <div
+                v-for="studentTeam in team.studentTeamList"
+                :key="studentTeam.id"
+                class="student flex-box"
+              >
+                <div>
+                  <div class="flex-box">
+                    <v-checkbox
+                      :id="`checkbox-${studentTeam.student.id}`"
+                      v-model="selectedStudents"
+                      :label="studentTeam.student.name"
+                      hide-details
+                      :value="studentTeam.student.id"
+                    />
+                    <span class="student-role"> {{ studentTeam.role }} </span>
+                  </div>
+
+                  <div
+                    v-for="medal in studentTeam.studentMedals"
+                    :key="medal.id"
+                  >
+                    <v-img
+                      :src="medal.picture"
+                      :title="medal.name"
+                      class="medal-style"
+                    />
+                  </div>
+                </div>
+                <v-spacer />
+                <div>
+                  <div class="flex-box inputs">
+                    <div class="box-input">
+                      <div>
+                        <div class="input-label">
+                          Proatividade
+                        </div>
+                        <input
+                          v-model="studentTeam.evaluations.proactivity"
+                          type="number"
+                          class="custom-input"
+                          min="0"
+                          max="5"
+                        >
+                      </div>
+                      <div>
+                        <div class="input-label">
+                          Autonomia
+                        </div>
+                        <input
+                          v-model="studentTeam.evaluations.autonomy"
+                          type="number"
+                          class="custom-input"
+                          min="0"
+                          max="5"
+                        >
+                      </div>
+                    </div>
+                    <div class="box-input">
+                      <div>
+                        <div class="input-label">
+                          Colaboração
+                        </div>
+                        <input
+                          v-model="studentTeam.evaluations.collaboration"
+                          type="number"
+                          class="custom-input"
+                          min="0"
+                          max="5"
+                        >
+                      </div>
+                      <div>
+                        <div class="input-label">
+                          Entrega de resultado
+                        </div>
+                        <input
+                          v-model="studentTeam.evaluations.resultsDeliver"
+                          type="number"
+                          class="custom-input"
+                          min="0"
+                          max="5"
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -92,65 +155,67 @@ import EventBus from '@/helpers/EventBus.js'
 import $ from 'jQuery'
 
 export default {
-    name: 'evaluation',
-	props: {
-        projectId: Number,
-    },
-    mounted() {
-        TeamService.getTeam(this.projectId)
-            .then(teams => { 
-                this.teams = teams;
-                this.teams.forEach((team) => {
-                    team.studentTeamList.forEach((studentTeam) => {
-                        studentTeam.evaluations = {
-                        proactivity: "",
-                        resultsDeliver: "",
-                        autonomy: "",
-                        collaboration: ""
-                        };
-                    })
-                })
-            })
-
-    },
-    methods: {
-        leaveEvaluation() {
-            EventBus.$emit('EVALUATE_STUDENTS');
-        },
-
-        selectAllTeam(team) {
-            team.studentTeamList.forEach(studentTeam => {
-                $(`#checkbox-${studentTeam.student.id}`).click();
-            })
-        },
-
-        upenUrl(url) {
-            if (url) {
-                window.open(url)
+  name: 'Evaluation',
+  props: {
+    projectId: {
+      type: Number,
+      default: 0
+    }
+  },
+  data () {
+    return {
+      proactivity: '',
+      teams: [],
+      pic: '',
+      selectedStudents: []
+    }
+  },
+  mounted () {
+    TeamService.getTeam(this.projectId)
+      .then(teams => {
+        this.teams = teams
+        this.teams.forEach((team) => {
+          team.studentTeamList.forEach((studentTeam) => {
+            studentTeam.evaluations = {
+              proactivity: '',
+              resultsDeliver: '',
+              autonomy: '',
+              collaboration: ''
             }
-        },
-
-        submit() {
-            let updatedTeam = this.teams;
-            updatedTeam.forEach((team) => {
-                team.studentTeamList.forEach((studentTeam) => {
-                    studentTeam.evaluations = [studentTeam.evaluations]
-                })
-            })
-
-            updatedTeam.forEach((team) => {
-                TeamService.updateTeam(team)
-            })
-        },
+          })
+        })
+      })
+  },
+  methods: {
+    leaveEvaluation () {
+      EventBus.$emit('EVALUATE_STUDENTS')
     },
-	data() {
-		return {
-            proactivity: '',
-            teams: [],
-            pic: '',
-            selectedStudents: [],
-        };
-	}
+
+    selectAllTeam (team) {
+      team.studentTeamList.forEach(studentTeam => {
+        $(`#checkbox-${studentTeam.student.id}`).click()
+      })
+    },
+
+    upenUrl (url) {
+      if (url) {
+        window.open(url)
+      }
+    },
+
+    submit () {
+      const updatedTeam = this.teams
+      updatedTeam.forEach((team) => {
+        team.studentTeamList.forEach((studentTeam) => {
+          studentTeam.evaluations = [studentTeam.evaluations]
+        })
+      })
+
+      updatedTeam.forEach((team) => {
+        TeamService.updateTeam(team)
+      })
+    }
+  }
 }
 </script>
 
@@ -252,7 +317,7 @@ textarea:focus, input:focus{
     color: blue;
     cursor: pointer;
     padding-top: 4%;
-    
+
 }
 
 .close {

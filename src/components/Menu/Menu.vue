@@ -1,34 +1,52 @@
 <template>
-	<div class="box items">
-        <div class="menu-item" @click="view('Informações pessoais')"> Informações pessoais </div>
-        <div class="menu-item" @click="view('Informações profissionais')"> Informações profissionais </div>
-        <div class="menu-item" @click="view('Informações Acadêmicas')"> Informações Acadêmicas </div>
-        <!-- {{menu_items}}
-        <div V-for='item in menu_items' :key='item.title'>
+  <div class="box items">
+    <div
+      class="menu-item"
+      @click="view('Informações pessoais')"
+    >
+      Informações pessoais
+    </div>
+    <div
+      class="menu-item"
+      @click="view('Informações profissionais')"
+    >
+      Informações profissionais
+    </div>
+    <div
+      class="menu-item"
+      @click="view('Informações Acadêmicas')"
+    >
+      Informações Acadêmicas
+    </div>
+    <!-- {{menuItems}}
+        <div V-for='item in menuItems' :key='item.title'>
             <div class="menu-item" @click="view(item.title)"> {{ item.title }} </div>
         </div> -->
-	</div>
+  </div>
 </template>
 
 <script>
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-	name: 'items',
-	props: {
-        menu_items: undefined
-    },
-    methods: {
-        view(item) {
-            EventBus.$emit(item)
-            console.log(item)
-        }
-    },
-    data() {
-        return {
-            item: String,
-        }
+  name: 'Items',
+  props: {
+    menuItems: {
+      type: Array,
+      default: () => []
     }
+  },
+  data () {
+    return {
+      item: String
+    }
+  },
+  methods: {
+    view (item) {
+      EventBus.$emit(item)
+      console.log(item)
+    }
+  }
 }
 </script>
 

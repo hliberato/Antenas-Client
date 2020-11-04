@@ -1,88 +1,92 @@
 <template>
-    <div>
-        <div class=" box__body">
-            <v-text-field 
-                v-model="user.name" 
-                label="Nome completo" 
-                hide-details="auto">
-            </v-text-field>
+  <div>
+    <div class=" box__body">
+      <v-text-field
+        v-model="user.name"
+        label="Nome completo"
+        hide-details="auto"
+      />
 
-            <v-text-field 
-                v-model="user.email" 
-                label="E-mail" 
-                hide-details="auto">
-            </v-text-field>
+      <v-text-field
+        v-model="user.email"
+        label="E-mail"
+        hide-details="auto"
+      />
 
-            <v-text-field 
-                v-model="user.ra" 
-                label="R.A" 
-                hide-details="auto">
-            </v-text-field>
+      <v-text-field
+        v-model="user.ra"
+        label="R.A"
+        hide-details="auto"
+      />
 
-            <v-text-field 
-                v-model="user.city" 
-                label="Cidade" 
-                hide-details="auto">
-            </v-text-field>
+      <v-text-field
+        v-model="user.city"
+        label="Cidade"
+        hide-details="auto"
+      />
 
-            <v-text-field 
-                v-model="user.linkedIn" 
-                label="LinkedIn" 
-                hide-details="auto">
-            </v-text-field>
+      <v-text-field
+        v-model="user.linkedIn"
+        label="LinkedIn"
+        hide-details="auto"
+      />
 
-            <v-textarea
-                :maxlength="300"
-                clearable
-                counter
-                clear-icon="cancel"
-                v-model="user.biography"
-                rows="4"
-                outlined
-                class="biography-input"
-                label="Biografia">
-                
-            </v-textarea>
+      <v-textarea
+        v-model="user.biography"
+        :maxlength="300"
+        clearable
+        counter
+        clear-icon="cancel"
+        rows="4"
+        outlined
+        class="biography-input"
+        label="Biografia"
+      />
 
-            <v-file-input
-                label="Foto do perfil"
-                chips
-                small-chips
-                truncate-length="50"
-                v-model="user.photo"
-            ></v-file-input>
-        </div>
-        <div class="row">
-            <v-spacer></v-spacer>
-            <v-btn small color="#4472E9" class="white--text button" type="submit">
-                Salvar
-            </v-btn>
-        </div>
+      <v-file-input
+        v-model="user.photo"
+        label="Foto do perfil"
+        chips
+        small-chips
+        truncate-length="50"
+      />
     </div>
+    <div class="row">
+      <v-spacer />
+      <v-btn
+        small
+        color="#4472E9"
+        class="white--text button"
+        type="submit"
+      >
+        Salvar
+      </v-btn>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'PersonalInfo',
   components: {
-  }, 
-  data() {
-      return { 
-        user: {
-          name: '',
-          email: '',
-          ra: '',
-          city: '',
-          linkedIn: '',
-          biography: '',
-          photo: null,
-          photoFile: null,
-        },
-      };
   },
+  data () {
+    return {
+      user: {
+        name: '',
+        email: '',
+        ra: '',
+        city: '',
+        linkedIn: '',
+        biography: '',
+        photo: null,
+        photoFile: null
+      }
+    }
+  }
 }
 </script>
-            
+
 <style scoped lang="scss">
 .content {
   max-height: 100%;

@@ -1,61 +1,75 @@
 <template>
-	<div class="box medal">
-        <div class="box__header">
-            <h4 class="text-title">Medalhas</h4>
-            <div class="actions">
-                <v-btn small color="#4472E9" class="white--text" >
-                    Criar
-                </v-btn>
-            </div>
-        </div>
+  <div class="box medal">
+    <div class="box__header">
+      <h4 class="text-title">
+        Medalhas
+      </h4>
+      <div class="actions">
+        <v-btn
+          small
+          color="#4472E9"
+          class="white--text"
+        >
+          Criar
+        </v-btn>
+      </div>
+    </div>
 
-        <div class="flex-box search">
-            <v-text-field 
-                class="mb-1"
-                label="Buscar"
-                hide-details
-                v-model="searchTerm"/>
-            <span class="material-icons"> search </span>
-        </div>
+    <div class="flex-box search">
+      <v-text-field
+        v-model="searchTerm"
+        class="mb-1"
+        label="Buscar"
+        hide-details
+      />
+      <span class="material-icons"> search </span>
+    </div>
 
-        <ul class="box__body box__body--no-horizontal-padding medal__list">
-            <li class="medal__item" v-for="medal in medals" :key="medal.id">
-                <a class="medal__item-content">
-                    <medal :medal="medal" @click="assignMedal(medal)"/>
-                </a>
-            </li>
-        </ul>
-	</div>
+    <ul class="box__body box__body--no-horizontal-padding medal__list">
+      <li
+        v-for="medal in medals"
+        :key="medal.id"
+        class="medal__item"
+      >
+        <a class="medal__item-content">
+          <medal
+            :medal="medal"
+            @click="assignMedal(medal)"
+          />
+        </a>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script>
-import Medal from './Medal' 
+import Medal from './Medal'
 import MedalService from '@/services/MedalService.js'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-	name: 'medal-list',
-	components: {
-        Medal
-    },
-    mounted() {
-        MedalService
-            .getMedals().then(res => {
-                this.medals = res;
-            })
-    },
+  name: 'MedalList',
+  components: {
+    Medal
+  },
+  data () {
+    return {
+      searchTerm: '',
+      medals: []
+    }
+  },
+  mounted () {
+    MedalService
+      .getMedals().then(res => {
+        this.medals = res
+      })
+  },
 
-    methods: {
-        assignMedal(medal) {
-            EventBus.$emit('ASSIGN_MEDAL', medal);
-        }
-    },
-	data() {
-		return {
-            searchTerm: '',
-            medals: [],
-        };
-	}
+  methods: {
+    assignMedal (medal) {
+      EventBus.$emit('ASSIGN_MEDAL', medal)
+    }
+  }
 }
 </script>
 
@@ -96,7 +110,6 @@ export default {
             flex-direction: column;
             margin-left: 17px;
             min-width: 90%;
-
 
             .text-title {
                 color: #0084E3;

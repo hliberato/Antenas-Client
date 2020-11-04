@@ -1,90 +1,107 @@
 <template>
-    <a class="profile">
-        <div class="profile__info">
-            <v-row>
-                <div>
-                    <div class="profile__name">{{ user.name }}</div>
-                    <div class="role-info">{{ getUserRole() }}</div>
-                </div>
-
-                <div class="avatar" v-if="user.name">
-                    <v-avatar size="36px">
-                    <img
-                        v-if="user.photo != undefined && user.photo.length > 0"
-                        alt="Avatar"
-                        :src="getUserPhoto()"
-                    >
-                    <div v-else >
-                        {{ getUserInitials() }}
-                    </div>
-                </v-avatar>
-                </div>
-
-                <v-menu origin="center center" transition="scale-transition" bottom offset-y >
-                    <template v-slot:activator="{ on, attrs }">
-                    <v-btn class="white--text" icon v-bind="attrs" v-on="on">
-                        <v-app-bar-nav-icon></v-app-bar-nav-icon>
-                    </v-btn>
-                    </template>
-
-                    <v-list>
-                        <v-list-item v-for="option in options_menu" :key="option" @click="click(option)" >
-                            <v-list-item-title>{{ option }}</v-list-item-title>
-                        </v-list-item>
-                    </v-list>
-                </v-menu>
-            </v-row>
+  <a class="profile">
+    <div class="profile__info">
+      <v-row>
+        <div>
+          <div class="profile__name">{{ user.name }}</div>
+          <div class="role-info">{{ getUserRole() }}</div>
         </div>
-    </a>
+
+        <div
+          v-if="user.name"
+          class="avatar"
+        >
+          <v-avatar size="36px">
+            <img
+              v-if="user.photo != undefined && user.photo.length > 0"
+              alt="Avatar"
+              :src="getUserPhoto()"
+            >
+            <div v-else>
+              {{ getUserInitials() }}
+            </div>
+          </v-avatar>
+        </div>
+
+        <v-menu
+          origin="center center"
+          transition="scale-transition"
+          bottom
+          offset-y
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              class="white--text"
+              icon
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-app-bar-nav-icon />
+            </v-btn>
+          </template>
+
+          <v-list>
+            <v-list-item
+              v-for="option in options_menu"
+              :key="option"
+              @click="click(option)"
+            >
+              <v-list-item-title>{{ option }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </v-row>
+    </div>
+  </a>
 </template>
 
 <script>
 export default {
-    name: 'Profile',
-    computed: {
-        user() {
-            return this.$store.state.user;
-        }
-    },
-    data() {
-        return {
-            options_menu: [/*"Medalhas", */"Dados Cadastrais", "Sair"]
-        }
-    },
-    methods: {
-        click(option) {
-            if (option == "Sair") {
-                this.$store.commit('LOGOUT_CURRENT_USER');
-                this.$router.push('/');
-            } else if (option == 'Dados Cadastrais') {
-                this.$router.push('/dados-cadastrais')
-            }
-        },
-
-        getUserPhoto() {
-            return this.user.photo;
-        },
-
-        getUserRole() {
-            if (this.$store.getters.isCadi) {
-                return "CADI"
-            } else if (this.$store.getters.isRepresentative) {
-                return "Representante"
-            } else if (this.$store.getters.isTeacher) {
-                return "Professor"
-            } else if (this.$store.getters.isStudent){
-                return "Aluno"
-            }
-        },
-
-        getUserInitials() {
-            if (this.user.name) {
-                let splitedName = this.user.name.split(' ')
-                return (splitedName[0].charAt(0) + splitedName[splitedName.length - 1].charAt(0)).toUpperCase()
-            }
-            return '';
-        }
+  name: 'Profile',
+  data () {
+    return {
+      options_menu: [/* "Medalhas", */'Dados Cadastrais', 'Sair']
     }
+  },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
+  methods: {
+    click (option) {
+      if (option === 'Sair') {
+        this.$store.commit('LOGOUT_CURRENT_USER')
+        this.$router.push('/')
+      } else if (option === 'Dados Cadastrais') {
+        this.$router.push('/dados-cadastrais')
+      }
+    },
+
+    getUserPhoto () {
+      return this.user.photo
+    },
+
+    getUserRole () {
+      if (this.$store.getters.isCadi) {
+        return 'CADI'
+      } else if (this.$store.getters.isRepresentative) {
+        return 'Representante'
+      } else if (this.$store.getters.isTeacher) {
+        return 'Professor'
+      } else if (this.$store.getters.isStudent) {
+        return 'Aluno'
+      }
+    },
+
+    getUserInitials () {
+      if (this.user.name) {
+        const splitedName = this.user.name.split(' ')
+        return (splitedName[0].charAt(0) + splitedName[splitedName.length - 1].charAt(0)).toUpperCase()
+      }
+      return ''
+    }
+  }
 }
 </script>
 
