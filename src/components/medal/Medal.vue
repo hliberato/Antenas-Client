@@ -1,26 +1,39 @@
 <template>
-    <div class="medal-box flex-box">
-        <div class="flex-box">
-            <v-img :src="medal.picture" class="medal-style" />
+  <div class="medal-box flex-box">
+    <div class="flex-box">
+      <v-img
+        :src="medal.picture"
+        class="medal-style"
+      />
 
-            <div class="medal-info">
-                <div class="medal-name"> {{ medal.name }}</div>
-                <div class="medal-description"> {{ medal.description }}</div>
-            </div>
+      <div class="medal-info">
+        <div class="medal-name">
+          {{ medal.name }}
         </div>
-
-        
-        <div class="medal-date-box" v-if="medal.achieveDate">
-            <div class="flex-box">
-                <span class="material-icons icon"> check_circle_outline </span>
-                <div>
-                    <div class="medal-date">Conquista </div>
-                    <div class="medal-date">10/02/2020</div>
-                </div>
-            </div>
+        <div class="medal-description">
+          {{ medal.description }}
         </div>
+      </div>
+    </div>
 
-        <!-- <div class="medal-date-box" v-else>
+    <div
+      v-if="medal.achieveDate"
+      class="medal-date-box"
+    >
+      <div class="flex-box">
+        <span class="material-icons icon"> check_circle_outline </span>
+        <div>
+          <div class="medal-date">
+            Conquista
+          </div>
+          <div class="medal-date">
+            10/02/2020
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="medal-date-box" v-else>
             <div class="flex-box">
                 <div>
                     <div class="medal-date">Criada dia </div>
@@ -28,20 +41,23 @@
                 </div>
             </div>
         </div> -->
-    </div>
+  </div>
 </template>
 
 <script>
 export default {
-    name: 'medal',
-    props: {
-        medal: [],
-    },
-    computed: {
-        getSource() {
-            return "@/assets/images/business_deal.svg";
-        }
-    },
+  name: 'Medal',
+  props: {
+    medal: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  computed: {
+    getSource () {
+      return '@/assets/images/business_deal.svg'
+    }
+  }
 }
 </script>
 

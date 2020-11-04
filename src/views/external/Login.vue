@@ -1,39 +1,54 @@
 <template>
-<div class="landing">
+  <div class="landing">
     <div class="landing__wrapper">
       <header class="landing__header">
-            <Logo variant="blue" />
-            <div class="actions">
+        <Logo variant="blue" />
+        <div class="actions">
+          <v-btn
+            small
+            color="#4472E9"
+            class="mr-5 white--text"
+            @click="goSignUp()"
+          >
+            Cadastrar
+          </v-btn>
 
-                <v-btn small color="#4472E9" @click="goSignUp()" class="white--text mr-5" >Cadastrar</v-btn>
-
-                <v-btn small color="white" @click="goLogin()" class="custom-blue--text">Entrar</v-btn>
-
-            </div>
-        </header>
-
-        <v-alert type="success" v-if="showError" @errorEvent="errorEvent">
-            {{ message }}
-        </v-alert>
-
-        <div class="landing__body">
-            <div class="landing__info">
-                <h3 class="title">
-                    <span>Conectando</span>
-                    <span class="big">
-                        os <strong class="strong">melhores alunos</strong>
-                    </span>
-                    <span class="big">
-                        às <strong class="strong">melhores empresas</strong>
-                    </span>
-                </h3>
-
-                <img class="illustration" src="@/assets/images/business_deal.svg" alt="Pessoas fazendo negócio">
-            </div>
-            <LoginForm :signUp="signUp" class="landing__login" />
+          <v-btn
+            small
+            color="white"
+            class="custom-blue--text"
+            @click="goLogin()"
+          >
+            Entrar
+          </v-btn>
         </div>
+      </header>
+
+      <div class="landing__body">
+        <div class="landing__info">
+          <h3 class="title">
+            <span>Conectando</span>
+            <span class="big">
+              os <strong class="strong">melhores alunos</strong>
+            </span>
+            <span class="big">
+              às <strong class="strong">melhores empresas</strong>
+            </span>
+          </h3>
+
+          <img
+            class="illustration"
+            src="@/assets/images/business_deal.svg"
+            alt="Pessoas fazendo negócio"
+          >
+        </div>
+        <LoginForm
+          :sign-up="signUp"
+          class="landing__login"
+        />
+      </div>
     </div>
-</div>
+  </div>
 </template>
 
 <script>
@@ -43,26 +58,21 @@ import LoginForm from '@/components/Auth/LoginForm.vue'
 export default {
   name: 'Landing',
   components: {
-      Logo,
-      LoginForm,
+    Logo,
+    LoginForm
   },
-  data() {
-      return {
-          signUp: true,
-          showError: false,
-          showSuccess: false,
-      };
+  data () {
+    return {
+      signUp: true
+    }
   },
   methods: {
-      goLogin() {
-          this.signUp = false;
-      },
-      goSignUp() {
-          this.signUp = true;
-      },
-      errorEvent() {
-          this.showError = true;
-      }
+    goLogin () {
+      this.signUp = false
+    },
+    goSignUp () {
+      this.signUp = true
+    }
   }
 }
 </script>
@@ -114,7 +124,7 @@ export default {
             line-height: 2em;
             font-size: 24px;
             font-weight: 300;
-            
+
             strong {
                 font-weight: 300;
                 color: #4472E9;

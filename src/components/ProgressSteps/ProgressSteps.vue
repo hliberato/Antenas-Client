@@ -1,41 +1,53 @@
 <template>
   <div class="root">
-     <div class="container">
-          <ul class="progressbar">
-            <li v-for="i in length" :key="i" :class="getClass(i, progress)" :title="tips[i - 1]">
-            </li>
-          </ul>
-      </div>
+    <div class="container">
+      <ul class="progressbar">
+        <li
+          v-for="i in length"
+          :key="i"
+          :class="getClass(i, progress)"
+          :title="tips[i - 1]"
+        />
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-    export default {
-        name: 'progressStep',
-        props: [
-            'length',
-            'progress',
-            'tips'
-        ],
-        components: {
-        },
-        data() {
-            return { };
-        },
-        methods: {
-            getClass(i, progress) {
-                if (i == progress) {
-                    return 'last-active';
-                } else if (i < progress) {
-                    return 'active';
-                } else {
-                    return '';
-                }
-            }
-        }
+export default {
+  name: 'ProgressStep',
+  components: {
+  },
+  props: {
+    length: {
+      type: Number,
+      default: 0
+    },
+    progress: {
+      type: Number,
+      default: 0
+    },
+    tips: {
+      type: Array,
+      default: () => []
     }
+  },
+  data () {
+    return { }
+  },
+  methods: {
+    getClass (i, progress) {
+      if (i === progress) {
+        return 'last-active'
+      } else if (i < progress) {
+        return 'active'
+      } else {
+        return ''
+      }
+    }
+  }
+}
 </script>
-
 
 <style lang="scss" scoped>
     .container{
@@ -116,7 +128,6 @@
     .progressbar li.last-active-li:after {
         background: #4472E9;
     }
-
 
     .progressbar li.active-li:before {
         border-color: #3aac5d;

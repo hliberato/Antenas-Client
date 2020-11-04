@@ -1,34 +1,37 @@
 <template>
-    <ul class="timeline">
-        <li 
-            class="timeline__phase" 
-            :class="{ 'timeline__phase--active': phase == progress }" 
-            v-for="(currentPhase, phase) in phases" 
-            :key="`phase-${phase}`">
-
-            <span>{{ phase }}. {{ currentPhase }}</span>
-        </li>
-    </ul>
+  <ul class="timeline">
+    <li
+      v-for="(currentPhase, phase) in phases"
+      :key="`phase-${phase}`"
+      class="timeline__phase"
+      :class="{ 'timeline__phase--active': phase == progress }"
+    >
+      <span>{{ phase }}. {{ currentPhase }}</span>
+    </li>
+  </ul>
 </template>
 
 <script>
 
 export default {
-    name: 'Timeline',
-    props: {
-        progress: Number
-    },
-    computed: {
-        phases() {
-            return this.$store.state.phases;
-        }
-    },
-    data() {
-        return { };
-    },
-    methods: {
-    
+  name: 'Timeline',
+  props: {
+    progress: {
+      type: Number,
+      default: 0
     }
+  },
+  data () {
+    return { }
+  },
+  computed: {
+    phases () {
+      return this.$store.state.phases
+    }
+  },
+  methods: {
+
+  }
 }
 </script>
 

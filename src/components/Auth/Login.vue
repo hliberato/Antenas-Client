@@ -1,43 +1,42 @@
 <template>
-    <v-container class="login-form">
-        <v-select
-            :items="roles"
-            label="Tipo de perfil"
-            :rules="rules">
-        </v-select>
-    </v-container>
+  <v-container class="login-form">
+    <v-select
+      :items="roles"
+      label="Tipo de perfil"
+      :rules="rules"
+    />
+  </v-container>
 </template>
 
 <script>
 export default {
-    name: 'Login',
-    props: {
-        signUp: Boolean
-    },
-    components: {
-    },
-    data() {
-        return {
-            justSignedUp: false,
-            email: '',
-            name: '',
-            password: '',
-            cpf: '',
-            ra: '',
-            city: '',
-            company: '',
-            telephone: '',
-            role: '',
-            roles: [ 'Aluno', 'Professor', 'Representante', 'CADI' ],
-            rules: [
-                value => !!value || 'Selecione uma opção.',
-                // value => (value && value.length >= 3) || 'Min 3 characters',
-            ],
-        };
-    },
+  name: 'Login',
+  components: {
+  },
+  props: {
+    signUp: Boolean
+  },
+  data () {
+    return {
+      justSignedUp: false,
+      email: '',
+      name: '',
+      password: '',
+      cpf: '',
+      ra: '',
+      city: '',
+      company: '',
+      telephone: '',
+      role: '',
+      roles: ['Aluno', 'Professor', 'Representante', 'CADI'],
+      rules: [
+        value => !!value || 'Selecione uma opção.'
+        // value => (value && value.length >= 3) || 'Min 3 characters',
+      ]
+    }
+  }
 }
 </script>
-
 
 <style lang="scss" scoped>
     .login-form {

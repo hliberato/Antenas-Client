@@ -1,26 +1,26 @@
 <template>
-    <div class="logo" :class="`logo--${ variant }`">
-        <h1 class="logo-title">Antenas</h1>
-        <h2 class="logo-subtitle">
-            Um projeto FATEC
-        </h2>
-    </div>
+  <div
+    class="logo"
+    :class="`logo--${ variant }`"
+  >
+    <h1 class="logo-title">
+      Antenas
+    </h1>
+    <h2 class="logo-subtitle">
+      Um projeto FATEC
+    </h2>
+  </div>
 </template>
 
 <script>
-import "@/scss/_reset.scss";
-import "@/scss/_variables.scss";
-import "@/scss/_functions.scss";
-import "@/scss/_fonts.scss";
-import "@/scss/_global.scss";
-import "@/scss/_icons.scss";
-import "@/scss/_box.scss";
-
 export default {
-    name: 'Logo',
-    props: {
-        variant: String
+  name: 'Logo',
+  props: {
+    variant: {
+      type: String,
+      default: ''
     }
+  }
 }
 </script>
 

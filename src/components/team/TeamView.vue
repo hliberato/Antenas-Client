@@ -1,363 +1,423 @@
 <template>
-    <div class="box-team">
-        <div v-if="teams.length == 0">
-            <v-alert
-                outlined
-                color="red"
-                v-if="!$store.getters.isStudent"
-            >
-                <div class="warning-stye">
-                    Não há equipes cadastradas neste projeto.
-                </div>
-            </v-alert>
-
-            <v-alert
-                outlined
-                type="warning"
-                prominent
-                border="left"
-                v-if="$store.getters.isStudent && teams.length == 0 && !createTeam"
-            >
-                <span class="text-button" @click="createTeam = !createTeam"> Crie uma equipe </span> ou aguarde até ser convidado para uma.
-            </v-alert>
+  <div class="box-team">
+    <div v-if="teams.length == 0">
+      <v-alert
+        v-if="!$store.getters.isStudent"
+        outlined
+        color="red"
+      >
+        <div class="warning-stye">
+          Não há equipes cadastradas neste projeto.
         </div>
+      </v-alert>
 
-        <div v-if="createTeam">
-            <div class="flex-box">
-                <v-text-field 
-                    class="mr-3"
-                    v-model="teamName"  
-                    label="Nome da equipe" 
-                    hide-details="auto"/>
-
-                <v-select
-                    :items="roles"
-                    :item-text="'label'"
-                    :item-value="'value'"
-                    label="Sua função no projeto"
-                    v-model="role"/>
-            </div>
-            
-            <v-row class="button-position ml-65p" >
-                <v-col cols="6" class="ml-0">
-                    <v-btn 
-                        small 
-                        color="#4472E9"
-                        class="white--text" 
-                        type="button"  
-                        @click="submit()">
-                        <v-icon left>save</v-icon>
-                        Criar
-                    </v-btn>
-                </v-col>
-                
-                <v-col cols="6">
-                    <v-btn 
-                        small 
-                        color="#DD2C2C" 
-                        type="button" 
-                        class="white--text" 
-                        @click="createTeam = !createTeam" 
-                    >
-                        <v-icon left>close</v-icon>
-                        Cancelar
-                    </v-btn>
-                </v-col>
-            </v-row>
-        </div>
-
-        <v-expansion-panels 
-            v-for="team in teams" 
-            :key="team.id"
-            :disabled="false"
-            multiple
-        >
-            <v-expansion-panel :aria-expanded="$store.getters.isStudent">
-                <v-expansion-panel-header class="team-view__title">
-                    <v-row>
-                        <h5> {{ team.name }} </h5>
-                    </v-row>
-                </v-expansion-panel-header>
-
-                <v-expansion-panel-content class="team-view" >
-                    <div class="student-flex-box">
-                        <div v-for="member in team.studentTeamList" :key="member.id" class="team-member">
-                            <div class="student-flex-box">
-                                <div>
-                                    <div class="member-name"> {{ member.student.name }} </div>
-                                    <div class="role-view"> {{ member.role }} </div>
-                                </div>
-
-                                <a @click.prevent="removeStudent(member.student.id)" v-if="$store.getters.isStudent"> 
-                                    <i class="material-icons material-icons-padding">close</i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>    
-                    <div v-if="$store.getters.isStudent"> 
-                        <v-row>
-                            <v-col cols="11">
-                                <v-text-field 
-                                    v-model="team.communicationLink" 
-                                    label="Link de comunicação" 
-                                    :rules="rules.link"
-                                    append-icon="link"
-                                    hide-details="auto">
-                                </v-text-field>
-                            </v-col>
-
-                            <v-col cols="1" class="save-button">
-                                <span 
-                                    class="material-icons material-icons-p25 pointer " 
-                                    v-if="$store.getters.isStudent"
-                                    @click="saveLink(team, team.communicationLink)"> 
-                                    save 
-                                </span>
-                            </v-col>
-                        </v-row>
-
-                        <v-row>
-                            <v-col cols="11">
-                                <v-text-field 
-                                    v-model="team.projectUrl" 
-                                    label="Link do projeto" 
-                                    append-icon="link"
-                                    :rules="rules.link"
-                                    hide-details="auto">
-                                </v-text-field>
-                            </v-col>
-
-                            <v-col cols="1" class="save-button">
-                                <span 
-                                    class="material-icons material-icons-p25 pointer " 
-                                    v-if="$store.getters.isStudent"
-                                    @click="saveLink(team, team.projectUrl)"> 
-                                    save 
-                                </span>
-                            </v-col>
-                        </v-row>
-                    </div>
-
-                    <div v-else>
-                        <div>
-                            <div class="link-title">
-                                Link de comunicação
-                            </div>
-                            <div class="link-view flex-box" @click="upenUrl(team.communicationLink)">
-                                <span>
-                                    {{ getLink(team.communicationLink)}}
-                                </span>
-                                
-                                <div class="spacer"></div>
-                                <span class="material-icons"> link </span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="link-title">
-                                Link do projeto
-                            </div>
-                            <div class="link-view flex-box" @click="upenUrl(team.projectUrl)">
-                                <span>
-                                    {{ getLink(team.projectUrl)}}
-                                </span>
-                                
-                                <div class="spacer"></div>
-                                <span class="material-icons"> link </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div v-if="$store.getters.isStudent" class="add-member">
-                        <div class="my-2">
-                            <v-btn text color="primary" @click="addMember = !addMember">
-                                <v-icon left>person_add</v-icon> Adicionar novo membro
-                            </v-btn>
-                        </div>
-
-                        <v-row v-if="addMember">
-                            <v-col cols="6">
-                                <v-select
-                                    :items="getSudentOptions()"
-                                    label="Nome"
-                                    :item-text="'label'"
-                                    :item-value="'value'"
-                                    v-model="newTeamMember">
-                                </v-select>
-                            </v-col>
-                            
-                            <v-col cols="6">
-                                <v-select
-                                    :items="roles"
-                                    :item-text="'label'"
-                                    :item-value="'value'"
-                                    label="Função"
-                                    v-model="role">
-                                </v-select>
-                            </v-col>
-                        </v-row>
-                        
-                        <v-row class="button-position" v-if="addMember">
-                            <v-col cols="6" class="ml-0">
-                                <v-btn 
-                                    small 
-                                    color="#4472E9"
-                                    class="white--text " 
-                                    type="button"  
-                                    @click="submit(team)">
-                                    <v-icon left>save</v-icon>
-                                    Salvar
-                                </v-btn>
-                            </v-col>
-                            
-                            <v-col cols="6">
-                                <v-btn 
-                                    small 
-                                    color="#DD2C2C" 
-                                    type="button" 
-                                    class="white--text pl-30" 
-                                    @click="addMember = !addMember" 
-                                >
-                                    <v-icon left>close</v-icon>
-                                    Cancelar
-                                </v-btn>
-                            </v-col>
-                        </v-row>
-                    </div>
-                </v-expansion-panel-content>
-            </v-expansion-panel>
-        </v-expansion-panels>
+      <v-alert
+        v-if="$store.getters.isStudent && teams.length == 0 && !createTeam"
+        outlined
+        type="warning"
+        prominent
+        border="left"
+      >
+        <span
+          class="text-button"
+          @click="createTeam = !createTeam"
+        > Crie uma equipe </span> ou aguarde até ser convidado para uma.
+      </v-alert>
     </div>
+
+    <div v-if="createTeam">
+      <div class="flex-box">
+        <v-text-field
+          v-model="teamName"
+          class="mr-3"
+          label="Nome da equipe"
+          hide-details="auto"
+        />
+
+        <v-select
+          v-model="role"
+          :items="roles"
+          :item-text="'label'"
+          :item-value="'value'"
+          label="Sua função no projeto"
+        />
+      </div>
+
+      <v-row class="button-position ml-65p">
+        <v-col
+          cols="6"
+          class="ml-0"
+        >
+          <v-btn
+            small
+            color="#4472E9"
+            class="white--text"
+            type="button"
+            @click="submit()"
+          >
+            <v-icon left>
+              save
+            </v-icon>
+            Criar
+          </v-btn>
+        </v-col>
+
+        <v-col cols="6">
+          <v-btn
+            small
+            color="#DD2C2C"
+            type="button"
+            class="white--text"
+            @click="createTeam = !createTeam"
+          >
+            <v-icon left>
+              close
+            </v-icon>
+            Cancelar
+          </v-btn>
+        </v-col>
+      </v-row>
+    </div>
+
+    <v-expansion-panels
+      v-for="team in teams"
+      :key="team.id"
+      :disabled="false"
+      multiple
+    >
+      <v-expansion-panel :aria-expanded="$store.getters.isStudent">
+        <v-expansion-panel-header class="team-view__title">
+          <v-row>
+            <h5> {{ team.name }} </h5>
+          </v-row>
+        </v-expansion-panel-header>
+
+        <v-expansion-panel-content class="team-view">
+          <div class="student-flex-box">
+            <div
+              v-for="member in team.studentTeamList"
+              :key="member.id"
+              class="team-member"
+            >
+              <div class="student-flex-box">
+                <div>
+                  <div class="member-name">
+                    {{ member.student.name }}
+                  </div>
+                  <div class="role-view">
+                    {{ member.role }}
+                  </div>
+                </div>
+
+                <a
+                  v-if="$store.getters.isStudent"
+                  @click.prevent="removeStudent(member.student.id)"
+                >
+                  <i class="material-icons material-icons-padding">close</i>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div v-if="$store.getters.isStudent">
+            <v-row>
+              <v-col cols="11">
+                <v-text-field
+                  v-model="team.communicationLink"
+                  label="Link de comunicação"
+                  :rules="rules.link"
+                  append-icon="link"
+                  hide-details="auto"
+                />
+              </v-col>
+
+              <v-col
+                cols="1"
+                class="save-button"
+              >
+                <span
+                  v-if="$store.getters.isStudent"
+                  class="material-icons material-icons-p25 pointer "
+                  @click="saveLink(team, team.communicationLink)"
+                >
+                  save
+                </span>
+              </v-col>
+            </v-row>
+
+            <v-row>
+              <v-col cols="11">
+                <v-text-field
+                  v-model="team.projectUrl"
+                  label="Link do projeto"
+                  append-icon="link"
+                  :rules="rules.link"
+                  hide-details="auto"
+                />
+              </v-col>
+
+              <v-col
+                cols="1"
+                class="save-button"
+              >
+                <span
+                  v-if="$store.getters.isStudent"
+                  class="material-icons material-icons-p25 pointer "
+                  @click="saveLink(team, team.projectUrl)"
+                >
+                  save
+                </span>
+              </v-col>
+            </v-row>
+          </div>
+
+          <div v-else>
+            <div>
+              <div class="link-title">
+                Link de comunicação
+              </div>
+              <div
+                class="link-view flex-box"
+                @click="upenUrl(team.communicationLink)"
+              >
+                <span>
+                  {{ getLink(team.communicationLink) }}
+                </span>
+
+                <div class="spacer" />
+                <span class="material-icons"> link </span>
+              </div>
+            </div>
+
+            <div>
+              <div class="link-title">
+                Link do projeto
+              </div>
+              <div
+                class="link-view flex-box"
+                @click="upenUrl(team.projectUrl)"
+              >
+                <span>
+                  {{ getLink(team.projectUrl) }}
+                </span>
+
+                <div class="spacer" />
+                <span class="material-icons"> link </span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            v-if="$store.getters.isStudent"
+            class="add-member"
+          >
+            <div class="my-2">
+              <v-btn
+                text
+                color="primary"
+                @click="addMember = !addMember"
+              >
+                <v-icon left>
+                  person_add
+                </v-icon> Adicionar novo membro
+              </v-btn>
+            </div>
+
+            <v-row v-if="addMember">
+              <v-col cols="6">
+                <v-select
+                  v-model="newTeamMember"
+                  :items="getSudentOptions()"
+                  label="Nome"
+                  :item-text="'label'"
+                  :item-value="'value'"
+                />
+              </v-col>
+
+              <v-col cols="6">
+                <v-select
+                  v-model="role"
+                  :items="roles"
+                  :item-text="'label'"
+                  :item-value="'value'"
+                  label="Função"
+                />
+              </v-col>
+            </v-row>
+
+            <v-row
+              v-if="addMember"
+              class="button-position"
+            >
+              <v-col
+                cols="6"
+                class="ml-0"
+              >
+                <v-btn
+                  small
+                  color="#4472E9"
+                  class="white--text "
+                  type="button"
+                  @click="submit(team)"
+                >
+                  <v-icon left>
+                    save
+                  </v-icon>
+                  Salvar
+                </v-btn>
+              </v-col>
+
+              <v-col cols="6">
+                <v-btn
+                  small
+                  color="#DD2C2C"
+                  type="button"
+                  class="white--text pl-30"
+                  @click="addMember = !addMember"
+                >
+                  <v-icon left>
+                    close
+                  </v-icon>
+                  Cancelar
+                </v-btn>
+              </v-col>
+            </v-row>
+          </div>
+        </v-expansion-panel-content>
+      </v-expansion-panel>
+    </v-expansion-panels>
+  </div>
 </template>
 
 <script>
 import TeamService from '@/services/TeamService'
-import UserService from '@/services/UserService.js';
+import UserService from '@/services/UserService.js'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-    name: 'TeamView',
-    props: {
-        projectId: Number,
-    },
-    mounted() {
-        UserService
-            .getStudentsUsers()
-                .then(students => {
-                    this.students = students.filter(student => {
-                        return student.id.toString() !== localStorage.getItem('USER_ID').toString();
-                    })
-                })
-
-        this.updateTeams(this.projectId);
-
-        EventBus.$on('selectProject', (projectId) => {
-            this.updateTeams(projectId);
-        });
-    },
-    data () {
-        return {
-            teams: [],
-            students: [],
-            addMember: false,
-            createTeam: false,
-
-            teamName: '',
-            role: '',
-            newTeamMember: 0,
-            roles: [
-                { value: 'DevOps', label: 'DevOps'},
-                { value: 'Dev', label: 'Dev'},
-                { value: 'Scrum Master', label: 'Scrum Master'},
-            ],
-            rules: {
-                link: [
-                    link => (link.includes("http://") || link.includes("https://")) || 'É necessário que o link possua http:// ou https://',
-                    link => !!link || 'Campo obrigatório',
-                ],
-
-                semester_rules: [
-                    semester => !!semester || 'Campo obrigatório',
-                    semester => (semester && semester < 7) || 'Insira um semestre válido.',
-                    semester => (semester && semester > 0 ) || 'Insira um semestre válido.'
-                ]
-            }
-        }
-    },
-    methods: {
-        updateTeams(projectId) {
-            TeamService
-                .getTeam(projectId)
-                    .then( teams => { 
-                        this.teams = teams 
-                    })
-        },
-        
-        submit(team) {
-            let updatedTeams = team; 
-            
-            if (updatedTeams !== undefined) {
-
-                if ((this.teamName && this.role) || this.newTeamMember != 0) {
-                    updatedTeams.studentTeamList.push({
-                        role: this.role,
-                        student: {
-                            id: this.newTeamMember != 0 ? this.newTeamMember : this.$store.state.selectedProject.id, 
-                        }
-                    });
-                }
-
-                TeamService.updateTeam(updatedTeams).then(() => {
-                    this.updateTeams(this.projectId);
-                });
-                this.addMember = false;
-
-            } else {
-                TeamService.addTeam(
-                    {
-                        project: {id: this.projectId},
-                        name: this.teamName
-                    }, 
-                    this.role).then(() => {
-                        this.updateTeams(this.projectId);
-                    })
-                this.createTeam = false;
-            }   
-        },
-
-        getSudentOptions() {
-            return [...this.students.map(student => ({ label: student.name, value: student.id }))];
-        },
-
-        getLink(link) {
-            return link ? link : "A equipe ainda não adicionou um Link.";
-        },
-
-        getClassTextField() {
-            let class1 = "input-link"
-            return [class1]
-        },
-
-        upenUrl(url) {
-            if (url) {
-                window.open(url)
-            }
-        },
-
-        removeStudent(student) {
-            TeamService.removeStudent(student).then(() => {
-                this.updateTeams(this.projectId);
-            })
-        },
-
-        saveLink(team, link) {
-            if ((!link.includes("http://") && !link.includes("https://")) || !link) {
-                alert("Link incorreto")
-            } else {
-                this.submit(team);
-            }
-        }
+  name: 'TeamView',
+  props: {
+    projectId: {
+      type: Number,
+      default: 0
     }
+  },
+  data () {
+    return {
+      teams: [],
+      students: [],
+      addMember: false,
+      createTeam: false,
+
+      teamName: '',
+      role: '',
+      newTeamMember: 0,
+      roles: [
+        { value: 'DevOps', label: 'DevOps' },
+        { value: 'Dev', label: 'Dev' },
+        { value: 'Scrum Master', label: 'Scrum Master' }
+      ],
+      rules: {
+        link: [
+          link => (link.includes('http://') || link.includes('https://')) || 'É necessário que o link possua http:// ou https://',
+          link => !!link || 'Campo obrigatório'
+        ],
+
+        semester_rules: [
+          semester => !!semester || 'Campo obrigatório',
+          semester => (semester && semester < 7) || 'Insira um semestre válido.',
+          semester => (semester && semester > 0) || 'Insira um semestre válido.'
+        ]
+      }
+    }
+  },
+  mounted () {
+    UserService
+      .getStudentsUsers()
+      .then(students => {
+        this.students = students.filter(student => {
+          // TODO alterar esse cara
+          return student.id.toString() !== localStorage.getItem('USER_ID').toString()
+        })
+      })
+
+    this.updateTeams(this.projectId)
+
+    EventBus.$on('selectProject', (projectId) => {
+      this.updateTeams(projectId)
+    })
+  },
+  methods: {
+    updateTeams (projectId) {
+      TeamService
+        .getTeam(projectId)
+        .then(teams => {
+          this.teams = teams
+        })
+    },
+
+    submit (team) {
+      const updatedTeams = team
+
+      if (updatedTeams !== undefined) {
+        if ((this.teamName && this.role) || this.newTeamMember !== 0) {
+          updatedTeams.studentTeamList.push({
+            role: this.role,
+            student: {
+              id: this.newTeamMember !== 0 ? this.newTeamMember : this.$store.state.selectedProject.id
+            }
+          })
+        }
+
+        TeamService.updateTeam(updatedTeams).then(() => {
+          this.updateTeams(this.projectId)
+        })
+        this.addMember = false
+      } else {
+        TeamService.addTeam(
+          {
+            project: { id: this.projectId },
+            name: this.teamName
+          },
+          this.role).then(() => {
+          this.updateTeams(this.projectId)
+        })
+        this.createTeam = false
+      }
+    },
+
+    getSudentOptions () {
+      return [...this.students.map(student => ({ label: student.name, value: student.id }))]
+    },
+
+    getLink (link) {
+      return link || 'A equipe ainda não adicionou um Link.'
+    },
+
+    getClassTextField () {
+      const class1 = 'input-link'
+      return [class1]
+    },
+
+    upenUrl (url) {
+      if (url) {
+        window.open(url)
+      }
+    },
+
+    removeStudent (student) {
+      TeamService.removeStudent(student).then(() => {
+        this.updateTeams(this.projectId)
+      })
+    },
+
+    saveLink (team, link) {
+      if ((!link.includes('http://') && !link.includes('https://')) || !link) {
+        alert('Link incorreto')
+      } else {
+        this.submit(team)
+      }
+    }
+  }
 }
 </script>
 
@@ -458,9 +518,9 @@ export default {
 }
 
 .v-expansion-panels {
-   justify-content: left; 
+   justify-content: left;
 }
-  
+
 .team-member {
     background-color: white;
     border-radius: 0px 21px 21px 21px;
@@ -494,7 +554,7 @@ export default {
     height: calc(100% - 20px - (16px * 2));
     overflow-y: auto;
 }
-    
+
 .v-expansion-panel-header {
     min-height: 0px;
 }

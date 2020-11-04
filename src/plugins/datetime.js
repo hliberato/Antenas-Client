@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Datetime } from 'vue-datetime'
 import 'vue-datetime/dist/vue-datetime.css'
- 
+
 Vue.use(Datetime)
 
-Vue.component('datetime', Datetime);
+Vue.component('datetime', Datetime)

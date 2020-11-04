@@ -1,290 +1,364 @@
 <template>
-    <div class="project-view">
-        <div v-if="project" class="box project-view__project">
-            <div class="box__header " style="padding: 0px">
-                <!-- todo - trar o style -->
-                <div>
-                    <v-tabs>
-                        <v-tab @click="selectTab('project')"> {{ project.title }} </v-tab>
-                        <v-tab @click="selectTab('team')"> {{ getTabNAme() }} </v-tab>
-                    </v-tabs>
-                </div>
-                
-                <div class="flex-box">
-                    <!-- <v-btn
-                        v-if="($store.getters.isTeacher && !project.open && project.progress == 8) " 
-                        small 
-                        color="#4472E9" 
-                        type="button"  
-                        class="white--text" 
+  <div class="project-view">
+    <div
+      v-if="project"
+      class="box project-view__project"
+    >
+      <div
+        class="box__header "
+        style="padding: 0px"
+      >
+        <!-- todo - trar o style -->
+        <div>
+          <v-tabs>
+            <v-tab @click="selectTab('project')">
+              {{ project.title }}
+            </v-tab>
+            <v-tab @click="selectTab('team')">
+              {{ getTabNAme() }}
+            </v-tab>
+          </v-tabs>
+        </div>
+
+        <div class="flex-box">
+          <!-- <v-btn
+                        v-if="($store.getters.isTeacher && !project.open && project.progress == 8) "
+                        small
+                        color="#4472E9"
+                        type="button"
+                        class="white--text"
                         @click="evaluateStudents()"
                     >
                         Avaliar alunos
                     </v-btn> -->
 
-                    <v-btn
-                        v-if="($store.getters.isRepresentative && project.refused ) " 
-                        small 
-                        color="#4472E9" 
-                        type="button"  
-                        class="white--text" 
-                        @click="deleteProject()"
-                    >
-                        Excluir projeto
-                    </v-btn>
-                    <div v-if="project && ($store.getters.isTeacher) && project.progress == 7" class="mr-3">
-                        <v-btn
-                            small 
-                            color="#4472E9" 
-                            type="button"  
-                            class="white--text" 
-                            @click="submit()"
-                        >
-                            {{ getButtonText() }}
-                        </v-btn>
+          <v-btn
+            v-if="($store.getters.isRepresentative && project.refused ) "
+            small
+            color="#4472E9"
+            type="button"
+            class="white--text"
+            @click="deleteProject()"
+          >
+            Excluir projeto
+          </v-btn>
+          <div
+            v-if="project && ($store.getters.isTeacher) && project.progress == 7"
+            class="mr-3"
+          >
+            <v-btn
+              small
+              color="#4472E9"
+              type="button"
+              class="white--text"
+              @click="submit()"
+            >
+              {{ getButtonText() }}
+            </v-btn>
 
-                        <p class="started-project" v-if="$store.getters.isTeacher && project && this.project.open && !project.progress == 7" >Projeto iniciado</p>
-                    </div>
-                    <div class="mr-2">   
-                        <a href @click.prevent="closeProject()" class="close">
-                            <i class="material-icons close">close</i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-            <div v-if="tabSelected === 'project'" class="project-view__box">
-                <div class="box__body project-body">
-                    <ProjectStatus class="project-view__phase" :project="project" v-if="!$store.getters.isStudent" />
-
-                    <div v-if="!$store.getters.isStudent">
-                        <br> <br> 
-                    </div>
-                    
-                    <ProjectUpdateForm 
-                        v-if="projectStatus === 'WAITING' && !project.refused"
-                        :project="project"
-                        class="project-view__form" 
-                    />
-                    
-                    <div class="project-view">
-                        <div class="project-view__field"
-                            v-if="showMeetingDetails()">
-                            <p class="label">Local e data da reunião:</p>
-                            <div class="text text-mb-0">
-                                {{ project.meeting.address.neighborhood }} 
-                                {{ project.meeting.address.neighborhood && (project.meeting.address.street || project.meeting.address.number) ? ',' : ''}} 
-                                {{ project.meeting.address.street }}
-                                {{ project.meeting.address.number  ? ',' : '' }} 
-                                {{ project.meeting.address.number }}
-                                <div>
-                                    {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
-                                </div> 
-                            </div>
-                            <p class="text">
-                                <strong>Data e horario:</strong> {{ getDatetime(project.meeting.chosenDate) }}
-                            </p>
-                        </div>
-
-                        <div class="project-view__field" v-if="project && project.semester">
-                            <p class="label">Aplicado no {{ project.semester }}º semestre</p>
-                        </div>
-                        <div class="project-view__field" v-if="project && project.semester">
-                            <span class="label">Professor responsável: </span>
-                            <span class="text">{{ project.teacher.name }}</span>
-                        </div>
-
-                        <div class="project-view__field" v-if="project && project.shortDescription">
-                            <p class="label">Descrição breve:</p>
-                            <p class="text">{{ project.shortDescription }}</p>
-                        </div>
-                        
-                        <div class="project-view__field" v-if="project && project.completeDescription">
-                            <p class="label">Descrição completa:</p>
-                            <p class="text">{{ project.completeDescription }}</p>
-                        </div>
-                        
-                        <div class="project-view__field" v-if="project && project.technologyDescription">
-                            <p class="label">Descrição da tecnologia:</p>
-                            <p class="text">{{ project.technologyDescription }}</p>
-                        </div>
-
-                        <div class="project-view__field" v-if="project && project && project.notes">
-                            <p class="label">Notas adicionais:</p>
-                            <p class="text">{{ project.notes }}</p>
-                        </div>
-
-                        
-                    </div>
-                </div>
-            </div>
-
-            <TeamView v-if="tabSelected == 'team'" :projectId="project.id">
-            </TeamView>
+            <p
+              v-if="$store.getters.isTeacher && project && project.open && !project.progress == 7"
+              class="started-project"
+            >
+              Projeto iniciado
+            </p>
+          </div>
+          <div class="mr-2">
+            <a
+              href
+              class="close"
+              @click.prevent="closeProject()"
+            >
+              <i class="material-icons close">close</i>
+            </a>
+          </div>
         </div>
+      </div>
 
-        <div v-else class="project-view__empty">
-            <div class="content">
-                <i class="material-icons icon">touch_app</i>
-                <p class="text">Selecione um projeto ao lado para saber mais</p>
-                <v-btn small color="#4472E9" type="button" class="white--text"  @click="createProject()" v-if="$store.getters.isRepresentative">
-                    Criar projeto
-                </v-btn>
+      <div
+        v-if="tabSelected === 'project'"
+        class="project-view__box"
+      >
+        <div class="box__body project-body">
+          <ProjectStatus
+            v-if="!$store.getters.isStudent"
+            class="project-view__phase"
+            :project="project"
+          />
+
+          <div v-if="!$store.getters.isStudent">
+            <br> <br>
+          </div>
+
+          <ProjectUpdateForm
+            v-if="projectStatus === 'WAITING' && !project.refused"
+            :project="project"
+            class="project-view__form"
+          />
+
+          <div class="project-view">
+            <div
+              v-if="showMeetingDetails()"
+              class="project-view__field"
+            >
+              <p class="label">
+                Local e data da reunião:
+              </p>
+              <div class="text text-mb-0">
+                {{ project.meeting.address.neighborhood }}
+                {{ project.meeting.address.neighborhood && (project.meeting.address.street || project.meeting.address.number) ? ',' : '' }}
+                {{ project.meeting.address.street }}
+                {{ project.meeting.address.number ? ',' : '' }}
+                {{ project.meeting.address.number }}
+                <div>
+                  {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
+                </div>
+              </div>
+              <p class="text">
+                <strong>Data e horario:</strong> {{ getDatetime(project.meeting.chosenDate) }}
+              </p>
             </div>
+
+            <div
+              v-if="project && project.semester"
+              class="project-view__field"
+            >
+              <p class="label">
+                Aplicado no {{ project.semester }}º semestre
+              </p>
+            </div>
+            <div
+              v-if="project && project.semester"
+              class="project-view__field"
+            >
+              <span class="label">Professor responsável: </span>
+              <span class="text">{{ project.teacher.name }}</span>
+            </div>
+
+            <div
+              v-if="project && project.shortDescription"
+              class="project-view__field"
+            >
+              <p class="label">
+                Descrição breve:
+              </p>
+              <p class="text">
+                {{ project.shortDescription }}
+              </p>
+            </div>
+
+            <div
+              v-if="project && project.completeDescription"
+              class="project-view__field"
+            >
+              <p class="label">
+                Descrição completa:
+              </p>
+              <p class="text">
+                {{ project.completeDescription }}
+              </p>
+            </div>
+
+            <div
+              v-if="project && project.technologyDescription"
+              class="project-view__field"
+            >
+              <p class="label">
+                Descrição da tecnologia:
+              </p>
+              <p class="text">
+                {{ project.technologyDescription }}
+              </p>
+            </div>
+
+            <div
+              v-if="project && project && project.notes"
+              class="project-view__field"
+            >
+              <p class="label">
+                Notas adicionais:
+              </p>
+              <p class="text">
+                {{ project.notes }}
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
+
+      <TeamView
+        v-if="tabSelected == 'team'"
+        :project-id="project.id"
+      />
     </div>
+
+    <div
+      v-else
+      class="project-view__empty"
+    >
+      <div class="content">
+        <i class="material-icons icon">touch_app</i>
+        <p class="text">
+          Selecione um projeto ao lado para saber mais
+        </p>
+        <v-btn
+          v-if="$store.getters.isRepresentative"
+          small
+          color="#4472E9"
+          type="button"
+          class="white--text"
+          @click="createProject()"
+        >
+          Criar projeto
+        </v-btn>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import ProjectStatus from '@/components/Project/ProjectStatus.vue'
 import ProjectUpdateForm from '@/components/Project/ProjectUpdateForm.vue'
-import ProjectService from '@/services/ProjectService.js';
-import TeamView from '@/components/team/TeamView.vue'
+import ProjectService from '@/services/ProjectService.js'
+import TeamView from '@/components/Team/TeamView.vue'
 import EventBus from '@/helpers/EventBus.js'
 import store from '../../store/index'
 
 export default {
-    name: 'ProjectView',
-	components: {
-        ProjectStatus,
-        ProjectUpdateForm,
-        TeamView,
+  name: 'ProjectView',
+  components: {
+    ProjectStatus,
+    ProjectUpdateForm,
+    TeamView
+  },
+  data () {
+    return {
+      students: [],
+      project: null,
+      tabSelected: 'project',
+      projectID: null
+    }
+  },
+  computed: {
+    projectStatus () {
+      return this.getProjectStatus(this.project)
+    }
+  },
+  mounted () {
+    EventBus.$on('selectProject', (id) => {
+      this.projectId = id
+      this.updateProject()
+    })
+  },
+  methods: {
+    selectTab (tab) {
+      this.tabSelected = tab
     },
-    computed: {
-        projectStatus() {
-            return this.getProjectStatus(this.project);
-        },
+
+    updateProject () {
+      ProjectService.getProjectById(this.projectId)
+        .then((res) => {
+          this.project = res
+          this.project.meeting.address.number = undefined
+        })
     },
-    mounted() {
-        EventBus.$on('selectProject', (id) => {
-            this.projectId = id;
-            this.updateProject()
-        });
+
+    evaluateStudents () {
+      EventBus.$emit('EVALUATE_STUDENTS', this.project.id)
     },
-    methods: {
-        selectTab(tab) {
-            this.tabSelected = tab;
-        },
 
-        updateProject() {
-            ProjectService.getProjectById(this.projectId)
-                .then((res) => {
-                    this.project = res
-                    this.project.meeting.address.number = undefined;
-                })
-        },
+    getMembersList (ids) {
+      return ids.map(id => this.students.filter(student => student.id === id)[0].name).join(', ')
+    },
 
-        evaluateStudents() {
-            EventBus.$emit('EVALUATE_STUDENTS', this.project.id);
-        },
-
-        getMembersList(ids) {
-            return ids.map(id => this.students.filter(student => student.id == id)[0].name).join(', ');
-        },
-
-        getButtonText() {
-            if (this.$store.getters.isTeacher) {
-                if (!this.project.open) {
-                    return "Iniciar projeto"
-                }
-                return "Finalizar projeto"
-            }
-        },
-
-        getDatetime(chosenDate) {
-            if (chosenDate) {
-                let date = new Date(chosenDate);
-                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-            }
-            return 'A definir'
-        },
-
-        closeProject() {
-            this.project = null
-        },
-
-        getTabNAme() {
-            return this.$store.getters.isStudent ? "Equipe" : "Equipes";
-        },
-
-        createProject() {
-            this.$emit('create');
-        },
-
-        submit() {
-            if ((this.$store.getters.isTeacher || this.$store.getters.isCadi) && this.project.progress == 7 ) {
-               this.project.open  = !this.project.open 
-            }
-
-            ProjectService.updateProject(this.project).then(() => {
-                this.updateProject();
-                setTimeout(() => this.updated = false, 5000);
-            });
-        },
-
-        showMeetingDetails() {
-            return (this.project && this.project.meeting && 
-            (this.project.progress == 5 || this.project.progress == 6) && 
-            (this.$store.getters.isCadi || this.$store.getters.isRepresentative));
-        },
-
-        getProjectStatus(project)  {
-            if (project) {
-                let isMeetingPhase = project.progress === 5;
-                let hasMeeting = false;
-
-                if (project.meeting != null) {
-                    hasMeeting = project.meeting.chosenDate != null;
-                }
-                
-                
-                let isRefused = project.refused;
-                let isDeliveryPhase = project.progress === 6;
-
-                let isConcluded = project.finished;
-
-                let isWaiting;
-
-                if (store.getters.isRepresentative) {
-                    isWaiting = project.progress === 3 || (isMeetingPhase && !hasMeeting && project.meeting.possibleDate.length);
-                }
-                else if (store.getters.isCadi) {
-                    isWaiting = [2, 4].includes(project.progress) || (isMeetingPhase && !project.meeting.chosenDate) || (isDeliveryPhase && !project.teacher);
-                }
-                else if (store.getters.isTeacher) {
-                    isWaiting = !!isDeliveryPhase;
-                }
-                else if (store.getters.isStudent) {
-                    isWaiting = isDeliveryPhase && !project.deliver.some(entrega => entrega.students.includes(store.state.user.id));
-                }
-
-                if (isRefused) {
-                    return 'REFUSED';
-                }
-                else if (isConcluded) {
-                    return 'CONCLUDED';
-                }
-                else if (isWaiting) {
-                    return 'WAITING';
-                }
-                else {
-                    return 'PENDING';
-                }
-            }
-        },
-
-        deleteProject()  {
-            ProjectService.deleteProject(this.project.id);
+    getButtonText () {
+      if (this.$store.getters.isTeacher) {
+        if (!this.project.open) {
+          return 'Iniciar projeto'
         }
+        return 'Finalizar projeto'
+      }
     },
-	data() {
-		return {
-            students: [],
-            project: null,
-            tabSelected: "project",
-            projectID: null,
-        };
-	}
+
+    getDatetime (chosenDate) {
+      if (chosenDate) {
+        const date = new Date(chosenDate)
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`
+      }
+      return 'A definir'
+    },
+
+    closeProject () {
+      this.project = null
+    },
+
+    getTabNAme () {
+      return this.$store.getters.isStudent ? 'Equipe' : 'Equipes'
+    },
+
+    createProject () {
+      this.$emit('create')
+    },
+
+    submit () {
+      if ((this.$store.getters.isTeacher || this.$store.getters.isCadi) && this.project.progress === 7) {
+        this.project.open = !this.project.open
+      }
+
+      ProjectService.updateProject(this.project).then(() => {
+        this.updateProject()
+        setTimeout(() => { this.updated = false }, 5000)
+      })
+    },
+
+    showMeetingDetails () {
+      return (this.project && this.project.meeting &&
+            (this.project.progress === 5 || this.project.progress === 6) &&
+            (this.$store.getters.isCadi || this.$store.getters.isRepresentative))
+    },
+
+    getProjectStatus (project) {
+      if (project) {
+        const isMeetingPhase = project.progress === 5
+        let hasMeeting = false
+
+        if (project.meeting != null) {
+          hasMeeting = project.meeting.chosenDate != null
+        }
+
+        const isRefused = project.refused
+        const isDeliveryPhase = project.progress === 6
+
+        const isConcluded = project.finished
+
+        let isWaiting
+
+        if (store.getters.isRepresentative) {
+          isWaiting = project.progress === 3 || (isMeetingPhase && !hasMeeting && project.meeting.possibleDate.length)
+        } else if (store.getters.isCadi) {
+          isWaiting = [2, 4].includes(project.progress) || (isMeetingPhase && !project.meeting.chosenDate) || (isDeliveryPhase && !project.teacher)
+        } else if (store.getters.isTeacher) {
+          isWaiting = !!isDeliveryPhase
+        } else if (store.getters.isStudent) {
+          isWaiting = isDeliveryPhase && !project.deliver.some(entrega => entrega.students.includes(store.state.user.id))
+        }
+
+        if (isRefused) {
+          return 'REFUSED'
+        } else if (isConcluded) {
+          return 'CONCLUDED'
+        } else if (isWaiting) {
+          return 'WAITING'
+        } else {
+          return 'PENDING'
+        }
+      }
+    },
+
+    deleteProject () {
+      ProjectService.deleteProject(this.project.id)
+    }
+  }
 }
 </script>
 
@@ -358,7 +432,7 @@ export default {
     }
 
     &__empty {
-    
+
         display: flex;
         align-items: center;
         justify-content: center;
@@ -367,7 +441,7 @@ export default {
         border-radius: 4px;
 
         .content {
-            
+
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -405,7 +479,7 @@ export default {
             display: flex;
             align-items: center;
         }
-        
+
         .label {
             color: #A6A6A6;
             font-weight: 600;
