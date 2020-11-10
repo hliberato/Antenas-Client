@@ -19,13 +19,15 @@ export default {
   },
   mutations: {
     SET_CURRENT_USER (state, auth) {
+      // eslint-disable-next-line no-debugger
+      // debugger
       // eslint-disable-next-line no-console
       auth = auth || {}
       state.id = auth.id || null
       state.email = auth.email || null
       state.name = auth.name || null
       state.photo = auth.photo || null
-      state.token = auth.token || null
+      if (auth.token && typeof auth.token === 'string') state.token = auth.token
       state.role = role(auth.authorizations || null)
       localStorage.setItem('ANTENAS_AUTH', JSON.stringify(state))
     },
@@ -64,6 +66,8 @@ export default {
       return new Promise((resolve, reject) => {
         UserService.getUserInfo()
           .then(auth => {
+            // eslint-disable-next-line no-debugger
+            // debugger
             commit('SET_CURRENT_USER', auth)
             resolve()
           })

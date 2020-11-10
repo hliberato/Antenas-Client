@@ -32,7 +32,6 @@
                 <div class="box__header ">
                   <div class="row">
                     {{ page_title }}
-                    <v-spacer />
                     <v-btn
                       v-if="page_title != 'Informações pessoais'"
                       small
