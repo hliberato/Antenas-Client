@@ -1,5 +1,5 @@
 <template>
-  <v-app class="container-view">
+  <div class="container-view">
     <v-app-bar
       color="white lighten-5"
       app
@@ -12,7 +12,7 @@
       <Profile class="toolbar__profile" />
     </v-app-bar>
     <router-view />
-  </v-app>
+  </div>
 </template>
 
 <script>
