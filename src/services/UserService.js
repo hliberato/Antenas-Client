@@ -41,9 +41,9 @@ export default {
     // })
   },
 
-  getUserInfo (userId) {
+  getUserInfo () {
     return http
-      .get(`user/${userId}`)
+      .get('user')
       .then(res => {
         return res.data
       }).catch(() => {
