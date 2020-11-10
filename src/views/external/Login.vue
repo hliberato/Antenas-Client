@@ -1,53 +1,72 @@
 <template>
-  <div class="landing">
-    <div class="landing__wrapper">
-      <header class="landing__header">
-        <Logo variant="blue" />
-        <div class="actions">
-          <v-btn
-            small
-            color="#4472E9"
-            class="mr-5 white--text"
-            @click="goSignUp()"
-          >
-            Cadastrar
-          </v-btn>
+  <div class="external-login">
+    <el-container>
+      <el-header>
+        <el-row justify="space-between">
+          <el-col :span="12">
+            <Logo variant="blue" />
+          </el-col>
+          <el-col :span="12" class="flex justify-end">
+            <el-button type="primary">
+              Cadastro
+            </el-button>
+            <el-button>
+              Entrar
+            </el-button>
+          </el-col>
+        </el-row>
+      </el-header>
+      <el-main class="external-login__content">
+        <el-row type="flex" justify="space-around" class="w100">
+          <el-col :span="9">
+            <h1 class="external-login__title">
+              <div>Conectando</div>
+              <div>
+                os <strong class="highlight">melhores alunos</strong>
+              </div>
+              <div>
+                às <strong class="highlight">melhores empresas</strong>
+              </div>
+            </h1>
+            <img
+              src="@/assets/images/business_deal.svg"
+              alt="Pessoas fazendo negócio"
+              class="external-login__image"
+            >
+          </el-col>
+          <el-col :span="9">
+            <LoginForm :sign-up="signUp" />
+          </el-col>
+        </el-row>
 
-          <v-btn
-            small
-            color="white"
-            class="custom-blue--text"
-            @click="goLogin()"
-          >
-            Entrar
-          </v-btn>
-        </div>
-      </header>
-
-      <div class="landing__body">
-        <div class="landing__info">
-          <h3 class="title">
-            <span>Conectando</span>
-            <span class="big">
-              os <strong class="strong">melhores alunos</strong>
-            </span>
-            <span class="big">
-              às <strong class="strong">melhores empresas</strong>
-            </span>
-          </h3>
-
-          <img
-            class="illustration"
-            src="@/assets/images/business_deal.svg"
-            alt="Pessoas fazendo negócio"
-          >
-        </div>
-        <LoginForm
-          :sign-up="signUp"
-          class="landing__login"
-        />
-      </div>
-    </div>
+        <!-- <el-row
+          :gutter="40"
+          type="flex"
+          class="h100"
+          justify="space-between"
+        >
+          <el-col :span="12" class="flex justify-center align-center flex-column">
+            <h1 class="external-login__title">
+              <div>Conectando</div>
+              <div>
+                os <strong class="highlight">melhores alunos</strong>
+              </div>
+              <div>
+                às <strong class="highlight">melhores empresas</strong>
+              </div>
+            </h1>
+            <img
+              src="@/assets/images/business_deal.svg"
+              alt="Pessoas fazendo negócio"
+              class="external-login__image"
+            >
+          </el-col>
+          <el-col :span="12" class="flex justify-center align-center">
+            <LoginForm :sign-up="signUp" />
+          </el-col>
+        </el-row> -->
+      </el-main>
+    </el-container>
   </div>
 </template>
 
@@ -65,86 +84,30 @@ export default {
     return {
       signUp: true
     }
-  },
-  methods: {
-    goLogin () {
-      this.signUp = false
-    },
-    goSignUp () {
-      this.signUp = true
-    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-    .custom-blue--text {
-        color: #4472E9
-    }
-
-    .strong {
-        font-weight: 600 !important;
-    }
-
-  .landing {
-
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 100px;
-
-        .actions {
-            display: flex;
-
-            .button {
-                margin-right: 16px;
-
-                &:last-child {
-                    margin-right: 0;
-                }
-            }
-        }
-    }
-
-    &__body {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 35px;
-    }
-
-    &__login {
-        align-self: flex-start;
-    }
-
-    &__info {
-        .title {
-            display: flex;
-            flex-direction: column;
-            line-height: 2em;
-            font-size: 24px;
-            font-weight: 300;
-
-            strong {
-                font-weight: 300;
-                color: #4472E9;
-            }
-
-            .big {
-                font-size: 29px;
-            }
-        }
-
-        .illustration {
-            margin-top: spacing(6);
-            max-width: 300px;
-        }
-    }
-
-    &__wrapper {
-      max-width: 1080px;
-      width: 90%;
-      margin: 0 auto;
+@import '@/plugins/element/_colors.scss';
+.external-login {
+  &__content {
+    display: flex !important;
+    justify-content: center;
+    margin-bottom: 60px;
+  }
+  &__title {
+    font-size: 2rem;
+    font-weight: 300;
+    .highlight {
+      color: $--color-primary;
     }
   }
+  &__image {
+    width: 350px;
+    max-width: 100%;
+    margin-right: 1rem;
+    margin-top: 2rem;
+  }
+}
 </style>

@@ -153,7 +153,7 @@ export default {
   data () {
     return {
       notificationVisible: false,
-      notificationType: '',
+      notificationType: 'error',
       justSignedUp: false,
       email: '',
       name: '',
