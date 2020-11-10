@@ -59,6 +59,9 @@ export default {
       return new Promise((resolve, reject) => {
         UserService.getUserInfo()
           .then(auth => {
+            if (!auth) {
+              reject(new Error('DEU PAU MANO'))
+            }
             commit('SET_CURRENT_USER', auth)
             resolve()
           })
