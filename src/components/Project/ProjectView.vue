@@ -22,15 +22,15 @@
 
         <div class="flex-box">
           <!-- <v-btn
-                        v-if="($store.getters.isTeacher && !project.open && project.progress == 8) "
-                        small
-                        color="#4472E9"
-                        type="button"
-                        class="white--text"
-                        @click="evaluateStudents()"
-                    >
-                        Avaliar alunos
-                    </v-btn> -->
+                v-if="($store.getters.isTeacher && !project.open && project.progress == 8) "
+                small
+                color="#4472E9"
+                type="button"
+                class="white--text"
+                @click="evaluateStudents()"
+            >
+                Avaliar alunos
+            </v-btn> -->
 
           <v-btn
             v-if="($store.getters.isRepresentative && project.refused ) "

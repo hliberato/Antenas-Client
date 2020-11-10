@@ -51,8 +51,8 @@
 import Projects from '@/components/Project/Projects.vue'
 import ProjectView from '@/components/Project/ProjectView.vue'
 import ProjectCreation from '@/components/Project/ProjectCreation.vue'
-import MedalList from '@/components/medal/MedalList'
-import Evaluation from '@/components/medal/Evaluation'
+import MedalList from '@/components/Medal/MedalList'
+import Evaluation from '@/components/Medal/Evaluation'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
