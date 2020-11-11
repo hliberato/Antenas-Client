@@ -1,109 +1,65 @@
 <template>
-  <div class=" box__body">
+  <div>
     <div v-if="show_fields">
-      <v-text-field
+      <br>
+      <label>Empresa: </label>
+      <input
         v-model="user.role"
-        label="Empresa"
-        hide-details="auto"
-      />
+        type="text"
+      >
 
-      <v-text-field
+      <br>
+
+      <label>Cargo: </label>
+      <input
         v-model="user.activities_performed"
-        label="Cargo"
-        hide-details="auto"
-      />
+        type="text"
+      >
 
-      <div class="row">
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          lazy
-          transition="scale-transition"
-          offset-y
-          full-width
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="user.start"
-              label="Data de início"
-              class="date-field"
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            />
-          </template>
-          <v-date-picker
-            ref="picker"
-            v-model="user.start"
-            show-current="true"
-          />
-        </v-menu>
+      <br>
 
-        <v-menu
-          ref="menu"
-          v-model="menu"
-          :close-on-content-click="false"
-          :nudge-right="40"
-          lazy
-          transition="scale-transition"
-          offset-y
-          full-width
-          min-width="290px"
-        >
-          <template v-slot:activator="{ on }">
-            <v-text-field
-              v-model="user.end"
-              label="Data final"
-              prepend-icon="event"
-              readonly
-              v-on="on"
-            />
-          </template>
-          <v-date-picker
-            ref="picker"
-            v-model="user.end"
-            show-current="true"
-          />
-        </v-menu>
-      </div>
-      <div class="row">
-        <v-spacer />
-        <v-btn
-          small
-          color="#4472E9"
-          class="white--text button"
-          type="submit"
-          @click="show_fields = !show_fields;"
-        >
-          Salvar
-        </v-btn>
-      </div>
+      <label>Data inicial: </label>
+      <input
+        v-model="user.start"
+        type="text"
+      >
+
+      <label>Data final: </label>
+      <input
+        v-model="user.end"
+        type="text"
+      >
+
+      <br>
+      <br>
+
+      <button
+        type="button"
+        @click="update"
+      >
+        Salvar
+      </button>
     </div>
 
-    <div class="company">
+    <br>
+
+    <div>
       <strong>
         Empresita
       </strong>
 
-      <div class="company-info">
-        <div class="line-spacing">
+      <div >
+        <div>
           <strong> Cargo: </strong> Estagiário
         </div>
 
-        <div class="line-spacing">
+        <div>
           <strong> Atividades exercidas: </strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor justo eget nunc aliquet, sed dictum purus consequat
         </div>
 
-        <div class="row">
-          <div>
-            <strong> Início: </strong> 05/2019
-          </div>
-          <div class="ml-25">
-            <strong> Fim: </strong> 05/2019
-          </div>
+        <div>
+          <strong> Início: </strong> 05/2019
+          <strong> Fim: </strong> 05/2019
         </div>
       </div>
     </div>

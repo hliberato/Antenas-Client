@@ -209,8 +209,6 @@ export default {
 
       if (this.signUp) {
         if (this.passwordConfirm !== this.password) {
-          console.log(this.passwordConfirm)
-          console.log(this.password)
           alert('As senhas não coincidem.')
           return
         }

@@ -43,8 +43,14 @@
                     </v-btn>
                   </div>
                 </div>
-                <PersonalInfo v-if="page_title == 'Informações pessoais'" />
-                <ProfessionalInfo v-if="page_title == 'Informações profissionais'" />
+                <PersonalInfo
+                  v-if="page_title == 'Informações pessoais'"
+                  :user="user"
+                />
+                <ProfessionalInfo
+                  v-if="page_title == 'Informações profissionais'"
+                  :user="user"
+                />
               </div>
             </v-col>
           </v-row>
@@ -99,7 +105,6 @@ export default {
     UserService.getUser()
       .then((res) => {
         this.user = res
-        console.log(this.user)
       })
   },
   methods: {
@@ -115,36 +120,5 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.content {
-  max-height: 100%;
-}
-
-.button {
-  margin-right: 40px;
-}
-
-.biography-input {
-  margin-top: 20px
-}
-
-.home {
-  &__wrapper {
-    display: flex;
-    max-width: 1080px;
-    width: 90%;
-    margin: 25px auto;
-    height: calc(100vh - 70px - #{32px } * 2);
-  }
-
-  &__projects,
-  &__project-view {
-    height: 100%;
-  }
-
-  &__project-view {
-    margin-left: spacing(4);
-    flex-grow: 1;
-  }
-}
 
 </style>

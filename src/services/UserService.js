@@ -95,5 +95,18 @@ export default {
       }).catch(() => {
         alert('Erro ao carregar informações do usuario')
       })
+  },
+
+  updateUser (user) {
+    console.log('updateUser')
+    const role = 'STUDENT'
+
+    return http
+      .post(`${routeMap[role]}/update`, user)
+      .then(res => {
+        return res.data
+      }).catch(() => {
+        alert('Erro ao atualizar as informações')
+      })
   }
 }

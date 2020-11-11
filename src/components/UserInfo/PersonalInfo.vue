@@ -1,123 +1,108 @@
 <template>
   <div>
-    <div class=" box__body">
-      <v-text-field
+    <div>
+      <label>Nome completo: </label>
+      <input
         v-model="user.name"
-        label="Nome completo"
-        hide-details="auto"
-      />
-
-      <v-text-field
-        v-model="user.email"
-        label="E-mail"
-        hide-details="auto"
-      />
-
-      <v-text-field
-        v-model="user.ra"
-        label="R.A"
-        hide-details="auto"
-      />
-
-      <v-text-field
-        v-model="user.city"
-        label="Cidade"
-        hide-details="auto"
-      />
-
-      <v-text-field
-        v-model="user.linkedIn"
-        label="LinkedIn"
-        hide-details="auto"
-      />
-
-      <v-textarea
-        v-model="user.biography"
-        :maxlength="300"
-        clearable
-        counter
-        clear-icon="cancel"
-        rows="4"
-        outlined
-        class="biography-input"
-        label="Biografia"
-      />
-
-      <v-file-input
-        v-model="user.photo"
-        label="Foto do perfil"
-        chips
-        small-chips
-        truncate-length="50"
-      />
-    </div>
-    <div class="row">
-      <v-spacer />
-      <v-btn
-        small
-        color="#4472E9"
-        class="white--text button"
-        type="submit"
+        type="text"
       >
-        Salvar
-      </v-btn>
+
+      <br>
+
+      <label>E-mail: </label>
+      <input
+        v-model="user.email"
+        type="text"
+      >
+
+      <br>
+
+      <label>R.A: </label>
+      <input
+        v-model="user.ra"
+        type="text"
+      >
+
+      <br>
+
+      <label>Cidade: </label>
+      <input
+        v-model="user.city"
+        type="text"
+      >
+
+      <br>
+
+      <label>LinkedIn: </label>
+      <input
+        v-model="user.linkedIn"
+        type="text"
+      >
+
+      <br>
+
+      <label>Biografia: </label>
+      <input
+        v-model="user.biography"
+        type="text"
+      >
+
+      <br>
+
+      <label>Foto de perfil: </label>
+      <input
+        v-model="user.photo"
+        type="text"
+      >
     </div>
+
+    <br>
+    <br>
+
+    <button
+      type="button"
+      @click="update"
+    >
+      Salvar
+    </button>
   </div>
 </template>
 
 <script>
+import UserService from '@/services/UserService.js'
+
 export default {
   name: 'PersonalInfo',
   components: {
   },
-  data () {
-    return {
-      user: {
-        name: '',
-        email: '',
-        ra: '',
-        city: '',
-        linkedIn: '',
-        biography: '',
-        photo: null,
-        photoFile: null
+  props: {
+    user: {
+      type: Object,
+      default () {
+        return {
+          name: '',
+          email: '',
+          ra: '',
+          city: '',
+          linkedIn: '',
+          biography: '',
+          photo: ''
+        }
       }
+    }
+  },
+  methods: {
+    update () {
+      console.log('update')
+      UserService.updateUser(this.user)
+        .then((res) => {
+          this.user = res
+        })
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-.content {
-  max-height: 100%;
-}
-
-.button {
-  margin-right: 40px;
-}
-
-.biography-input {
-  margin-top: 20px
-}
-
-.home {
-  &__wrapper {
-    display: flex;
-    max-width: 1080px;
-    width: 90%;
-    margin: 25px auto;
-    height: calc(100vh - 70px - #{32px } * 2);
-  }
-
-  &__projects,
-  &__project-view {
-    height: 100%;
-  }
-
-  &__project-view {
-    margin-left: spacing(4);
-    flex-grow: 1;
-  }
-}
 
 </style>

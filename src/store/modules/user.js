@@ -19,9 +19,6 @@ export default {
   },
   mutations: {
     SET_CURRENT_USER (state, auth) {
-      // eslint-disable-next-line no-debugger
-      // debugger
-      // eslint-disable-next-line no-console
       auth = auth || {}
       state.id = auth.id || null
       state.email = auth.email || null
@@ -44,15 +41,11 @@ export default {
   actions: {
     authenticateUser ({ commit }, credentials) {
       return new Promise((resolve, reject) => {
-        // eslint-disable-next-line no-console
-        console.log(credentials)
         UserService.authenticateUser({
           email: credentials.email,
           password: credentials.password
         })
           .then(response => {
-            // eslint-disable-next-line no-console
-            // console.log(auth)
             commit('SET_CURRENT_USER', response.data)
             resolve()
           })
@@ -66,8 +59,6 @@ export default {
       return new Promise((resolve, reject) => {
         UserService.getUserInfo()
           .then(auth => {
-            // eslint-disable-next-line no-debugger
-            // debugger
             commit('SET_CURRENT_USER', auth)
             resolve()
           })
