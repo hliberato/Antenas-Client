@@ -1,10 +1,13 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
-import Landing from '../views/external/Login.vue'
-import Container from '../views/app/Container.vue'
-import Home from '../views/app/Home.vue'
-import RegistrationInfo from '../views/external/RegistrationInfo.vue'
+
+// Pages
+
+const External = () => import(/* webpackChunkName: "external-view" */ '@/views/external/External.vue')
+const RegistrationInfo = () => import(/* webpackChunkName: "registration-info-view" */ '@/views/external/RegistrationInfo.vue')
+const Container = () => import(/* webpackChunkName: "container-view" */ '@/views/app/Container.vue')
+const Home = () => import(/* webpackChunkName: "home-view" */ '@/views/app/Home.vue')
 
 Vue.use(VueRouter)
 
@@ -12,7 +15,7 @@ const routes = [
   {
     path: '/auth',
     name: 'Landing',
-    component: Landing,
+    component: External,
     meta: {
       public: true
     }
@@ -45,7 +48,6 @@ const routes = [
 ]
 
 const router = new VueRouter({
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

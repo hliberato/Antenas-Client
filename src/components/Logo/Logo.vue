@@ -25,27 +25,26 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .logo {
-        display: inline-flex;
-        align-items: center;
-        flex-direction: column;
-        color: white;
+@import '@/plugins/element/_colors.scss';
 
-        .logo-title {
-            font-weight: 600;
-            font-size: 24px !important;
-            font-style: normal;
-        }
-
-        .logo-subtitle {
-            font-weight: 200;
-            font-size: 12px;
-            margin-bottom: 6px;
-            font-style: normal;
-        }
-
-        &--blue {
-            color: #4472E9;
-        }
-    }
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  .logo-title {
+    margin-top: -6px;
+    font-weight: 600;
+    font-size: 27px !important;
+    font-style: normal;
+  }
+  .logo-subtitle {
+    font-weight: 200;
+    font-size: 12px;
+    font-style: normal;
+  }
+  &--blue {
+    color: $--color-primary;
+  }
+}
 </style>
