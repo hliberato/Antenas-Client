@@ -55,6 +55,19 @@ export default {
           })
       })
     },
+    registerUser ({ commit }, credentials) {
+      return new Promise((resolve, reject) => {
+        UserService.registUser(credentials)
+          .then(response => {
+            commit('SET_CURRENT_USER', response.data)
+            resolve()
+          })
+          .catch(err => {
+            console.log(err)
+            reject(err)
+          })
+      })
+    },
     loadCurrentUserInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         UserService.getUserInfo()

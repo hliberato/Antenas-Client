@@ -8,7 +8,7 @@
 html {
   font-family: 'Roboto', sans-serif;
 }
-html, body, body > div, .el-container, .el-main {
+html, body, body > [class*=-view], .el-container, .el-main {
   height: 100%;
 }
 .w100 {
@@ -17,8 +17,8 @@ html, body, body > div, .el-container, .el-main {
 .h100 {
   height: 100%;
 }
-.flex {
-  display: flex;
+.d-flex {
+  display: flex !important;
 }
 .justify-end {
   justify-content: flex-end;
@@ -34,5 +34,21 @@ html, body, body > div, .el-container, .el-main {
 }
 .el-header {
   margin: 20px 0;
+}
+.el-form-item {
+  margin-bottom: .75rem !important;
+  &__error {
+    right: 4px;
+    left: initial !important;
+  }
+}
+.fade-enter-active, .fade-leave-active{
+  transition:opacity .3s
+}
+.fade-enter-active{
+  display:none
+}
+.fade-enter, .fade-leave-to{
+  opacity:0
 }
 </style>

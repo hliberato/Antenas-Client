@@ -11,6 +11,7 @@ import vuetify from './plugins/vuetify.js'
 import './plugins/element/element.js'
 import './plugins/datetime.js'
 import './plugins/loading.js'
+import './plugins/notification.js'
 
 // Register global components
 Vue.component('Notification', Notification)

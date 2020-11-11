@@ -1,25 +1,25 @@
 <template>
-  <div class="external-login">
+  <div class="external-view">
     <el-container>
-      <el-header>
+      <el-header height="40px">
         <el-row justify="space-between">
           <el-col :span="12">
             <Logo variant="blue" />
           </el-col>
-          <el-col :span="12" class="flex justify-end">
-            <el-button type="primary">
+          <el-col :span="12" class="justify-end d-flex">
+            <el-button type="primary" @click="signUp = true">
               Cadastro
             </el-button>
-            <el-button>
+            <el-button @click="signUp = false">
               Entrar
             </el-button>
           </el-col>
         </el-row>
       </el-header>
-      <el-main class="external-login__content">
+      <el-main class="justify-center external-view__content d-flex">
         <el-row type="flex" justify="space-around" class="w100">
-          <el-col :span="9">
-            <h1 class="external-login__title">
+          <el-col :span="8" class="justify-center d-flex flex-column">
+            <h1 class="external-view__title">
               <div>Conectando</div>
               <div>
                 os <strong class="highlight">melhores alunos</strong>
@@ -31,40 +31,24 @@
             <img
               src="@/assets/images/business_deal.svg"
               alt="Pessoas fazendo negócio"
-              class="external-login__image"
+              class="external-view__image"
             >
           </el-col>
-          <el-col :span="9">
-            <LoginForm :sign-up="signUp" />
+          <el-col :span="8">
+            <el-card v-loading="loading" class="box-card">
+              <transition name="fade">
+                <div v-if="signUp" key="1">
+                  <h2>{{ title }}</h2>
+                  <RegisterForm />
+                </div>
+                <div v-else key="2">
+                  <h2>{{ title }}</h2>
+                  <LoginForm />
+                </div>
+              </transition>
+            </el-card>
           </el-col>
         </el-row>
-
-        <!-- <el-row
-          :gutter="40"
-          type="flex"
-          class="h100"
-          justify="space-between"
-        >
-          <el-col :span="12" class="flex justify-center align-center flex-column">
-            <h1 class="external-login__title">
-              <div>Conectando</div>
-              <div>
-                os <strong class="highlight">melhores alunos</strong>
-              </div>
-              <div>
-                às <strong class="highlight">melhores empresas</strong>
-              </div>
-            </h1>
-            <img
-              src="@/assets/images/business_deal.svg"
-              alt="Pessoas fazendo negócio"
-              class="external-login__image"
-            >
-          </el-col>
-          <el-col :span="12" class="flex justify-center align-center">
-            <LoginForm :sign-up="signUp" />
-          </el-col>
-        </el-row> -->
       </el-main>
     </el-container>
   </div>
@@ -73,16 +57,25 @@
 <script>
 import Logo from '@/components/Logo/Logo.vue'
 import LoginForm from '@/components/Auth/LoginForm.vue'
+import RegisterForm from '@/components/Auth/RegisterForm.vue'
 
 export default {
-  name: 'Landing',
   components: {
     Logo,
-    LoginForm
+    LoginForm,
+    RegisterForm
   },
   data () {
     return {
-      signUp: true
+      signUp: false
+    }
+  },
+  computed: {
+    title () {
+      return this.signUp ? 'Novo cadastro' : 'Acesso ao sistema'
+    },
+    loading () {
+      return this.$store.getters.loading
     }
   }
 }
@@ -90,11 +83,10 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/plugins/element/_colors.scss';
-.external-login {
+.external-view {
   &__content {
-    display: flex !important;
-    justify-content: center;
     margin-bottom: 60px;
+    align-items: center;
   }
   &__title {
     font-size: 2rem;
@@ -108,6 +100,13 @@ export default {
     max-width: 100%;
     margin-right: 1rem;
     margin-top: 2rem;
+  }
+  .el-card {
+    margin-top: .5rem;
+    text-align: center;
+  }
+  h2 {
+    margin: .5rem 0 1rem;
   }
 }
 </style>

@@ -24,6 +24,7 @@
     "vue-datetime": "^1.0.0-beta.13",
     "vue-loading-overlay": "^3.4.2",
     "vue-router": "^3.4.3",
+    "vue-the-mask": "^0.11.1",
     "vuetify": "^2.3.9",
     "vuex": "^3.5.1",
     "weekstart": "^1.0.1",
@@ -63,13 +64,16 @@
       "parser": "babel-eslint"
     },
     "rules": {
-      "vue/max-attributes-per-line": ["error", {
-        "singleline": 3,
-        "multiline": {
-          "max": 1,
-          "allowFirstLine": false
+      "vue/max-attributes-per-line": [
+        "error",
+        {
+          "singleline": 4,
+          "multiline": {
+            "max": 1,
+            "allowFirstLine": false
+          }
         }
-      }]
+      ]
     }
   },
   "browserslist": [

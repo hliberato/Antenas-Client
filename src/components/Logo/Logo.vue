@@ -28,26 +28,23 @@ export default {
 @import '@/plugins/element/_colors.scss';
 
 .logo {
-    display: inline-flex;
-    align-items: center;
-    flex-direction: column;
-    color: white;
-
-    .logo-title {
-        font-weight: 600;
-        font-size: 27px !important;
-        font-style: normal;
-    }
-
-    .logo-subtitle {
-        font-weight: 200;
-        font-size: 12px;
-        margin-bottom: 6px;
-        font-style: normal;
-    }
-
-    &--blue {
-        color: $--color-primary;
-    }
+  display: inline-flex;
+  align-items: center;
+  flex-direction: column;
+  color: white;
+  .logo-title {
+    margin-top: -6px;
+    font-weight: 600;
+    font-size: 27px !important;
+    font-style: normal;
+  }
+  .logo-subtitle {
+    font-weight: 200;
+    font-size: 12px;
+    font-style: normal;
+  }
+  &--blue {
+    color: $--color-primary;
+  }
 }
 </style>

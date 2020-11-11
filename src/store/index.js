@@ -7,6 +7,7 @@ import user from './modules/user'
 Vue.use(Vuex)
 
 const state = {
+  loading: false,
   phases: {
     1: 'Cadastro Inicial',
     2: 'Avaliação Inicial',
@@ -26,13 +27,17 @@ const mutations = {
   ADD_PROJECTS (state, projects) {
     state.projects = state.projects.concat(projects)
   },
-
   SELECT_PROJECT (state, projectId) {
     state.selectedProject = state.projects.filter(project => project.id === projectId)[0]
   },
-
   DESELECT_PROJECT (state) {
     state.selectedProject = null
+  },
+  SHOW_LOADING (state) {
+    state.loading = true
+  },
+  HIDE_LOADING (state) {
+    state.loading = false
   }
 }
 
@@ -53,7 +58,9 @@ const actions = {
   }
 }
 
-const getters = {}
+const getters = {
+  loading: (state) => state.loading
+}
 
 const modules = {
   user

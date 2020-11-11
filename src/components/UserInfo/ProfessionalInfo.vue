@@ -48,7 +48,7 @@
         Empresita
       </strong>
 
-      <div >
+      <div>
         <div>
           <strong> Cargo: </strong> Estagiário
         </div>
