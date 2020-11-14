@@ -15,7 +15,7 @@ export default {
     name: authFromStorage.name || null,
     photo: authFromStorage.photo || null,
     token: authFromStorage.token || null,
-    role: role(authFromStorage.authorizations || null)
+    role: authFromStorage.role || null
   },
   mutations: {
     SET_CURRENT_USER (state, auth) {
@@ -41,10 +41,7 @@ export default {
   actions: {
     authenticateUser ({ commit }, credentials) {
       return new Promise((resolve, reject) => {
-        UserService.authenticateUser({
-          email: credentials.email,
-          password: credentials.password
-        })
+        UserService.authenticateUser(credentials)
           .then(response => {
             commit('SET_CURRENT_USER', response.data)
             resolve()
@@ -86,6 +83,15 @@ export default {
     }
   },
   getters: {
+    userName: (state) => state.name,
+    userRole: (state) => {
+      switch (state.role) {
+        case 'ROLE_CADI': return 'CADI'
+        case 'ROLE_REPRESENTATIVE': return 'Representante'
+        case 'ROLE_TEACHER': return 'Professor'
+        case 'ROLE_STUDENT': return 'Aluno'
+      } return ''
+    },
     userToken: (state) => state.token,
     isLoggedIn: (state) => !!state.token,
     isCadi: (state) => state.role === 'ROLE_CADI',

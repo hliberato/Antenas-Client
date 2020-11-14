@@ -1,6 +1,6 @@
 <template>
   <el-form ref="form" :model="form" :rules="rules" class="register-form">
-    <div v-if="step === 1">
+    <div v-if="step === 1 && !finished">
       <el-form-item label="Cargo" prop="role">
         <el-select v-model="form.role" class="w100">
           <el-option
@@ -29,7 +29,7 @@
         </el-form-item>
       </div>
     </div>
-    <div v-else>
+    <div v-else-if="step === 2 && !finished">
       <el-form-item label="E-mail" prop="email">
         <el-input v-model="form.email" @keyup.enter.native="submitForm" />
       </el-form-item>
@@ -40,9 +40,25 @@
         <el-input v-model="form.confirmPassword" type="password" @keyup.enter.native="submitForm" />
       </el-form-item>
     </div>
-    <el-button type="primary" class="w100" @click="submitForm">
-      {{ step === 1 ? 'Avançar' : 'Cadastrar' }}
-    </el-button>
+    <div v-else>
+      <h2>
+        BOA MERMÃO! <br>
+        ENVIAMO E-MAIL PROCÊ LÁ <br>
+        QUE EMAIL? ESSE, JUMENTO: <i>{{ form.email }}</i><br>
+        VAI MANO!
+      </h2>
+      <el-button type="primary" class="w100" @click="$emit('back-to-login')">
+        Ir para Login
+      </el-button>
+    </div>
+    <div v-if="!finished" class="d-flex">
+      <el-button v-if="step === 2" type="text" @click="step = 1">
+        Voltar
+      </el-button>
+      <el-button type="primary" class="w100" @click="submitForm">
+        {{ step === 1 ? 'Avançar' : 'Cadastrar' }}
+      </el-button>
+    </div>
   </el-form>
 </template>
 
@@ -58,6 +74,7 @@ export default {
     }
     return {
       step: 1,
+      finished: false,
       roles: [
         { value: 'STUDENT', label: 'Aluno' },
         { value: 'TEACHER', label: 'Professor' },
@@ -124,8 +141,14 @@ export default {
 
 <style lang="scss" scoped>
 .register-form {
+  overflow-wrap: break-word;
   .el-button {
     margin: 1.5rem 0 .5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    & + .el-button {
+      margin-left: 1rem;
+    }
   }
 }
 </style>
