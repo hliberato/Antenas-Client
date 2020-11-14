@@ -73,7 +73,8 @@
             "allowFirstLine": false
           }
         }
-      ]
+      ],
+      "vue/singleline-html-element-content-newline": 0
     }
   },
   "browserslist": [

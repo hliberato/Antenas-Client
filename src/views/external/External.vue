@@ -16,10 +16,10 @@
           </el-col>
         </el-row>
       </el-header>
-      <el-main class="justify-center external-view__content d-flex">
+      <el-main class="justify-center content d-flex">
         <el-row type="flex" justify="space-around" class="w100">
           <el-col :span="8" class="justify-center d-flex flex-column">
-            <h1 class="external-view__title">
+            <h1 class="title">
               <div>Conectando</div>
               <div>
                 os <strong class="highlight">melhores alunos</strong>
@@ -31,7 +31,7 @@
             <img
               src="@/assets/images/business_deal.svg"
               alt="Pessoas fazendo negócio"
-              class="external-view__image"
+              class="image"
             >
           </el-col>
           <el-col :span="8">
@@ -39,7 +39,7 @@
               <transition name="fade">
                 <div v-if="signUp" key="1">
                   <h2>{{ title }}</h2>
-                  <RegisterForm />
+                  <RegisterForm @back-to-login="signUp = false" />
                 </div>
                 <div v-else key="2">
                   <h2>{{ title }}</h2>
@@ -67,7 +67,7 @@ export default {
   },
   data () {
     return {
-      signUp: false
+      signUp: true
     }
   },
   computed: {
@@ -83,19 +83,20 @@ export default {
 
 <style lang="scss" scoped>
 @import '@/plugins/element/_colors.scss';
+
 .external-view {
-  &__content {
+  .content {
     margin-bottom: 60px;
     align-items: center;
   }
-  &__title {
+  .title {
     font-size: 2rem;
     font-weight: 300;
     .highlight {
       color: $--color-primary;
     }
   }
-  &__image {
+  .image {
     width: 350px;
     max-width: 100%;
     margin-right: 1rem;

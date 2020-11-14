@@ -34,10 +34,7 @@ export default {
       this.$refs.form.validate((valid) => {
         if (valid) {
           this.$store.commit('SHOW_LOADING')
-          this.$store.dispatch('authenticateUser', {
-            email: this.form.email,
-            password: this.form.password
-          })
+          this.$store.dispatch('authenticateUser', this.form)
             .then(() => this.$router.push('/home'))
             .catch(err => this.$throwError(err))
             .finally(() => this.$store.commit('HIDE_LOADING'))

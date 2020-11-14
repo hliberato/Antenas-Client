@@ -1,61 +1,104 @@
 <template>
   <div class="container-view">
-    <v-app-bar
-      color="white lighten-5"
-      app
-    >
-      <Logo
-        variant="blue"
-        class="toolbar__logo"
-      />
-      <v-spacer />
-      <Profile class="toolbar__profile" />
-    </v-app-bar>
-    <router-view />
+    <el-container>
+      <el-header height="auto">
+        <Logo variant="blue" />
+        <div class="">
+          <div class="align-center d-flex">
+            <el-badge :value="1" class="notification">
+              <i class="el-icon-bell" />
+            </el-badge>
+            <el-avatar size="medium" class="avatar">
+              {{ userInitials }}
+            </el-avatar>
+            <div>
+              <h4>{{ userName }}</h4>
+              <h5>{{ userRole }}</h5>
+            </div>
+            <el-dropdown @command="dropdownClick">
+              <i class="menu el-icon-more" />
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="account">
+                  <i class="el-icon-user" />
+                  Dados da conta
+                </el-dropdown-item>
+                <el-dropdown-item command="medals">
+                  <i class="el-icon-medal" />
+                  Medalhas
+                </el-dropdown-item>
+                <el-dropdown-item command="logout" divided>
+                  <i class="el-icon-switch-button" />
+                  Sair
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
+        </div>
+      </el-header>
+      <el-main>
+        <transition name="fade">
+          <router-view />
+        </transition>
+      </el-main>
+    </el-container>
   </div>
 </template>
 
 <script>
 import Logo from '@/components/Logo/Logo.vue'
-import Profile from '@/components/Toolbar/Profile.vue'
-import EventBus from '@/helpers/EventBus.js'
+import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Home',
-  components: {
-    Logo,
-    Profile
-  },
-  data () {
-    return {
-      selectedProject: {},
-      creating: false,
-      evaluateStudents: false,
-      projectId: 0
+  components: { Logo },
+  computed: {
+    ...mapGetters([
+      'userName',
+      'userRole'
+    ]),
+    userInitials () {
+      if (this.userName) {
+        const splitedName = this.userName.split(' ')
+        return (splitedName[0].charAt(0) + splitedName[splitedName.length - 1].charAt(0)).toUpperCase()
+      }
+      return ''
     }
   },
-  mounted () {
-    EventBus.$on('EVALUATE_STUDENTS', (projectId) => {
-      this.projectId = projectId
-      this.evaluateStudents = !this.evaluateStudents
-    })
-  },
   methods: {
-    deselectProject () {
-      this.selectedProject = {}
-    },
-    createProject () {
-      this.creating = true
-      this.deselectProject()
-    },
-    stopCreation () {
-      this.creating = false
+    dropdownClick (action) {
+      if (action === 'account') this.$router.push('/dados-cadastrais')
+      else if (action === 'logout') {
+        this.$store.commit('LOGOUT_CURRENT_USER')
+        this.$router.push('/')
+      }
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.container-view {
+<style lang="scss" scoped>
+@import '@/plugins/element/_colors.scss';
+
+h3, h4, h5 {
+  color: $--color-text-regular;
+}
+.notification {
+  margin-right: 1.4rem;
+  font-size: 1.2rem;
+}
+.avatar {
+  margin-right: .75rem;
+}
+.menu {
+  margin-left: .7rem;
+  font-size: 1.4rem;
+  transform: rotate(90deg);
+}
+.el-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 0 6px rgb(0 0 0 / 4%);
+  padding: 6px 20px;
+  margin: 0;
 }
 </style>
