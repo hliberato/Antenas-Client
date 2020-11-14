@@ -98,7 +98,6 @@ export default {
   },
 
   updateUser (user) {
-    console.log('updateUser')
     const role = 'STUDENT'
 
     return http

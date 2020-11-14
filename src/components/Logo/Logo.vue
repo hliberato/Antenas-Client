@@ -2,6 +2,7 @@
   <div
     class="logo"
     :class="`logo--${ variant }`"
+    @click="redirect()"
   >
     <h1 class="logo-title">
       Antenas
@@ -20,6 +21,11 @@ export default {
       type: String,
       default: ''
     }
+  },
+  methods: {
+    redirect () {
+      this.$router.push('/home')
+    }
   }
 }
 </script>
@@ -32,6 +38,7 @@ export default {
   align-items: center;
   flex-direction: column;
   color: white;
+  cursor: pointer;
   .logo-title {
     margin-top: -6px;
     font-weight: 600;

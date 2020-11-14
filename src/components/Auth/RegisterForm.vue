@@ -19,7 +19,7 @@
           <el-input v-model="form.cpf" v-mask="'###.###.###-##'" @keyup.enter.native="submitForm" />
         </el-form-item>
         <el-form-item v-if="isStudent" label="RA" prop="ra">
-          <el-input v-model="form.ra" @keyup.enter.native="submitForm" />
+          <el-input v-model="form.ra" v-mask="'#############'" @keyup.enter.native="submitForm" />
         </el-form-item>
         <el-form-item v-if="isStudent || isRepresentative" label="Cidade" prop="city">
           <el-input v-model="form.city" @keyup.enter.native="submitForm" />

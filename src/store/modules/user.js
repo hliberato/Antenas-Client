@@ -88,9 +88,9 @@ export default {
   getters: {
     userToken: (state) => state.token,
     isLoggedIn: (state) => !!state.token,
-    isCadi: (state) => state.role === 'CADI',
-    isStudent: (state) => state.role === 'STUDENT',
-    isRepresentative: (state) => state.role === 'REPRESENTATIVE',
-    isTeacher: (state) => state.role === 'TEACHER'
+    isCadi: (state) => state.role === 'ROLE_CADI',
+    isStudent: (state) => state.role === 'ROLE_STUDENT',
+    isRepresentative: (state) => state.role === 'ROLE_REPRESENTATIVE',
+    isTeacher: (state) => state.role === 'ROLE_TEACHER'
   }
 }

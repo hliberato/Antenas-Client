@@ -104,6 +104,7 @@ export default {
   .el-card {
     margin-top: .5rem;
     text-align: center;
+    max-width: 400px;
   }
   h2 {
     margin: .5rem 0 1rem;

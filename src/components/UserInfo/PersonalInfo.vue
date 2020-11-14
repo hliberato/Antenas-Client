@@ -35,7 +35,7 @@
 
       <label>LinkedIn: </label>
       <input
-        v-model="user.linkedIn"
+        v-model="user.linkedin"
         type="text"
       >
 
@@ -93,7 +93,6 @@ export default {
   },
   methods: {
     update () {
-      console.log('update')
       UserService.updateUser(this.user)
         .then((res) => {
           this.user = res

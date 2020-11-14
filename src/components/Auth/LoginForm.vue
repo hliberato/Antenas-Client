@@ -35,8 +35,8 @@ export default {
         if (valid) {
           this.$store.commit('SHOW_LOADING')
           this.$store.dispatch('authenticateUser', {
-            email: this.email,
-            password: this.password
+            email: this.form.email,
+            password: this.form.password
           })
             .then(() => this.$router.push('/home'))
             .catch(err => this.$throwError(err))

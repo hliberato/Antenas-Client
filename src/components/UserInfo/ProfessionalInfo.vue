@@ -4,7 +4,7 @@
       <br>
       <label>Empresa: </label>
       <input
-        v-model="user.role"
+        v-model="professionalInfo.role"
         type="text"
       >
 
@@ -12,7 +12,7 @@
 
       <label>Cargo: </label>
       <input
-        v-model="user.activities_performed"
+        v-model="professionalInfo.activities_performed"
         type="text"
       >
 
@@ -20,13 +20,13 @@
 
       <label>Data inicial: </label>
       <input
-        v-model="user.start"
+        v-model="professionalInfo.start"
         type="text"
       >
 
       <label>Data final: </label>
       <input
-        v-model="user.end"
+        v-model="professionalInfo.end"
         type="text"
       >
 
@@ -35,7 +35,7 @@
 
       <button
         type="button"
-        @click="update"
+        @click="save()"
       >
         Salvar
       </button>
@@ -63,31 +63,52 @@
         </div>
       </div>
     </div>
+
+    {{ '[[[[[' + user + ']]]]]' }}
   </div>
 </template>
 
 <script>
 import EventBus from '@/helpers/EventBus.js'
+import UserService from '@/services/UserService.js'
 
 export default {
   name: 'ProfessionalInfo',
   components: {
   },
+  props: {
+    user: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
   data () {
     return {
-      user: {
+      show_fields: false,
+      professionalInfo: {
         role: '',
         activities_performed: '',
         start: '',
         end: ''
-      },
-      show_fields: false
+      }
     }
   },
   mounted () {
     EventBus.$on('ADD_PROFESSIONAL_INFO', () => {
       this.show_fields = !this.show_fields
     })
+  },
+  methods: {
+    save () {
+      this.user.professionalInfos.push(this.professionalInfo)
+      console.log(this.user)
+      UserService.updateUser(this.user)
+        .then((res) => {
+          this.user = res
+        })
+    }
   }
 }
 </script>
