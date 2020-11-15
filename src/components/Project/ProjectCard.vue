@@ -3,18 +3,19 @@
     :class="`project-card--${status}`"
     class="project-card"
     shadow="hover"
+    @click.native="$emit('click', project.id)"
   >
-    <h4 class="title">{{ title }}</h4>
+    <h4 class="title">{{ project.title }}</h4>
     <div class="description">
-      {{ description }}
+      {{ project.shortDescription }}
     </div>
     <div class="justify-between d-flex">
       <span class="updated">
-        Atualizado em: <b>{{ updatedAt | moment("DD/MM/YYYY") }}</b>
+        Atualizado em: <b>{{ project.updatedAt | moment("DD/MM/YYYY") }}</b>
       </span>
-      <span class="progress">
-        {{ progressLabel }}
-      </span>
+      <h5 class="progress">
+        {{ labelPhase }}
+      </h5>
     </div>
   </el-card>
 </template>
@@ -22,40 +23,17 @@
 <script>
 export default {
   props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    description: {
-      type: String,
-      default: ''
-    },
-    updatedAt: {
-      type: String,
-      default: ''
-    },
-    progress: {
-      type: Number,
-      default: 1
-    },
-    status: {
-      type: String,
-      default: 'waitingAction',
-      validator: (val) => [
-        'waitingAction',
-        'requestedAction',
-        'rejected',
-        'finished'].includes(val)
+    project: {
+      type: Object,
+      default: () => {}
     }
   },
   computed: {
-    progressLabel () {
-      switch (this.progress) {
-        case 1:
-          return 'a'
-        default:
-          return 'b'
-      }
+    status () {
+      return this.$getProjectStatus(this.project)
+    },
+    labelPhase () {
+      return this.$getProjectLabelPhase(this.status, this.project)
     }
   }
 }
@@ -68,13 +46,15 @@ export default {
   border: 0;
   border-left-width: 6px;
   border-left-style: solid;
-  &--waitingAction {
+  cursor: pointer;
+  &--waiting {
     border-left-color: $--color-primary;
-    .title {
+    .title, .progress {
       color: $--color-primary;
     }
   }
   .description {
+    margin: .3rem 0;
     font-size: .875rem;
     overflow: hidden;
     white-space: nowrap;

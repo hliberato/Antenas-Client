@@ -2,11 +2,10 @@
   <el-container class="projects-view">
     <el-aside style="padding: 10px;">
       <ProjectCard
-        status="waitingAction"
-        title="Projetão monstro"
-        description="Um carro eletrico movido a gasolina renovavel baseado em flatulência de suínos."
-        updated-at="2020-10-26T03:27:06.000+0000"
-        :progress="2"
+        v-for="(project, index) in projects"
+        :key="index"
+        :project="project"
+        @click="selectProject"
       />
     </el-aside>
     <el-main>
@@ -17,6 +16,7 @@
 
 <script>
 import ProjectCard from '@/components/Project/ProjectCard.vue'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
@@ -26,9 +26,17 @@ export default {
     return {
     }
   },
+  computed: {
+    ...mapGetters([
+      'projects'
+    ])
+  },
   mounted () {
   },
   methods: {
+    selectProject (id) {
+      console.log(id)
+    }
   }
 }
 </script>
@@ -37,6 +45,9 @@ export default {
 .projects-view {
   .el-card__body {
     padding: 4px 12px;
+  }
+  .project-card + .project-card {
+    margin-top: 1rem;
   }
 }
 </style>

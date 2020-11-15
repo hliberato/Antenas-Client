@@ -59,7 +59,9 @@ const actions = {
 }
 
 const getters = {
-  loading: (state) => state.loading
+  loading: (state) => state.loading,
+  defaultPhases: (state) => state.phases,
+  projects: (state) => state.projects
 }
 
 const modules = {
