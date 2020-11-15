@@ -84,7 +84,8 @@ export default {
   },
   getters: {
     userName: (state) => state.name,
-    userRole: (state) => {
+    userRole: (state) => state.role ? state.role.replace('ROLE_', '') : undefined,
+    userRoleDisplay: (state) => {
       switch (state.role) {
         case 'ROLE_CADI': return 'CADI'
         case 'ROLE_REPRESENTATIVE': return 'Representante'

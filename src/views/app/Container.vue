@@ -13,7 +13,7 @@
             </el-avatar>
             <div>
               <h4>{{ userName }}</h4>
-              <h5>{{ userRole }}</h5>
+              <h5>{{ userRoleDisplay }}</h5>
             </div>
             <el-dropdown @command="dropdownClick">
               <i class="menu el-icon-more" />
@@ -53,7 +53,7 @@ export default {
   computed: {
     ...mapGetters([
       'userName',
-      'userRole'
+      'userRoleDisplay'
     ]),
     userInitials () {
       if (this.userName) {

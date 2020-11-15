@@ -1,11 +1,5 @@
 import http from '../helpers/Http'
-
-const routeMap = {
-  STUDENT: '/student',
-  CADI: '/cadi',
-  REPRESENTATIVE: '/representative',
-  TEACHER: '/teacher'
-}
+import store from '@/store'
 
 export default {
   authenticateUser (credentials) {
@@ -27,7 +21,7 @@ export default {
       company,
       telephone
     }
-    return http.post(routeMap[role], user)
+    return http.post(role, user)
     // TODO mudar toda essa estrutura para quem o chama
     // .then(() => {
     //   alert('Usuario criado')
@@ -98,10 +92,8 @@ export default {
   },
 
   updateUser (user) {
-    const role = 'STUDENT'
-
     return http
-      .post(`${routeMap[role]}/update`, user)
+      .put(`${store.getters.userRole}/update`, user)
       .then(res => {
         return res.data
       }).catch(() => {

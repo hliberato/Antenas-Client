@@ -13,6 +13,9 @@ import './plugins/datetime.js'
 import './plugins/loading.js'
 import './plugins/notification.js'
 
+import { Loading } from 'element-ui'
+Vue.prototype.$loading = Loading.service
+
 // Register global components
 Vue.component('Notification', Notification)
 
