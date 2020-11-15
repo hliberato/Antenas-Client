@@ -9,7 +9,10 @@
               <i class="el-icon-bell" />
             </el-badge>
             <el-avatar size="medium" class="avatar">
-              {{ userInitials }}
+              <img v-if="userPhoto" :src="userPhoto">
+              <span v-else>
+                {{ userInitials }}
+              </span>
             </el-avatar>
             <div>
               <h4>{{ userName }}</h4>
@@ -51,7 +54,8 @@ export default {
   computed: {
     ...mapGetters([
       'userName',
-      'userRoleDisplay'
+      'userRoleDisplay',
+      'userPhoto'
     ]),
     userInitials () {
       if (this.userName) {
@@ -83,9 +87,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/plugins/element/_colors.scss';
 
-h3, h4, h5 {
-  color: $--color-text-regular;
-}
 .notification {
   margin-right: 1.4rem;
   font-size: 1.2rem;

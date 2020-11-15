@@ -1,5 +1,6 @@
 <template>
   <div class="personal-info">
+    <h2>Informações pessoais</h2>
     <el-form
       ref="form"
       v-loading="$store.getters.loading"
@@ -111,7 +112,7 @@ export default {
     update () {
       this.$store.commit('SHOW_LOADING')
       UserService.updateUser(this.user)
-        .then((res) => this.$emit('update:user'))
+        // .then((res) => this.$emit('update:user'))
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
     },
@@ -139,7 +140,12 @@ export default {
     margin-top: -14px;
     color: $--color-text-regular;
   }
+
+  h2 {
+    color: $--color-primary;
+  }
 }
+
 .avatar-uploader .el-upload {
   border: 1px dashed #d9d9d9;
   border-radius: 6px;

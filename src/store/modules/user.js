@@ -93,6 +93,7 @@ export default {
         case 'ROLE_STUDENT': return 'Aluno'
       } return ''
     },
+    userPhoto: (state) => state.photo,
     userToken: (state) => state.token,
     isLoggedIn: (state) => !!state.token,
     isCadi: (state) => state.role === 'ROLE_CADI',
