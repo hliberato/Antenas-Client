@@ -1,6 +1,6 @@
 <template>
-  <v-main class="justify-center home-view">
-    <div class="home__wrapper">
+  <v-main class="justify-center projects-view">
+    <div class="projects__wrapper">
       <v-row>
         <v-col
           v-if="evaluateStudents"
@@ -22,7 +22,7 @@
           class="content"
         >
           <Projects
-            class="home__projects"
+            class="projects__projects"
             @create="createProject"
           />
         </v-col>
@@ -33,12 +33,12 @@
         >
           <ProjectView
             v-if="!creating"
-            class="home__project-view"
+            class="projects__project-view"
             @create="createProject"
           />
           <ProjectCreation
             v-if="creating"
-            class="home__project-view"
+            class="projects__project-view"
             @close="stopCreation"
           />
         </v-col>
@@ -56,7 +56,7 @@ import Evaluation from '@/components/Medal/Evaluation'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-  name: 'Home',
+  name: 'projects',
   components: {
     Projects,
     ProjectView,
@@ -98,7 +98,7 @@ export default {
   max-height: 100%;
 }
 
-.home {
+.projects {
   &__wrapper {
     display: flex;
     max-width: 1080px;
