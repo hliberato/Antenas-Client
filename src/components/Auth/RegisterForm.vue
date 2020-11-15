@@ -128,7 +128,7 @@ export default {
           } else {
             this.$store.commit('SHOW_LOADING')
             this.$store.dispatch('registerUser', this.form)
-              .then(() => this.$router.push('/home'))
+              .then(() => this.$router.push('/projects'))
               .catch(err => this.$throwError(err))
               .finally(() => this.$store.commit('HIDE_LOADING'))
           }

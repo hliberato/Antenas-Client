@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import { Notification } from 'element-ui'
 
-Notification.install = function (Vue, options) {
+const Utils = {}
+
+Utils.install = function (Vue, options) {
   Vue.prototype.$throwError = (err) => {
     let message
     switch (err.response.data.status) {
@@ -26,4 +28,4 @@ Notification.install = function (Vue, options) {
   }
 }
 
-Vue.use(Notification)
+Vue.use(Utils)

@@ -26,6 +26,9 @@ html, body, body > [class*=-view], .el-container, .el-main {
 .justify-center {
   justify-content: center;
 }
+.justify-between {
+  justify-content: space-between;
+}
 .align-center {
   align-items: center;
 }
@@ -34,6 +37,9 @@ html, body, body > [class*=-view], .el-container, .el-main {
 }
 .el-header {
   margin: 20px 0;
+}
+.el-main {
+  padding: 0 !important;
 }
 .el-form-item {
   margin-bottom: .75rem !important;
