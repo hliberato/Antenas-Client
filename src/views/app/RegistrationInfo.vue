@@ -7,8 +7,12 @@
       <el-tab-pane v-loading="loading" label="Informações profissionais" name="job">
         <ProfessionalInfo :user.sync="user" />
       </el-tab-pane>
-      <el-tab-pane v-loading="loading" label="Informações acadêmicas" name="school">Informações acadêmicas</el-tab-pane>
-      <el-tab-pane v-loading="loading" label="Medalhas" name="medals">Medalhas</el-tab-pane>
+      <el-tab-pane v-loading="loading" label="Informações acadêmicas" name="school">
+        <AcademicInfo :user.sync="user" />
+      </el-tab-pane>
+      <el-tab-pane v-loading="loading" label="Medalhas" name="medals">
+        Medalhas
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -16,6 +20,7 @@
 <script>
 import PersonalInfo from '@/components/UserInfo/PersonalInfo.vue'
 import ProfessionalInfo from '@/components/UserInfo/ProfessionalInfo.vue'
+import AcademicInfo from '@/components/UserInfo/AcademicInfo.vue'
 import UserService from '@/services/UserService.js'
 import { mapGetters } from 'vuex'
 
@@ -23,7 +28,8 @@ export default {
   name: 'RegistrationInfo',
   components: {
     PersonalInfo,
-    ProfessionalInfo
+    ProfessionalInfo,
+    AcademicInfo
   },
   data () {
     return {

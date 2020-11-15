@@ -1,75 +1,98 @@
 <template>
-  <div>
-    <div v-if="show_fields">
-      <br>
-      <label>Empresa: </label>
-      <input
-        v-model="professionalInfo.role"
-        type="text"
-      >
-
-      <br>
-
-      <label>Cargo: </label>
-      <input
-        v-model="professionalInfo.activities_performed"
-        type="text"
-      >
-
-      <br>
-
-      <label>Data inicial: </label>
-      <input
-        v-model="professionalInfo.start"
-        type="text"
-      >
-
-      <label>Data final: </label>
-      <input
-        v-model="professionalInfo.end"
-        type="text"
-      >
-
-      <br>
-      <br>
-
-      <button
-        type="button"
-        @click="save()"
-      >
+  <div class="professional-info">
+    <el-form
+      ref="form"
+      v-loading="$store.getters.loading"
+      :model="form"
+      class="login-form"
+      label-position="top"
+      label-width="130px"
+      :rules="rules"
+    >
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="Empresa" prop="company">
+            <el-input v-model="form.company" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="Cargo" prop="role">
+            <el-input v-model="form.role" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="Data inicial" prop="startDate">
+            <el-date-picker
+              v-model="form.start"
+              format="dd/MM/yyyy"
+              prop="start"
+              type="date"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="Data final" prop="endDate">
+            <el-date-picker
+              v-model="form.end"
+              format="dd/MM/yyyy"
+              prop="end"
+              label="Data de início"
+              type="date"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item label="Atividades realizadas" prop="activitiesPerformed">
+        <el-input v-model="form.activitiesPerformed" type="textarea" :rows="4" />
+      </el-form-item>
+      <el-button type="primary" @click="update">
         Salvar
-      </button>
-    </div>
-
-    <br>
-
-    <div>
-      <strong>
-        Empresita
-      </strong>
-
-      <div>
-        <div>
-          <strong> Cargo: </strong> Estagiário
-        </div>
-
-        <div>
-          <strong> Atividades exercidas: </strong> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor justo eget nunc aliquet, sed dictum purus consequat
-        </div>
-
-        <div>
-          <strong> Início: </strong> 05/2019
-          <strong> Fim: </strong> 05/2019
-        </div>
-      </div>
-    </div>
-
-    {{ '[[[[[' + user + ']]]]]' }}
+      </el-button>
+    </el-form>
+    <el-table :data="user.professionalInfos">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <p><strong>Atividades exercidas:</strong> {{ props.row.activitiesPerformed }}</p>
+          <p><strong>Data inicial:</strong> {{ props.row.start }}</p>
+          <p><strong>Data final:</strong> {{ props.row.end }}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Empresa"
+        prop="company"
+      />
+      <el-table-column
+        label="Cargo"
+        prop="role"
+      />
+      <el-table-column
+        align="right"
+      >
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            icon="el-icon-edit"
+            @click="edit(scope.row)"
+          >
+            Editar
+          </el-button>
+          <el-button
+            size="mini"
+            type="danger"
+            icon="el-icon-delete"
+            @click="deleteRow(scope.row)"
+          >
+            Excluir
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
-import EventBus from '@/helpers/EventBus.js'
 import UserService from '@/services/UserService.js'
 
 export default {
@@ -80,93 +103,72 @@ export default {
     user: {
       type: Object,
       default () {
-        return {}
+        return {
+          company: '',
+          activitiesPerformed: '',
+          start: '',
+          end: ''
+        }
       }
     }
   },
   data () {
+    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
     return {
-      show_fields: false,
-      professionalInfo: {
-        role: '',
-        activities_performed: '',
+      form: {
+        id: 0,
+        company: '',
+        activitiesPerformed: '',
         start: '',
         end: ''
+      },
+      rules: {
+        company: required,
+        activitiesPerformed: required,
+        start: required,
+        end: required
       }
     }
   },
-  mounted () {
-    EventBus.$on('ADD_PROFESSIONAL_INFO', () => {
-      this.show_fields = !this.show_fields
-    })
-  },
   methods: {
-    save () {
-      this.user.professionalInfos.push(this.professionalInfo)
-      console.log(this.user)
+    update () {
+      this.$store.commit('SHOW_LOADING')
+
+      const index = this.user.professionalInfos.findIndex(item => item.id === this.form.id)
+
+      if (this.form.company && index === -1) {
+        if (!this.user.professionalInfos) {
+          this.user.professionalInfos = []
+        }
+        this.user.professionalInfos.push(this.form)
+      }
+
       UserService.updateUser(this.user)
-        .then((res) => {
-          this.user = res
-        })
+        .then((res) => this.$emit('update:user'))
+        .catch(err => this.$throwError(err))
+        .finally(() => this.$store.commit('HIDE_LOADING'))
+    },
+    deleteRow (row) {
+      this.user.professionalInfos = this.user.professionalInfos.filter(info => {
+        return info !== row
+      })
+      this.update()
+    },
+    edit (row) {
+      this.form = row
     }
   }
 }
 </script>
 
-<style scoped lang="scss">
-.content {
-  max-height: 100%;
-}
-
-.button {
-  margin-right: 40px;
-}
-
-.date-field {
-    margin-right: 30px;
-}
-
-.ml-25 {
-    margin-left: 25px;
-}
-
-.row {
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-.company-info {
-    margin-left: 15px;
-    margin-top: 5px;
-}
-
-.line-spacing {
-    margin-bottom: 5px;
-}
-
-.company {
-    border-top: solid 1px #CDCCCC;
-    margin-top: 40px;
-}
-
-.home {
-  &__wrapper {
-    display: flex;
-    max-width: 1080px;
-    width: 90%;
-    margin: 25px auto;
-    height: calc(100vh - 70px - #{32px } * 2);
+<style lang="scss">
+.professional-info {
+  .el-table__expanded-cell {
+    padding: 50px;
   }
 
-  &__projects,
-  &__project-view {
-    height: 100%;
-  }
-
-  &__project-view {
-    margin-left: spacing(4);
-    flex-grow: 1;
+  .el-date-editor {
+      width: 100%;
   }
 }
-
 </style>

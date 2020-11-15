@@ -104,7 +104,6 @@ export default {
   },
   watch: {
     user (user) {
-      console.log(user)
       if (user.id) this.form = user
     }
   },
