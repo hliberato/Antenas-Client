@@ -25,6 +25,7 @@
           <el-form-item label="Data inicial" prop="startDate">
             <el-date-picker
               v-model="form.start"
+              format="dd/MM/yyyy"
               prop="start"
               type="date"
             />
@@ -34,6 +35,7 @@
           <el-form-item label="Data final" prop="endDate">
             <el-date-picker
               v-model="form.end"
+              format="dd/MM/yyyy"
               prop="end"
               label="Data de início"
               type="date"
@@ -51,8 +53,8 @@
     >
       <el-table-column type="expand">
         <template slot-scope="props">
-          <p><strong>Data inicial:</strong>  {{ props.row.start }}</p>
-          <p><strong>Data final:</strong> {{ props.row.end }}</p>
+          <p><strong>Data inicial:</strong>  {{ props.row.start | moment("DD/MM/YYYY") }}</p>
+          <p><strong>Data final:</strong> {{ props.row.end | moment("DD/MM/YYYY") }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -139,7 +141,7 @@ export default {
       }
 
       UserService.updateUser(this.user)
-        .then((res) => this.$emit('update:user'))
+        // .then((res) => this.$emit('update:user'))
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
     },
@@ -158,10 +160,6 @@ export default {
 
 <style lang="scss">
 .academic-info {
-  .el-date-editor {
-      width: 100%;
-  }
-
   .el-table__expanded-cell {
     padding: 50px;
   }

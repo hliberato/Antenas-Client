@@ -25,7 +25,6 @@ import UserService from '@/services/UserService.js'
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'RegistrationInfo',
   components: {
     PersonalInfo,
     ProfessionalInfo,
@@ -57,9 +56,15 @@ export default {
 @import '@/plugins/element/_colors.scss';
 
 .el-tabs__header {
-  background-color: mix(#fff, $--color-primary, 90%)
+  background-color: mix(#fff, $--color-primary, 90%);
 }
 .el-tab-pane {
-  padding: 20px 40px;
+  padding: 18px 40px 20px;
+}
+.el-tabs__nav {
+  margin-top: 2rem;
+}
+.el-tabs__item {
+  text-align: left !important;
 }
 </style>

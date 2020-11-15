@@ -7,13 +7,13 @@ import store from '@/store'
 const External = () => import(/* webpackChunkName: "external-view" */ '@/views/external/External.vue')
 const RegistrationInfo = () => import(/* webpackChunkName: "registration-info-view" */ '@/views/app/RegistrationInfo.vue')
 const Container = () => import(/* webpackChunkName: "container-view" */ '@/views/app/Container.vue')
-const Home = () => import(/* webpackChunkName: "home-view" */ '@/views/app/Home.vue')
+const Projects = () => import(/* webpackChunkName: "projects-view" */ '@/views/app/Projects.vue')
 
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/auth',
+    path: '/',
     name: 'Landing',
     component: External,
     meta: {
@@ -28,9 +28,9 @@ const routes = [
     },
     children: [
       {
-        path: '/home',
-        name: 'Home',
-        component: Home,
+        path: '/projects',
+        name: 'Projects',
+        component: Projects,
         meta: {
           public: false
         }
@@ -54,11 +54,10 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (!to.meta.public && !store.getters.isLoggedIn) {
-    return next({ path: '/auth' })
-  } else if (to.meta.public && store.getters.isLoggedIn) {
     return next({ path: '/' })
+  } else if (to.meta.public && store.getters.isLoggedIn) {
+    return next({ path: '/projects' })
   }
-
   next()
 })
 

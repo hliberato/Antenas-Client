@@ -54,9 +54,9 @@
     <el-table :data="user.professionalInfos">
       <el-table-column type="expand">
         <template slot-scope="props">
-          <p><strong>Atividades exercidas:</strong> {{ props.row.activitiesPerformed }}</p>
-          <p><strong>Data inicial:</strong> {{ props.row.start }}</p>
-          <p><strong>Data final:</strong> {{ props.row.end }}</p>
+          <p><strong>Atividades exercidas:</strong> {{ props.row.activitiesPerformed }} </p>
+          <p><strong>Data inicial:</strong> {{ props.row.start | moment("DD/MM/YYYY") }} </p>
+          <p><strong>Data final:</strong> {{ props.row.end | moment("DD/MM/YYYY") }}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -144,7 +144,7 @@ export default {
       }
 
       UserService.updateUser(this.user)
-        .then((res) => this.$emit('update:user'))
+        // .then((res) => this.$emit('update:user'))
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
     },
@@ -163,10 +163,6 @@ export default {
 
 <style lang="scss">
 .professional-info {
-  .el-table__expanded-cell {
-    padding: 50px;
-  }
-
   .el-date-editor {
       width: 100%;
   }

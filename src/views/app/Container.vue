@@ -1,5 +1,5 @@
 <template>
-  <div class="container-view">
+  <div v-loading="$store.getters.loading" class="container-view">
     <el-container>
       <el-header height="auto">
         <Logo variant="blue" />
@@ -35,11 +35,9 @@
           </div>
         </div>
       </el-header>
-      <el-main>
-        <transition name="fade">
-          <router-view />
-        </transition>
-      </el-main>
+      <transition name="fade">
+        <router-view />
+      </transition>
     </el-container>
   </div>
 </template>
@@ -62,6 +60,13 @@ export default {
       }
       return ''
     }
+  },
+  mounted () {
+    this.$store.commit('SHOW_LOADING')
+    this.$store.dispatch('loadCurrentUserInfo')
+      .then(() => this.$store.dispatch('loadProjects'))
+      .catch(err => this.$throwError(err))
+      .finally(() => this.$store.commit('HIDE_LOADING'))
   },
   methods: {
     dropdownClick (action) {
@@ -100,5 +105,6 @@ h3, h4, h5 {
   box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 0 6px rgb(0 0 0 / 4%);
   padding: 6px 20px;
   margin: 0;
+  z-index: 9;
 }
 </style>
