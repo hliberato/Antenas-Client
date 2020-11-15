@@ -41,6 +41,9 @@ html, body, body > [class*=-view], .el-container, .el-main {
     right: 4px;
     left: initial !important;
   }
+  &__label {
+    padding: 0 !important;
+  }
 }
 .fade-enter-active, .fade-leave-active{
   transition:opacity .3s

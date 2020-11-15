@@ -35,7 +35,7 @@
             >
           </el-col>
           <el-col :span="8">
-            <el-card v-loading="loading" class="box-card">
+            <el-card v-loading="$store.getters.loading" class="box-card">
               <transition name="fade">
                 <div v-if="signUp" key="1">
                   <h2>{{ title }}</h2>
@@ -73,9 +73,6 @@ export default {
   computed: {
     title () {
       return this.signUp ? 'Novo cadastro' : 'Acesso ao sistema'
-    },
-    loading () {
-      return this.$store.getters.loading
     }
   }
 }
