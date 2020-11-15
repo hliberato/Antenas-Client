@@ -197,6 +197,7 @@ export default {
 
   h2 {
     color: $--color-primary;
+    margin-bottom: 30px;
   }
 }
 </style>

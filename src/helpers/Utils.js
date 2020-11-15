@@ -1,6 +1,7 @@
 import store from '../store/index'
 
 function getProjectStatus (project) {
+  console.log("??")
   const isMeetingPhase = project.progress === 5
   let hasMeeting = false
 

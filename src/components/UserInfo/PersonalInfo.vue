@@ -112,7 +112,6 @@ export default {
     update () {
       this.$store.commit('SHOW_LOADING')
       UserService.updateUser(this.user)
-        // .then((res) => this.$emit('update:user'))
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
     },
@@ -143,6 +142,7 @@ export default {
 
   h2 {
     color: $--color-primary;
+    margin-bottom: 30px;
   }
 }
 
