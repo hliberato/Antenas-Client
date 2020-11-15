@@ -59,7 +59,7 @@ export default {
   background-color: mix(#fff, $--color-primary, 90%);
 }
 .el-tab-pane {
-  padding: 18px 40px 20px;
+  padding: 30px 65px 20px 18px;
 }
 .el-tabs__nav {
   margin-top: 2rem;

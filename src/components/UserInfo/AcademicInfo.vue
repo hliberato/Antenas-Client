@@ -1,52 +1,76 @@
 <template>
   <div class="academic-info">
-    <el-form
-      ref="form"
-      v-loading="$store.getters.loading"
-      :model="form"
-      class="login-form"
-      label-position="top"
-      label-width="130px"
-    >
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="Instituição" prop="institution">
-            <el-input v-model="form.institution" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="Curso" prop="course">
-            <el-input v-model="form.course" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="Data inicial" prop="startDate">
-            <el-date-picker
-              v-model="form.start"
-              format="dd/MM/yyyy"
-              prop="start"
-              type="date"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="Data final" prop="endDate">
-            <el-date-picker
-              v-model="form.end"
-              format="dd/MM/yyyy"
-              prop="end"
-              label="Data de início"
-              type="date"
-            />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-button type="primary" @click="update">
-        Salvar
-      </el-button>
-    </el-form>
+    <el-row>
+      <el-col :span="12">
+        <h2>Informações acadêmicas</h2>
+      </el-col>
+      <el-col :span="12">
+        <div class="d-flex justify-end">
+          <el-button
+            type="primary"
+            icon="el-icon-plus"
+            @click="showDialog = true"
+          >
+            Adicionar
+          </el-button>
+        </div>
+      </el-col>
+    </el-row>
+    <el-dialog title="Cadastrar empresa" :visible.sync="showDialog">
+      <el-form
+        ref="form"
+        v-loading="$store.getters.loading"
+        :model="form"
+        class="login-form"
+        label-position="top"
+        label-width="130px"
+        :rules="rules"
+      >
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Instituição" prop="institution">
+              <el-input v-model="form.institution" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Curso" prop="course">
+              <el-input v-model="form.course" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20">
+          <el-col :span="12">
+            <el-form-item label="Data inicial" prop="startDate">
+              <el-date-picker
+                v-model="form.start"
+                format="dd/MM/yyyy"
+                prop="start"
+                type="date"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Data final" prop="endDate">
+              <el-date-picker
+                v-model="form.end"
+                format="dd/MM/yyyy"
+                prop="end"
+                label="Data de início"
+                type="date"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showDialog = false">
+          Cancelar
+        </el-button>
+        <el-button type="primary" @click="update">
+          Salvar
+        </el-button>
+      </span>
+    </el-dialog>
     <el-table
       :data="user.academicInfos"
       style="width: 100%"
@@ -113,6 +137,7 @@ export default {
   data () {
     const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
     return {
+      showDialog: false,
       form: {
         id: 0,
         institution: '',
@@ -143,7 +168,10 @@ export default {
       UserService.updateUser(this.user)
         // .then((res) => this.$emit('update:user'))
         .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
+        .finally(() => {
+          this.$store.commit('HIDE_LOADING')
+          this.showDialog = false
+        })
     },
     deleteRow (row) {
       this.user.academicInfos = this.user.academicInfos.filter(info => {
@@ -153,15 +181,22 @@ export default {
     },
     edit (row) {
       this.form = row
+      this.showDialog = true
     }
   }
 }
 </script>
 
 <style lang="scss">
+@import '@/plugins/element/_colors.scss';
+
 .academic-info {
   .el-date-editor {
       width: 100%;
+  }
+
+  h2 {
+    color: $--color-primary;
   }
 }
 </style>

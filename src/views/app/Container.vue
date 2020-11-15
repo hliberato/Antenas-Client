@@ -87,9 +87,6 @@ export default {
 <style lang="scss" scoped>
 @import '@/plugins/element/_colors.scss';
 
-h3, h4, h5 {
-  color: $--color-text-regular;
-}
 .notification {
   margin-right: 1.4rem;
   font-size: 1.2rem;
