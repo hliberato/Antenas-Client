@@ -32,7 +32,7 @@
         </el-col>
         <el-col :span="11">
           <el-form-item label="LinkedIn" prop="LinkedIn">
-            <el-input v-model="form.LinkedIn" />
+            <el-input v-model="form.linkedin" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -92,7 +92,7 @@ export default {
         email: '',
         ra: '',
         city: '',
-        linkedIn: '',
+        linkedin: '',
         biography: '',
         photo: ''
       },
@@ -104,7 +104,8 @@ export default {
   },
   watch: {
     user (user) {
-      this.form = user
+      console.log(user)
+      if (user.id) this.form = user
     }
   },
   methods: {

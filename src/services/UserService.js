@@ -93,7 +93,7 @@ export default {
 
   updateUser (user) {
     return http
-      .put(`${store.getters.userRole}/update`, user)
+      .post(`${store.getters.userRole}/update`, user)
       .then(res => {
         return res.data
       }).catch(() => {
