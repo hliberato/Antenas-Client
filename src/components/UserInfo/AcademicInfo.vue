@@ -160,8 +160,8 @@ export default {
 
 <style lang="scss">
 .academic-info {
-  .el-table__expanded-cell {
-    padding: 50px;
+  .el-date-editor {
+      width: 100%;
   }
 }
 </style>
