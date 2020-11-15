@@ -9,7 +9,10 @@
               <i class="el-icon-bell" />
             </el-badge>
             <el-avatar size="medium" class="avatar">
-              {{ userInitials }}
+              <img v-if="userPhoto" :src="userPhoto">
+              <span v-else>
+                {{ userInitials }}
+              </span>
             </el-avatar>
             <div>
               <h4>{{ userName }}</h4>
@@ -51,7 +54,8 @@ export default {
   computed: {
     ...mapGetters([
       'userName',
-      'userRoleDisplay'
+      'userRoleDisplay',
+      'userPhoto'
     ]),
     userInitials () {
       if (this.userName) {
