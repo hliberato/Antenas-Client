@@ -3,39 +3,37 @@
     <el-container>
       <el-header height="auto">
         <Logo variant="blue" />
-        <div class="">
-          <div class="align-center d-flex">
-            <el-badge :value="1" class="notification">
-              <i class="el-icon-bell" />
-            </el-badge>
-            <el-avatar size="medium" class="avatar">
-              <img v-if="userPhoto" :src="userPhoto">
-              <span v-else>
-                {{ userInitials }}
-              </span>
-            </el-avatar>
-            <div>
-              <h4>{{ userName }}</h4>
-              <h5>{{ userRoleDisplay }}</h5>
-            </div>
-            <el-dropdown @command="dropdownClick">
-              <i class="menu el-icon-more" />
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="account">
-                  <i class="el-icon-user" />
-                  Dados da conta
-                </el-dropdown-item>
-                <el-dropdown-item command="medals">
-                  <i class="el-icon-medal" />
-                  Medalhas
-                </el-dropdown-item>
-                <el-dropdown-item command="logout" divided>
-                  <i class="el-icon-switch-button" />
-                  Sair
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+        <div class="align-center d-flex">
+          <el-badge :value="1" class="notification">
+            <i class="el-icon-bell" />
+          </el-badge>
+          <el-avatar size="medium" class="avatar">
+            <img v-if="userPhoto" :src="userPhoto">
+            <span v-else>
+              {{ userInitials }}
+            </span>
+          </el-avatar>
+          <div>
+            <h4>{{ userName }}</h4>
+            <h5>{{ userRoleDisplay }}</h5>
           </div>
+          <el-dropdown @command="dropdownClick">
+            <i class="menu el-icon-more" />
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="account">
+                <i class="el-icon-user" />
+                Dados da conta
+              </el-dropdown-item>
+              <el-dropdown-item command="medals">
+                <i class="el-icon-medal" />
+                Medalhas
+              </el-dropdown-item>
+              <el-dropdown-item command="logout" divided>
+                <i class="el-icon-switch-button" />
+                Sair
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
       </el-header>
       <transition name="fade">
@@ -74,9 +72,11 @@ export default {
   },
   methods: {
     dropdownClick (action) {
-      if (action === 'account') this.$router.push('/dados-cadastrais')
-      else if (action === 'logout') {
+      if (action === 'account' && this.$route.path !== '/dados-cadastrais') {
+        this.$router.push('/dados-cadastrais')
+      } else if (action === 'logout') {
         this.$store.commit('LOGOUT_CURRENT_USER')
+        this.$store.commit('CLEAR_PROJECTS')
         this.$router.push('/')
       }
     }
@@ -107,7 +107,7 @@ h3, h4, h5 {
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 0 6px rgb(0 0 0 / 4%);
-  padding: 6px 20px;
+  padding: 9px 20px;
   margin: 0;
   z-index: 9;
 }

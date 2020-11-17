@@ -29,12 +29,11 @@ Utils.install = function (Vue, options) {
   }
 
   Vue.prototype.$getProjectLabelPhase = (status, project) => {
-    console.log('.')
     if (!status || !Object.keys(project).length) return ''
     if (['waiting', 'pending'].includes(status)) {
-      if (project.progress === 5 && store.getters.isRepresentative && this.project.meeting.possibleDate.length === 0) {
+      if (project.progress === 5 && store.getters.isRepresentative && project.meeting.possibleDate.length === 0) {
         return `${store.getters.defaultPhases[project.progress]} - Aguardando informações.`
-      } else if (project.progress === 5 && store.getters.isCadi && this.project.meeting.possibleDate.length > 0) {
+      } else if (project.progress === 5 && store.getters.isCadi && project.meeting.possibleDate.length > 0) {
         return `${store.getters.defaultPhases[project.progress]} (Aguardando representante)`
       }
       return store.getters.defaultPhases[project.progress]

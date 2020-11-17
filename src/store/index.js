@@ -1,8 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import ProjectService from '@/services/ProjectService.js'
-import 'vue-datetime/dist/vue-datetime.css'
 import user from './modules/user'
+import project from './modules/project'
+import 'vue-datetime/dist/vue-datetime.css'
 
 Vue.use(Vuex)
 
@@ -18,21 +18,10 @@ const state = {
     7: 'Entrega',
     8: 'Finalizado'
   },
-  projects: [],
-  selectedProject: null,
   teams: []
 }
 
 const mutations = {
-  ADD_PROJECTS (state, projects) {
-    state.projects = state.projects.concat(projects)
-  },
-  SELECT_PROJECT (state, projectId) {
-    state.selectedProject = state.projects.filter(project => project.id === projectId)[0]
-  },
-  DESELECT_PROJECT (state) {
-    state.selectedProject = null
-  },
   SHOW_LOADING (state) {
     state.loading = true
   },
@@ -41,37 +30,19 @@ const mutations = {
   }
 }
 
-const actions = {
-  loadProjects ({ commit }) {
-    return new Promise((resolve, reject) => {
-      ProjectService
-        .getProjects()
-        .then(projects => {
-          commit('ADD_PROJECTS', projects)
-          resolve()
-        })
-        .catch(err => {
-          console.log(err)
-          reject(err)
-        })
-    })
-  }
-}
-
 const getters = {
   loading: (state) => state.loading,
-  defaultPhases: (state) => state.phases,
-  projects: (state) => state.projects
+  defaultPhases: (state) => state.phases
 }
 
 const modules = {
-  user
+  user,
+  project
 }
 
 export default new Vuex.Store({
   state,
   mutations,
-  actions,
   getters,
   modules
 })
