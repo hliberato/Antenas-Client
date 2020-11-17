@@ -9,6 +9,7 @@
 
 html {
   font-family: 'Roboto', sans-serif;
+  background: $--background-color-base;
 }
 html, body, body > [class*=-view], .el-container, .el-main {
   height: 100%;
@@ -34,14 +35,22 @@ html, body, body > [class*=-view], .el-container, .el-main {
 .align-center {
   align-items: center;
 }
+.align-end {
+  align-items: flex-end;
+}
 .flex-column {
   flex-direction: column;
+}
+.text-center {
+  text-align: center;
 }
 .el-header {
   margin: 20px 0;
 }
-.el-main {
-  padding: 0 !important;
+.el-aside {
+  width: 380px !important;
+  padding: 20px !important;
+  padding-right: 0 !important;
 }
 .el-form-item {
   margin-bottom: .75rem !important;

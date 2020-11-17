@@ -2,7 +2,7 @@
   <el-card
     :class="`project-card--${status}`"
     class="project-card"
-    shadow="hover"
+    :shadow="isActive ? 'always' : 'hover'"
     @click.native="$emit('click', project.id)"
   >
     <h4 class="title">{{ project.title }}</h4>
@@ -26,6 +26,10 @@ export default {
     project: {
       type: Object,
       default: () => {}
+    },
+    isActive: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -39,7 +43,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 @import '@/plugins/element/_colors.scss';
 
 .project-card {
@@ -63,6 +67,9 @@ export default {
   .updated {
     color: $--color-text-secondary;
     font-size: .75rem;
+  }
+  .el-card__body {
+    padding: 4px 12px;
   }
 }
 </style>

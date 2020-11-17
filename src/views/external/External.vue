@@ -74,6 +74,10 @@ export default {
     title () {
       return this.signUp ? 'Novo cadastro' : 'Acesso ao sistema'
     }
+  },
+  mounted () {
+    this.$store.commit('LOGOUT_CURRENT_USER')
+    this.$store.commit('CLEAR_PROJECTS')
   }
 }
 </script>
