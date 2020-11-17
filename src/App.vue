@@ -62,7 +62,4 @@ html, body, body > [class*=-view], .el-container, .el-main {
 .fade-enter, .fade-leave-to{
   opacity:0
 }
-h1, h2, h3, h4, h5, h6 {
- color: $--color-text-regular;
-}
 </style>

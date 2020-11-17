@@ -12,20 +12,20 @@
 2. Acesse a pasta do AntenasClient
 3. Execute o comando
     ```
-    npm install
+    yarn install
     ```
 
 ### Executando a aplicação em modo de desenvolvimento
 
 Com o terminal na pasta do AntenasClient, execute:
 ```
-npm run serve
+yarn run serve
 ```
 
 ### Compilando projeto para deploy
 
 1. Com o terminal na pasta do AntenasClient, execute:
     ```
-    npm run build
+    yarn run build
     ```
 2. Na raiz do projeto deve ter sido criada uma pasta _dist_, dentro dela há o site estático que de fato vai para o cliente.
