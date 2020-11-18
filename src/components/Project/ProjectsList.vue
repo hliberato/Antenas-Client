@@ -1,6 +1,6 @@
 <template>
   <el-card class="project-list h100">
-    <div slot="header" class="justify-between d-flex align-center">
+    <div slot="header" class="justify-between d-flex align-center mt-4 mb-4">
       <h3>Seus projetos</h3>
       <el-button
         v-if="$store.getters.isRepresentative"
@@ -84,7 +84,7 @@ export default {
     height: 100%;
   }
   .list {
-    height: calc(100% - 116px);
+    height: calc(100% - 126px);
     overflow-y: auto;
     overflow-x: hidden;
   }
