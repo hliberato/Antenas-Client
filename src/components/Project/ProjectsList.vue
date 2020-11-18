@@ -15,13 +15,15 @@
       suffix-icon="el-icon-search"
     />
     <br><br>
-    <ProjectCard
-      v-for="(project, index) in projects"
-      :key="index"
-      :project="project"
-      :is-active="activeProjectId === project.id"
-      @click="selectProject"
-    />
+    <div class="list">
+      <ProjectCard
+        v-for="(project, index) in projects"
+        :key="index"
+        :project="project"
+        :is-active="activeProjectId === project.id"
+        @click="selectProject"
+      />
+    </div>
   </el-card>
 </template>
 
@@ -68,8 +70,16 @@ export default {
 
 <style lang="scss">
 .project-list {
+  max-height: calc(100vh - 100px);
   .el-card__header {
     padding: 12px 20px;
+  }
+  > .el-card__body {
+    height: 100%;
+  }
+  .list {
+    height: calc(100% - 116px);
+    overflow-y: auto;
   }
 }
 </style>

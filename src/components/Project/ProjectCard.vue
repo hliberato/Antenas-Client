@@ -51,6 +51,10 @@ export default {
   border-left-width: 6px;
   border-left-style: solid;
   cursor: pointer;
+  border-left-color: $--color-success;
+  .title, .progress {
+      color: $--color-success;
+    }
   &--waiting {
     border-left-color: $--color-primary;
     .title, .progress {

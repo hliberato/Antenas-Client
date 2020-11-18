@@ -11,7 +11,7 @@
 
 <script>
 import ProjectsList from '@/components/Project/ProjectsList'
-import ProjectOverview from '@/components/Project/ProjectOverview'
+import ProjectOverview from '@/components/Project/ProjectOverview.vue'
 import { mapGetters } from 'vuex'
 
 export default {
