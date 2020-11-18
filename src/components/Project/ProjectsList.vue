@@ -2,7 +2,13 @@
   <el-card class="project-list h100">
     <div slot="header" class="justify-between d-flex align-center">
       <h3>Seus projetos</h3>
-      <el-button class="new" type="success" size="small" @click="showProjectModal">
+      <el-button
+        v-if="$store.getters.isRepresentative"
+        class="new"
+        type="success"
+        size="small"
+        @click="showProjectModal"
+      >
         Novo projeto
       </el-button>
     </div>

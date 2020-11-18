@@ -13,45 +13,22 @@
               <el-steps :active="project.progress - 1" finish-status="success" process-status="finish">
                 <el-step v-for="(step, index) in Array(9)" :key="index" />
               </el-steps>
-              <div class="content">
+              <el-collapse class="mt-28" value="1">
+                <el-collapse-item v-if="project.shortDescription" title="Resumo" name="1">
+                  {{ project.shortDescription }}
+                </el-collapse-item>
+                <el-collapse-item v-if="project.completeDescription" title="Descrição completa" name="2">
+                  {{ project.completeDescription }}
+                </el-collapse-item>
+                <el-collapse-item v-if="project.technologyDescription" title="Tecnologias" name="3">
+                  {{ project.technologyDescription }}
+                </el-collapse-item>
+                <el-collapse-item v-if="project.notes" title="Notas adicionais" name="4">
+                  {{ project.notes }}
+                </el-collapse-item>
+              </el-collapse>
+              <div class="content mt-28">
                 <component :is="currentStep" :project="project" />
-              </div>
-              <div>
-                <div v-if="project.shortDescription">
-                  <h3>
-                    Resumo:
-                  </h3>
-                  <p class="project-info">
-                    {{ project.shortDescription }}
-                  </p>
-                  <br>
-                </div>
-                <div v-if="project.completeDescription">
-                  <h3>
-                    Descrição completa:
-                  </h3>
-                  <p class="project-info">
-                    {{ project.completeDescription }}
-                  </p>
-                  <br>
-                </div>
-                <div v-if="project.technologyDescription">
-                  <h3>
-                    Tecnologias:
-                  </h3>
-                  <p class="project-info">
-                    {{ project.technologyDescription }}
-                  </p>
-                  <br>
-                </div>
-                <div v-if="project.notes && !$store.getters.isStudent">
-                  <h3>
-                    Notas adicionais:
-                  </h3>
-                  <p class="project-info">
-                    {{ project.notes }}
-                  </p>
-                </div>
               </div>
             </el-tab-pane>
             <el-tab-pane :disabled="false" label="Equipe" />
@@ -60,7 +37,7 @@
       </transition>
     </div>
     <div v-else>
-      <div class="empty h100 d-flex align-center text-center">
+      <div class="text-center empty h100 d-flex align-center">
         <div>
           Selecione um projeto ao lado para saber mais ou
           <el-link type="primary">crie um novo projeto</el-link>.
@@ -124,6 +101,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import '@/plugins/element/_colors.scss';
+
 .project-overview {
   height: 100%;
   .title {
@@ -162,8 +141,13 @@ export default {
       height: 100%;
     }
   }
-  .project-info {
-    margin: 8px 0px 0px 20px;
+  // Collapse
+  .el-collapse-item__header {
+    font-size: 1.17em;
+  }
+  .el-collapse-item__content {
+    color: $--color-text-secondary;
+    font-size: 1rem;
   }
 }
 </style>

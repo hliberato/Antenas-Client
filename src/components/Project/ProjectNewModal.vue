@@ -35,7 +35,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button @click="dialogVisible = false">Cancelar</el-button>
-      <el-button type="primary" @click="dialogVisible = false">Criar</el-button>
+      <el-button type="primary" @click="saveProject()">Criar</el-button>
     </span>
   </el-dialog>
 </template>
@@ -64,6 +64,21 @@ export default {
       },
       set (bol) {
         this.$store.commit('SET_PROJECT_MODAL', bol)
+      }
+    }
+  },
+  methods: {
+    saveProject () {
+      this.dialogVisible = false
+      this.$store.commit('SHOW_LOADING')
+      this.$store.dispatch('saveProject', this.project)
+        .catch(err => this.$throwError(err))
+        .finally(() => this.$store.commit('HIDE_LOADING'))
+
+      this.project = {
+        title: '',
+        shortDescription: '',
+        notes: ''
       }
     }
   }
