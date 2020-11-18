@@ -111,11 +111,11 @@ export default {
   watch: {
     project (value) {
       this.fade = true
-      this.tabsKey += 1
     },
     fade: {
       handler: debounce(function (newVal) {
         if (newVal) this.fade = false
+        else setTimeout(() => { this.tabsKey += 1 }, 300)
       }, 200),
       deep: true
     }

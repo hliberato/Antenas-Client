@@ -8,6 +8,8 @@ Vue.use(Vuex)
 
 const state = {
   loading: false,
+  teams: [],
+  projectModal: false,
   phases: {
     1: 'Cadastro Inicial',
     2: 'Avaliação Inicial',
@@ -17,8 +19,7 @@ const state = {
     6: 'Designar responsável',
     7: 'Entrega',
     8: 'Finalizado'
-  },
-  teams: []
+  }
 }
 
 const mutations = {
@@ -27,12 +28,16 @@ const mutations = {
   },
   HIDE_LOADING (state) {
     state.loading = false
+  },
+  SET_PROJECT_MODAL (state, bol) {
+    state.projectModal = bol
   }
 }
 
 const getters = {
   loading: (state) => state.loading,
-  defaultPhases: (state) => state.phases
+  defaultPhases: (state) => state.phases,
+  projectModal: (state) => state.projectModal
 }
 
 const modules = {

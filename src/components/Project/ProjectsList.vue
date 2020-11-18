@@ -1,11 +1,8 @@
 <template>
   <el-card class="project-list h100">
-    <div slot="header" class="d-flex justify-between align-center">
+    <div slot="header" class="justify-between d-flex align-center">
       <h3>Seus projetos</h3>
-      <el-button
-        size="small"
-        type="success"
-      >
+      <el-button class="new" type="success" size="small" @click="showProjectModal">
         Novo projeto
       </el-button>
     </div>
@@ -28,7 +25,7 @@
 </template>
 
 <script>
-import ProjectCard from '@/components/Project/ProjectCard.vue'
+import ProjectCard from '@/components/Project/ProjectCard'
 
 export default {
   components: {
@@ -62,6 +59,9 @@ export default {
   methods: {
     selectProject (id) {
       this.activeProjectId = id
+    },
+    showProjectModal () {
+      this.$store.commit('SET_PROJECT_MODAL', true)
     }
   }
 
@@ -80,6 +80,10 @@ export default {
   .list {
     height: calc(100% - 116px);
     overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .new {
+    font-size: .9rem;
   }
 }
 </style>
