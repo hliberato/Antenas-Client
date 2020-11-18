@@ -1,25 +1,31 @@
 <template>
   <div v-if="$store.getters.isCadi">
-    <h2>
-      Leia as especificações do projeto e decida-se se ele está apto a continuar:
-    </h2>
-    <div class="d-flex justify-end">
-      <el-button
-        type="primary"
-        icon="el-icon-close"
-        @click="update (false)"
-      >
-        Aprovar
-      </el-button>
-
-      <el-button
-        type="danger"
-        icon="el-icon-check"
-        @click="update (true)"
-      >
-        Rejeitar
-      </el-button>
-    </div>
+    <el-alert
+      :closable="false"
+      type="info"
+    >
+      <h3>
+        Leia as especificações do projeto e decida-se se ele está apto a continuar:
+      </h3>
+      <div class="justify-end d-flex">
+        <el-button
+          plain
+          type="danger"
+          icon="el-icon-close"
+          @click="update(true)"
+        >
+          Rejeitar
+        </el-button>
+        <el-button
+          plain
+          type="success"
+          icon="el-icon-check"
+          @click="update(false)"
+        >
+          Aprovar
+        </el-button>
+      </div>
+    </el-alert>
   </div>
 </template>
 
@@ -35,20 +41,21 @@ export default {
   },
   methods: {
     update (refused) {
-      this.$store.commit('SHOW_LOADING')
-      this.project.refused = refused
-      this.$store.dispatch('updateProject', this.project)
-        .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
+      this.$confirm('Tem certeza que deseja continuar?', 'Avaliação Inicial', {
+        confirmButtonText: refused ? 'Rejeitar' : 'Aprovar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonClass: refused ? 'el-button--danger' : 'el-button--success'
+      }).then(() => {
+        this.$store.commit('SHOW_LOADING')
+        this.project.refused = refused
+        this.$store.dispatch('updateProject', this.project)
+          .catch(err => this.$throwError(err))
+          .finally(() => this.$store.commit('HIDE_LOADING'))
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-@import '@/plugins/element/_colors.scss';
- h2 {
-    color: $--color-primary;
-    margin: 38px 0px 8px 0px;
-  }
 </style>

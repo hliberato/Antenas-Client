@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import ProjectService from '@/services/ProjectService.js'
 
 export default {
@@ -18,9 +19,7 @@ export default {
     },
     UPDATE_PROJECT (state, project) {
       const index = state.projects.findIndex(item => item.id === project.id)
-      console.log(index)
-      console.log(project.id)
-      state.projects[index] = project
+      Vue.set(state.projects, index, project)
     }
   },
   actions: {
@@ -46,12 +45,10 @@ export default {
         ProjectService
           .updateProject(project)
           .then(res => {
-            console.log('comit update project')
             commit('UPDATE_PROJECT', res)
             resolve()
           })
           .catch(err => {
-            console.log(err)
             reject(err)
           })
       })
