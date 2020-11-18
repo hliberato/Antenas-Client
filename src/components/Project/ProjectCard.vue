@@ -4,7 +4,7 @@
       :shadow="isActive ? 'always' : 'hover'"
       @click.native="$emit('click', project.id)"
     >
-      <h4 class="title">{{ project.title }}</h4>
+      <h4>{{ project.title }}</h4>
       <div class="mt-4 mb-8 description">
         {{ project.shortDescription }}
       </div>
@@ -64,7 +64,7 @@ export default {
         box-shadow: 0 2px 12px 0 $--color-primary;
       }
     }
-    .title, .progress {
+    .progress {
       color: $--color-primary;
     }
   }
@@ -75,7 +75,7 @@ export default {
         box-shadow: 0 2px 12px 0 $--color-warning;
       }
     }
-    .title, .progress {
+    .progress {
       color: $--color-warning;
     }
   }
@@ -86,7 +86,7 @@ export default {
         box-shadow: 0 2px 12px 0 $--color-danger;
       }
     }
-    .title, .progress {
+    .progress {
       color: $--color-danger;
     }
   }
@@ -97,7 +97,7 @@ export default {
         box-shadow: 0 2px 12px 0 $--color-success;
       }
     }
-    .title, .progress {
+    .progress {
       color: $--color-success;
     }
   }
