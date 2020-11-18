@@ -16,6 +16,7 @@
       <h5 class="progress">
         {{ labelPhase }}
       </h5>
+      <i v-if="status === 'pending'" class="alert el-icon-warning-outline" />
     </div>
   </el-card>
 </template>
@@ -51,14 +52,28 @@ export default {
   border-left-width: 6px;
   border-left-style: solid;
   cursor: pointer;
-  border-left-color: $--color-success;
-  .title, .progress {
-      color: $--color-success;
-    }
   &--waiting {
     border-left-color: $--color-primary;
     .title, .progress {
       color: $--color-primary;
+    }
+  }
+  &--pending {
+    border-left-color: $--color-warning;
+    .title, .progress {
+      color: $--color-warning;
+    }
+  }
+  &--refused {
+    border-left-color: $--color-danger;
+    .title, .progress {
+      color: $--color-danger;
+    }
+  }
+  &--conclused {
+    border-left-color: $--color-success;
+    .title, .progress {
+      color: $--color-success;
     }
   }
   .description {
@@ -71,6 +86,10 @@ export default {
   .updated {
     color: $--color-text-secondary;
     font-size: .75rem;
+  }
+  .alert {
+    position: absolute;
+    color: $--color-success;
   }
   .el-card__body {
     padding: 4px 12px;

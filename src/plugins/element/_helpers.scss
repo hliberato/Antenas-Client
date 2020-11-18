@@ -1,0 +1,22 @@
+$max: 48;
+$offset: 4;
+$unit: 'px';
+@mixin list-loop($className, $styleName) {
+  $i: 0;
+  @while $i <= $max {
+    #{$className + $i} { 
+      #{$styleName}: #{$i + $unit};
+    }
+    $i: $i + $offset;
+  }
+}
+@include list-loop('.pl-', 'padding-left');
+@include list-loop('.pr-', 'padding-left');
+@include list-loop('.pt-', 'padding-left');
+@include list-loop('.pb-', 'padding-left');
+
+@include list-loop('.ml-', 'margin-left');
+@include list-loop('.mr-', 'margin-left');
+@include list-loop('.mt-', 'margin-left');
+@include list-loop('.mb-', 'margin-left');
+
