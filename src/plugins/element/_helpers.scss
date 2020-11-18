@@ -11,12 +11,12 @@ $unit: 'px';
   }
 }
 @include list-loop('.pl-', 'padding-left');
-@include list-loop('.pr-', 'padding-left');
-@include list-loop('.pt-', 'padding-left');
-@include list-loop('.pb-', 'padding-left');
+@include list-loop('.pr-', 'padding-right');
+@include list-loop('.pt-', 'padding-top');
+@include list-loop('.pb-', 'padding-bottom');
 
 @include list-loop('.ml-', 'margin-left');
-@include list-loop('.mr-', 'margin-left');
-@include list-loop('.mt-', 'margin-left');
-@include list-loop('.mb-', 'margin-left');
+@include list-loop('.mr-', 'margin-right');
+@include list-loop('.mt-', 'margin-top');
+@include list-loop('.mb-', 'margin-bottom');
 
