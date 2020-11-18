@@ -18,8 +18,6 @@ export default {
     },
     UPDATE_PROJECT (state, project) {
       const index = state.projects.findIndex(item => item.id === project.id)
-      console.log(index)
-      console.log(project.id)
       state.projects[index] = project
     }
   },
@@ -41,12 +39,10 @@ export default {
       })
     },
     updateProject ({ commit }, project) {
-      console.log('updating project')
       return new Promise((resolve, reject) => {
         ProjectService
           .updateProject(project)
           .then(res => {
-            console.log('comit update project')
             commit('UPDATE_PROJECT', res)
             resolve()
           })
