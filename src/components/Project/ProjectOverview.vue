@@ -27,7 +27,7 @@
                   {{ project.notes }}
                 </el-collapse-item>
               </el-collapse>
-              <div class="content mt-28">
+              <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />
               </div>
             </el-tab-pane>
@@ -48,9 +48,10 @@
 </template>
 
 <script>
+/* eslint-disable import/no-duplicates */
 import Step2 from './ProjectOverviewSteps/Step2'
 import Step3 from './ProjectOverviewSteps/Step3'
-import Step4 from './ProjectOverviewSteps/Step4'
+import Step4 from './ProjectOverviewSteps/Step2'
 import Step5 from './ProjectOverviewSteps/Step5'
 import Step6 from './ProjectOverviewSteps/Step6'
 import Step7 from './ProjectOverviewSteps/Step7'
@@ -104,7 +105,7 @@ export default {
 @import '@/plugins/element/_colors.scss';
 
 .project-overview {
-  height: 100%;
+  max-height: calc(100vh - 100px);
   .title {
     font-size: 1.8rem;
   }
@@ -136,7 +137,6 @@ export default {
   .el-card__body {
     padding: 38px;
     height: 100%;
-    margin-top: -1px;
     > div {
       height: 100%;
     }
@@ -148,6 +148,9 @@ export default {
   .el-collapse-item__content {
     color: $--color-text-secondary;
     font-size: 1rem;
+  }
+  .el-collapse, .el-collapse * {
+    border: 0;
   }
 }
 </style>
