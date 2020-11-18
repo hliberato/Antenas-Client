@@ -56,13 +56,13 @@ export default {
     border-left-width: 6px;
     border-left-style: solid;
     cursor: pointer;
+    &.is-always-shadow {
+      box-shadow: $--box-shadow-dark;
+    }
   }
   &--waiting {
     .el-card {
       border-left-color: $--color-primary;
-      &.is-always-shadow {
-        box-shadow: 0 2px 12px 0 $--color-primary;
-      }
     }
     .progress {
       color: $--color-primary;
@@ -71,9 +71,6 @@ export default {
   &--pending {
     .el-card {
       border-left-color: $--color-warning;
-      &.is-always-shadow {
-        box-shadow: 0 2px 12px 0 $--color-warning;
-      }
     }
     .progress {
       color: $--color-warning;
@@ -82,9 +79,6 @@ export default {
   &--refused {
     .el-card {
       border-left-color: $--color-danger;
-      &.is-always-shadow {
-        box-shadow: 0 2px 12px 0 $--color-danger;
-      }
     }
     .progress {
       color: $--color-danger;
@@ -93,9 +87,6 @@ export default {
   &--conclused {
     .el-card {
       border-left-color: $--color-success;
-      &.is-always-shadow {
-        box-shadow: 0 2px 12px 0 $--color-success;
-      }
     }
     .progress {
       color: $--color-success;
