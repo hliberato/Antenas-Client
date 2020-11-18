@@ -15,6 +15,12 @@ export default {
     CLEAR_PROJECTS (state) {
       state.projects = []
       state.selectedProjectId = 0
+    },
+    UPDATE_PROJECT (state, project) {
+      const index = state.projects.findIndex(item => item.id === project.id)
+      console.log(index)
+      console.log(project.id)
+      state.projects[index] = project
     }
   },
   actions: {
@@ -26,6 +32,22 @@ export default {
           .then(projects => {
             commit('HIDE_LOADING')
             commit('SET_PROJECTS', projects)
+            resolve()
+          })
+          .catch(err => {
+            console.log(err)
+            reject(err)
+          })
+      })
+    },
+    updateProject ({ commit }, project) {
+      console.log('updating project')
+      return new Promise((resolve, reject) => {
+        ProjectService
+          .updateProject(project)
+          .then(res => {
+            console.log('comit update project')
+            commit('UPDATE_PROJECT', res)
             resolve()
           })
           .catch(err => {

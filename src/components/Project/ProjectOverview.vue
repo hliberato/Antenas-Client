@@ -16,6 +16,43 @@
               <div class="content">
                 <component :is="currentStep" :project="project" />
               </div>
+              <div>
+                <div v-if="project.shortDescription">
+                  <h3>
+                    Resumo:
+                  </h3>
+                  <p class="project-info">
+                    {{ project.shortDescription }}
+                  </p>
+                  <br>
+                </div>
+                <div v-if="project.completeDescription">
+                  <h3>
+                    Descrição completa:
+                  </h3>
+                  <p class="project-info">
+                    {{ project.completeDescription }}
+                  </p>
+                  <br>
+                </div>
+                <div v-if="project.technologyDescription">
+                  <h3>
+                    Tecnologias:
+                  </h3>
+                  <p class="project-info">
+                    {{ project.technologyDescription }}
+                  </p>
+                  <br>
+                </div>
+                <div v-if="project.notes && !$store.getters.isStudent">
+                  <h3>
+                    Notas adicionais:
+                  </h3>
+                  <p class="project-info">
+                    {{ project.notes }}
+                  </p>
+                </div>
+              </div>
             </el-tab-pane>
             <el-tab-pane :disabled="false" label="Equipe" />
           </el-tabs>
@@ -124,6 +161,9 @@ export default {
     > div {
       height: 100%;
     }
+  }
+  .project-info {
+    margin: 8px 0px 0px 20px;
   }
 }
 </style>

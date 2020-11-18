@@ -1,5 +1,5 @@
 import http from '../helpers/Http'
-import store from '../store/index'
+// import store from '../store/index'
 
 export default {
 
@@ -70,27 +70,25 @@ export default {
   },
 
   updateProject (project, approved) {
-    return new Promise(resolve => {
-      if (store.getters.isCadi && [2, 4].includes(project.progress)) {
-        project.refused = !approved
+    // return new Promise(resolve => {
+    //   if (store.getters.isCadi && [2, 4].includes(project.progress)) {
+    //     project.refused = !approved
+    //     if (approved) {
+    //       project.progress = project.progress + 1
+    //     }
+    //   }
 
-        if (approved) {
-          project.progress = project.progress + 1
-        }
-      }
+    //   if (store.getters.isRepresentative && project.progress === 3) {
+    //     project.progress = 4
+    //   }
 
-      if (store.getters.isRepresentative && project.progress === 3) {
-        project.progress = 4
-      }
-
-      http.post('/project/update', project)
-        .then(() => {
-          alert('Projeto atualizado com sucesso')
-        }).catch(() => {
-          alert('Ocorreu um erro ao atualizar o projeto')
-        })
-      resolve(project)
-    })
+    http.post('/project/update', project)
+      .then(() => {
+        alert('Projeto atualizado com sucesso')
+      }).catch(() => {
+        alert('Ocorreu um erro ao atualizar o projeto')
+      })
+    // resolve(project)
   },
 
   deleteProject (id) {
