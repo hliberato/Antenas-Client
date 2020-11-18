@@ -168,7 +168,6 @@ export default {
       }
 
       UserService.updateUser(this.user)
-        // .then((res) => this.$emit('update:user'))
         .catch(err => this.$throwError(err))
         .finally(() => {
           this.$store.commit('HIDE_LOADING')
