@@ -48,7 +48,7 @@ html, body, body > [class*=-view], .el-container, .el-main {
   margin: 20px 0;
 }
 .el-aside {
-  width: 380px !important;
+  width: 400px !important;
   padding: 20px !important;
   padding-right: 0 !important;
 }

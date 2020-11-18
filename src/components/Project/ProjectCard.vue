@@ -1,24 +1,26 @@
 <template>
-  <el-card
-    :class="`project-card--${status}`"
-    class="project-card"
-    :shadow="isActive ? 'always' : 'hover'"
-    @click.native="$emit('click', project.id)"
-  >
-    <h4 class="title">{{ project.title }}</h4>
-    <div class="description">
-      {{ project.shortDescription }}
-    </div>
-    <div class="justify-between d-flex">
-      <span class="updated">
-        Atualizado em: <b>{{ project.updatedAt | moment("DD/MM/YYYY") }}</b>
-      </span>
-      <h5 class="progress">
-        {{ labelPhase }}
-      </h5>
-      <i v-if="status === 'pending'" class="alert el-icon-warning-outline" />
-    </div>
-  </el-card>
+  <div :class="`project-card--${status}`" class="mt-20 mr-12 project-card">
+    <el-card
+      :shadow="isActive ? 'always' : 'hover'"
+      @click.native="$emit('click', project.id)"
+    >
+      <h4 class="title">{{ project.title }}</h4>
+      <div class="mt-4 mb-8 description">
+        {{ project.shortDescription }}
+      </div>
+      <div class="justify-between d-flex align-end">
+        <span class="updated">
+          Atualizado em:
+          <br>
+          <b>{{ project.updatedAt | moment("DD/MM/YYYY") }}</b>
+        </span>
+        <h5 class="progress">
+          {{ labelPhase }}
+        </h5>
+      </div>
+    </el-card>
+    <i v-if="status === 'pending'" class="alert el-icon-warning-outline" />
+  </div>
 </template>
 
 <script>
@@ -48,51 +50,88 @@ export default {
 @import '@/plugins/element/_colors.scss';
 
 .project-card {
-  border: 0;
-  border-left-width: 6px;
-  border-left-style: solid;
-  cursor: pointer;
+  position: relative;
+  .el-card {
+    border: 0;
+    border-left-width: 6px;
+    border-left-style: solid;
+    cursor: pointer;
+  }
   &--waiting {
-    border-left-color: $--color-primary;
+    .el-card {
+      border-left-color: $--color-primary;
+      &.is-always-shadow {
+        box-shadow: 0 2px 12px 0 $--color-primary;
+      }
+    }
     .title, .progress {
       color: $--color-primary;
     }
   }
   &--pending {
-    border-left-color: $--color-warning;
+    .el-card {
+      border-left-color: $--color-warning;
+      &.is-always-shadow {
+        box-shadow: 0 2px 12px 0 $--color-warning;
+      }
+    }
     .title, .progress {
       color: $--color-warning;
     }
   }
   &--refused {
-    border-left-color: $--color-danger;
+    .el-card {
+      border-left-color: $--color-danger;
+      &.is-always-shadow {
+        box-shadow: 0 2px 12px 0 $--color-danger;
+      }
+    }
     .title, .progress {
       color: $--color-danger;
     }
   }
   &--conclused {
-    border-left-color: $--color-success;
+    .el-card {
+      border-left-color: $--color-success;
+      &.is-always-shadow {
+        box-shadow: 0 2px 12px 0 $--color-success;
+      }
+    }
     .title, .progress {
       color: $--color-success;
     }
   }
   .description {
-    margin: .3rem 0;
     font-size: .875rem;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+  }
+  .progress {
+    word-break: break-word;
+    max-width: 50%;
+    text-align: right;
   }
   .updated {
     color: $--color-text-secondary;
     font-size: .75rem;
   }
   .alert {
+    top: -4px;
+    right: -4px;
+    font-size: 1.4rem;
     position: absolute;
-    color: $--color-success;
+    color: $--color-warning;
+    animation: pulse 1.5s infinite linear;
   }
   .el-card__body {
-    padding: 4px 12px;
+    padding: 8px 12px;
   }
+}
+
+@keyframes pulse {
+0% { transform: scale(1); }
+50% { transform: scale(1.2); }
+100% { transform: scale(1); }
 }
 </style>

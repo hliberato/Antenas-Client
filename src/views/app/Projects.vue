@@ -5,6 +5,7 @@
     </el-aside>
     <el-main>
       <ProjectOverview />
+      <ProjectNewModal />
     </el-main>
   </el-container>
 </template>
@@ -12,12 +13,14 @@
 <script>
 import ProjectsList from '@/components/Project/ProjectsList'
 import ProjectOverview from '@/components/Project/ProjectOverview.vue'
+import ProjectNewModal from '@/components/Project/ProjectNewModal'
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
     ProjectsList,
-    ProjectOverview
+    ProjectOverview,
+    ProjectNewModal
   },
   data () {
     return {
@@ -35,8 +38,5 @@ export default {
 
 <style lang="scss">
 .projects-view {
-  .project-card + .project-card {
-    margin-top: 1rem;
-  }
 }
 </style>
