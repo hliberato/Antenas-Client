@@ -54,17 +54,19 @@ export default {
 
 <style lang="scss">
 @import '@/plugins/element/_colors.scss';
+.registration-info-view {
+  .el-tabs__header {
+    background-color: mix(#fff, $--color-primary, 90%);
+  }
+  .el-tab-pane {
+    padding: 30px 65px 20px 18px;
+  }
+  .el-tabs__nav {
+    margin-top: 2rem;
+  }
+  .el-tabs__item {
+    text-align: left !important;
+  }
+}
 
-.el-tabs__header {
-  background-color: mix(#fff, $--color-primary, 90%);
-}
-.el-tab-pane {
-  padding: 30px 65px 20px 18px;
-}
-.el-tabs__nav {
-  margin-top: 2rem;
-}
-.el-tabs__item {
-  text-align: left !important;
-}
 </style>
