@@ -32,9 +32,9 @@ Utils.install = function (Vue, options) {
     if (!status || !Object.keys(project).length) return ''
     if (['waiting', 'pending'].includes(status)) {
       if (project.progress === 5 && store.getters.isRepresentative && project.meeting.possibleDate.length === 0) {
-        return `${store.getters.defaultPhases[project.progress]} - Aguardando informações.`
+        return `${store.getters.defaultPhases[project.progress]} - Aguardando CADI`
       } else if (project.progress === 5 && store.getters.isCadi && project.meeting.possibleDate.length > 0) {
-        return `${store.getters.defaultPhases[project.progress]} (Aguardando representante)`
+        return `${store.getters.defaultPhases[project.progress]} - Aguardando representante`
       }
       return store.getters.defaultPhases[project.progress]
     } else if (project.refused) {
@@ -46,32 +46,29 @@ Utils.install = function (Vue, options) {
 
   Vue.prototype.$getProjectStatus = (project) => {
     if (!Object.keys(project).length) return ''
-    let hasMeeting = false
-    if (project.meeting != null) {
-      hasMeeting = project.meeting.chosenDate !== null
-    }
     const isMeetingPhase = project.progress === 5
     const isRefused = project.refused
-    const isDeliveryPhase = project.progress === 6
     const isConcluded = project.finished
-    let isWaiting
+    let isPending
+
     if (store.getters.isRepresentative) {
-      isWaiting = project.progress === 3 || (isMeetingPhase && !hasMeeting && project.meeting.possibleDate.length)
+      isPending = project.progress === 3 || (isMeetingPhase && project.meeting.possibleDate.length > 0)
     } else if (store.getters.isCadi) {
-      isWaiting = [2, 4].includes(project.progress) || (isMeetingPhase && !project.meeting.chosenDate) || (isDeliveryPhase && !project.teacher)
+      isPending = [2, 4, 6].includes(project.progress) || (isMeetingPhase && !project.meeting.address.zipCode)
     } else if (store.getters.isTeacher) {
-      isWaiting = !!isDeliveryPhase
+      isPending = project.progress === 7 && !project.open
     } else if (store.getters.isStudent) {
-      isWaiting = isDeliveryPhase && !project.deliver.some(entrega => entrega.students.includes(store.state.user.id))
+      isPending = project.progress === 7 && project.open
     }
+
     if (isRefused) {
       return 'refused'
     } else if (isConcluded) {
       return 'concluded'
-    } else if (isWaiting) {
-      return 'waiting'
-    } else {
+    } else if (isPending) {
       return 'pending'
+    } else {
+      return 'waiting'
     }
   }
 }

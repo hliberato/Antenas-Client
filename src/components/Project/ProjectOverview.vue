@@ -174,8 +174,5 @@ export default {
     color: $--color-text-secondary;
     font-size: 1rem;
   }
-  .el-collapse, .el-collapse * {
-    border: 0;
-  }
 }
 </style>
