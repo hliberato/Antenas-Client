@@ -27,6 +27,23 @@
                   {{ project.notes }}
                 </el-collapse-item>
               </el-collapse>
+              <div v-if="showMeetingDetails()">
+                <h3> Local da reunião: </h3>
+                <div>
+                  {{ project.meeting.address.place }}
+                  <br>
+                  {{ project.meeting.address.neighborhood }}
+                  {{ project.meeting.address.neighborhood && (project.meeting.address.street || project.meeting.address.number) ? ',' : '' }}
+                  {{ project.meeting.address.street }}
+                  {{ project.meeting.address.number ? ',' : '' }}
+                  {{ project.meeting.address.number }}
+                  <br>
+                  {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
+                </div>
+                <div>
+                  <h3>Data e horario:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
+                </div>
+              </div>
               <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />
               </div>
@@ -96,6 +113,13 @@ export default {
         else setTimeout(() => { this.tabsKey += 1 }, 300)
       }, 200),
       deep: true
+    }
+  },
+  methods: {
+    showMeetingDetails () {
+      return (this.project && this.project.meeting &&
+            (this.project.progress === 5 || this.project.progress === 6) &&
+            (this.$store.getters.isCadi || this.$store.getters.isRepresentative))
     }
   }
 }
