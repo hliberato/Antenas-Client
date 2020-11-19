@@ -46,9 +46,21 @@
                   <h3>Data e horario:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
                 </div>
               </div>
-              <div>
-                <h3> Professor responsável: </h3> {{ }}
-                <h3> Projeto aplicado no semestre </h3> {{ }}
+              <div v-if="project.progress === 7">
+                <h3> Professor responsável: </h3> {{ project.teacher.name }}
+                <h3> Projeto aplicado no {{ project.semester }} semestre </h3>
+              </div>
+              <div v-if="$store.getters.isCadi">
+                <div v-if="!project.refused">
+                  <br>
+                  <h3> Criado por: </h3> {{ project.createdBy.name }}
+                  <h3> Telefone: </h3> {{ project.createdBy.telephone }}
+                  <br><br>
+                  <h3> Aprovado por: </h3> {{ project.approvedBy.name }}
+                </div>
+                <div v-else>
+                  <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
+                </div>
               </div>
               <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />
