@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div v-if="$store.getters.isCadi || $store.getters.isRepresentative">
+    <div v-if="$store.getters.isCadi">
       <h3>
         Adicione um local e as datas possíveis para a reunião
       </h3>
@@ -98,17 +98,39 @@
             {{ date.dateTime | moment("DD/MM/YYYY HH:mm") }}
           </el-tag>
         </div>
-        <div class="justify-end d-flex">
-          <el-button
-            plain
-            type="success"
-            :disabled="buttonDisabled()"
-            @click="update()"
-          >
-            Salvar
-          </el-button>
-        </div>
       </el-form>
+    </div>
+    <div v-else-if="$store.getters.isRepresentative">
+      <h3> Selecione uma data para a reunião </h3>
+      <el-form
+        ref="form"
+        v-loading="$store.getters.loading"
+        class="login-form"
+        :rules="rules"
+        label-position="top"
+        label-width="130px"
+      >
+        <el-form-item label="Data" prop="role">
+          <el-select v-model="chosenDate" class="w100">
+            <el-option
+              v-for="date in project.meeting.possibleDate"
+              :key="date.dateTime"
+              :value="date.dateTime"
+              :label="$moment(date.dateTime).format('DD/MM/YYYY HH:mm')"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="justify-end d-flex">
+      <el-button
+        plain
+        type="success"
+        :disabled="buttonDisabled()"
+        @click="update()"
+      >
+        Salvar
+      </el-button>
     </div>
   </div>
 </template>
@@ -131,6 +153,7 @@ export default {
     const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
     return {
       newMeetingDate: '',
+      chosenDate: '',
       address: {
         id: '',
         place: '',
@@ -157,8 +180,12 @@ export default {
   methods: {
     update () {
       this.$store.commit('SHOW_LOADING')
-      this.project.meeting.address = this.address
-      this.project.meeting.possibleDate = this.dates
+      if (this.chosenDate) {
+        this.project.meeting.chosenDate = this.chosenDate
+      } else {
+        this.project.meeting.address = this.address
+        this.project.meeting.possibleDate = this.dates
+      }
       this.$store.dispatch('updateProject', this.project)
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
@@ -178,10 +205,10 @@ export default {
       }
     },
     buttonDisabled () {
-      return !(this.address.place && this.address.number &&
+      return !((this.address.place && this.address.number &&
       this.address.street && this.address.neighborhood &&
       this.address.city && this.address.zipCode &&
-      this.dates.length > 0)
+      this.dates.length > 0) || this.chosenDate)
     },
     addPossibleDate () {
       this.dates.push({ dateTime: this.newMeetingDate })
