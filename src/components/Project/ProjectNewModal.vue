@@ -6,10 +6,10 @@
   >
     <el-form
       ref="form"
-      v-loading="$store.getters.loading"
-      class="login-form"
+      v-loading="loading"
+      :model="project"
+      :rules="rules"
       label-position="top"
-      label-width="130px"
     >
       <el-form-item label="Título" prop="title">
         <el-input v-model="project.title" maxlength="30" show-word-limit />
@@ -34,13 +34,15 @@
       </el-form-item>
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">Cancelar</el-button>
-      <el-button type="primary" @click="saveProject()">Criar</el-button>
+      <el-button :disabled="loading" @click="dialogVisible = false">Cancelar</el-button>
+      <el-button :loading="loading" type="primary" @click="saveProject()">Criar</el-button>
     </span>
   </el-dialog>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     visible: {
@@ -54,13 +56,22 @@ export default {
         title: '',
         shortDescription: '',
         notes: ''
+      },
+      rules: {
+        title: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
+        shortDescription: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
+        notes: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
       }
     }
   },
   computed: {
+    ...mapGetters([
+      'projectModal',
+      'loading'
+    ]),
     dialogVisible: {
       get () {
-        return this.$store.getters.projectModal
+        return this.projectModal
       },
       set (bol) {
         this.$store.commit('SET_PROJECT_MODAL', bol)
@@ -69,17 +80,28 @@ export default {
   },
   methods: {
     saveProject () {
-      this.dialogVisible = false
-      this.$store.commit('SHOW_LOADING')
-      this.$store.dispatch('saveProject', this.project)
-        .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
-
-      this.project = {
-        title: '',
-        shortDescription: '',
-        notes: ''
-      }
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$store.commit('SHOW_LOADING')
+          this.$store.dispatch('saveProject', this.project)
+            .then(() => {
+              this.$notify({
+                title: 'Pronto!',
+                message: 'Projeto salvo com sucesso',
+                type: 'success',
+                position: 'bottom-right'
+              })
+              this.project = {
+                title: '',
+                shortDescription: '',
+                notes: ''
+              }
+              this.dialogVisible = false
+            })
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        }
+      })
     }
   }
 }

@@ -12,7 +12,7 @@
         <span class="updated">
           Atualizado em:
           <br>
-          <b>{{ project.updatedAt | moment("DD/MM/YYYY") }}</b>
+          <b>{{ project.updatedAt ? project.updatedAt : project.createdAt | moment("DD/MM/YYYY") }}</b>
         </span>
         <h5 class="progress">
           {{ labelPhase }}
