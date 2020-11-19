@@ -96,7 +96,7 @@ export default {
         'Cadastro detalhado',
         'Avaliação detalhada',
         'Reunião',
-        'Designar responsável',
+        'Designar professor',
         'Entrega',
         // 'Avaliação',
         'Finalizado'

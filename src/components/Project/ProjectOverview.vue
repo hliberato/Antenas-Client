@@ -6,12 +6,14 @@
           <h1 class="title">{{ project.title }}</h1>
           <el-tabs :key="tabsKey">
             <el-tab-pane label="Projeto">
-              <h3>
-                Fase atual do projeto:
-                <span>{{ $getProjectLabelPhase($getProjectStatus(project), project) }}</span>
-              </h3>
-              <el-steps :active="project.progress - 1" finish-status="success" process-status="finish">
-                <el-step v-for="(step, index) in Array(9)" :key="index" />
+              <el-steps
+                :space="200"
+                :active="project.progress - 1"
+                finish-status="success"
+                process-status="finish"
+                align-center
+              >
+                <el-step v-for="(step, index) in steps" :key="index" :title="step" />
               </el-steps>
               <el-collapse class="mt-28" value="1">
                 <el-collapse-item v-if="project.shortDescription" title="Resumo" name="1">
@@ -92,7 +94,18 @@ export default {
   data () {
     return {
       fade: false,
-      tabsKey: 0
+      tabsKey: 0,
+      steps: [
+        'Cadastro inicial',
+        'Avaliação inicial',
+        'Cadastro detalhado',
+        'Avaliação detalhada',
+        'Reunião',
+        'Designar professor',
+        'Entrega',
+        // 'Avaliação',
+        'Finalizado'
+      ]
     }
   },
   computed: {
