@@ -43,7 +43,7 @@
                   {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
                 </div>
                 <div>
-                  <h3>Data e horario:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
+                  <h3>Data e hora:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
                 </div>
               </div>
               <div v-if="project.progress === 7">
@@ -58,9 +58,9 @@
                   <br><br>
                   <h3> Aprovado por: </h3> {{ project.approvedBy.name }}
                 </div>
-                <div v-else>
+                <!-- <div v-else> VAMO BOTA ISSO DEPOIS, NUM APAGA PREU N ESQUECER
                   <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
-                </div>
+                </div> -->
               </div>
               <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />

@@ -103,7 +103,6 @@ export default {
       .getTeacherUsers()
       .then(res => {
         this.teacherList = res
-        console.log(this.teacherList)
       })
   },
   methods: {
