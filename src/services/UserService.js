@@ -21,18 +21,9 @@ export default {
       company,
       telephone
     }
-    return http.post(role, user)
-    // TODO mudar toda essa estrutura para quem o chama
-    // .then(() => {
-    //   alert('Usuario criado')
-    // })
-    // .catch((error) => {
-    //   if (error.response !== null && error.response.status === 409) {
-    //     alert('Email duplicado')
-    //   } else {
-    //     console.log(error)
-    //   }
-    // })
+    return http.post(role, user).then(res => {
+      return res.data
+    })
   },
 
   getUserInfo () {
@@ -40,8 +31,6 @@ export default {
       .get('user')
       .then(res => {
         return res.data
-      }).catch(() => {
-        alert('Erro ao carregar informações do usuario')
       })
   },
 
@@ -56,9 +45,6 @@ export default {
           name: teacher.name,
           authorizations: teacher.authorizations[0].name
         }))
-      }).catch(() => {
-        this.$emit('errorEvent', 'Erro ao carregar informações do professor')
-        alert('Erro ao carregar informações do professor')
       })
   },
 
@@ -76,28 +62,20 @@ export default {
           city: student.city,
           ra: student.ra
         }))
-      }).catch(() => {
-        alert('Erro ao carregar informações do aluno')
       })
   },
 
   getUser () {
     return http
-      .get('user')
-      .then(res => {
+      .get('user').then(res => {
         return res.data
-      }).catch(() => {
-        alert('Erro ao carregar informações do usuario')
       })
   },
 
   updateUser (user) {
     return http
-      .post(`${store.getters.userRole}/update`, user)
-      .then(res => {
+      .post(`${store.getters.userRole}/update`, user).then(res => {
         return res.data
-      }).catch(() => {
-        alert('Erro ao atualizar as informações')
       })
   }
 }

@@ -1,6 +1,10 @@
 <template>
-  <div v-loading="$store.getters.loading" class="container-view">
-    <el-container>
+  <div
+    v-loading="$store.getters.loading"
+    element-loading-text="Carregando informações..."
+    class="container-view"
+  >
+    <el-container v-if="completeLoading">
       <el-header height="auto">
         <Logo variant="blue" />
         <div class="align-center d-flex">
@@ -49,6 +53,7 @@ import { mapGetters } from 'vuex'
 
 export default {
   components: { Logo },
+  data () { return { completeLoading: false } },
   computed: {
     ...mapGetters([
       'userName',
@@ -65,8 +70,11 @@ export default {
   },
   mounted () {
     this.$store.commit('SHOW_LOADING')
-    this.$store.dispatch('loadCurrentUserInfo')
-      .then(() => this.$store.dispatch('loadProjects'))
+    Promise.all([
+      this.$store.dispatch('loadCurrentUserInfo'),
+      this.$store.dispatch('loadProjects')
+    ])
+      .then(() => { this.completeLoading = true })
       .catch(err => this.$throwError(err))
       .finally(() => this.$store.commit('HIDE_LOADING'))
   },

@@ -161,6 +161,7 @@ export default {
   .el-card__body {
     padding: 38px;
     height: 100%;
+    overflow-y: auto;
     > div {
       height: 100%;
     }
