@@ -15,7 +15,7 @@
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
               </el-steps>
-              <el-collapse class="mt-28" value="1">
+              <el-collapse class="mt-28">
                 <el-collapse-item v-if="project.shortDescription" title="Resumo" name="1">
                   {{ project.shortDescription }}
                 </el-collapse-item>
@@ -46,6 +46,10 @@
                   <h3>Data e horario:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
                 </div>
               </div>
+              <div>
+                <h3> Professor responsável: </h3> {{ }}
+                <h3> Projeto aplicado no semestre </h3> {{ }}
+              </div>
               <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />
               </div>
@@ -58,8 +62,11 @@
     <div v-else>
       <div class="text-center empty h100 d-flex align-center">
         <div>
-          Selecione um projeto ao lado para saber mais ou
-          <el-link type="primary">crie um novo projeto</el-link>.
+          Selecione um projeto ao lado para saber mais
+          <span v-if="$store.getters.isRepresentative">
+            ou
+            <el-link type="primary">crie um novo projeto</el-link>.
+          </span>
         </div>
       </div>
     </div>

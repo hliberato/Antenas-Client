@@ -176,6 +176,7 @@ export default {
   },
   mounted () {
     this.address = this.project.meeting.address
+    this.dates = this.project.meeting.possibleDate
   },
   methods: {
     update () {
@@ -221,7 +222,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .el-input-number {
   width: 100%;
 }
