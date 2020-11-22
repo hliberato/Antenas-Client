@@ -4,7 +4,7 @@
       <transition name="fade">
         <div v-if="!fade">
           <h1 class="title">{{ project.title }}</h1>
-          <el-tabs :key="tabsKey">
+          <el-tabs :key="tabsKey" @tab-click="tabClick">
             <el-tab-pane label="Projeto">
               <el-steps
                 :space="200"
@@ -34,10 +34,8 @@
                 <div>
                   {{ project.meeting.address.place }}
                   <br>
-                  {{ project.meeting.address.neighborhood }}
-                  {{ project.meeting.address.neighborhood && (project.meeting.address.street || project.meeting.address.number) ? ',' : '' }}
-                  {{ project.meeting.address.street }}
-                  {{ project.meeting.address.number ? ',' : '' }}
+                  {{ project.meeting.address.neighborhood }},
+                  {{ project.meeting.address.street }},
                   {{ project.meeting.address.number }}
                   <br>
                   {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
@@ -51,14 +49,15 @@
                 <h3> Projeto aplicado no {{ project.semester }} semestre </h3>
               </div>
               <div v-if="$store.getters.isCadi">
-                <div v-if="!project.refused">
+                <div v-if="!project.refused && project.createdBy">
                   <br>
                   <h3> Criado por: </h3> {{ project.createdBy.name }}
                   <h3> Telefone: </h3> {{ project.createdBy.telephone }}
                   <br><br>
-                  <h3> Aprovado por: </h3> {{ project.approvedBy.name }}
+                  <!-- <h3> Aprovado por: </h3> {{ project.approvedBy.name }} -->
                 </div>
-                <!-- <div v-else> VAMO BOTA ISSO DEPOIS, NUM APAGA PREU N ESQUECER
+                <!-- NUM APAGA ESSES COMENTARIOS
+                <div v-else>
                   <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
                 </div> -->
               </div>
@@ -66,7 +65,9 @@
                 <component :is="currentStep" :project="project" />
               </div>
             </el-tab-pane>
-            <el-tab-pane :disabled="false" label="Equipe" />
+            <el-tab-pane label="Equipe">
+              <TeamView ref="teamView" :project="project" />
+            </el-tab-pane>
           </el-tabs>
         </div>
       </transition>
@@ -87,6 +88,8 @@
 
 <script>
 /* eslint-disable import/no-duplicates */
+import TeamView from '@/components/Team/TeamView.vue'
+
 import Step2 from './ProjectOverviewSteps/Step2'
 import Step3 from './ProjectOverviewSteps/Step3'
 import Step4 from './ProjectOverviewSteps/Step2'
@@ -101,6 +104,7 @@ import { debounce } from 'lodash'
 
 export default {
   components: {
+    TeamView,
     Step2,
     Step3,
     Step4,
@@ -152,6 +156,11 @@ export default {
       return (this.project && this.project.meeting &&
             (this.project.progress === 5 || this.project.progress === 6) &&
             (this.$store.getters.isCadi || this.$store.getters.isRepresentative))
+    },
+    tabClick (tab) {
+      if (tab.label === 'Equipe') {
+        this.$refs.teamView.getTeam()
+      }
     }
   }
 }

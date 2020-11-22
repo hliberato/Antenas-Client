@@ -1,304 +1,170 @@
 <template>
-  <div class="box-team">
-    <div v-if="teams.length == 0">
-      <v-alert
+  <div>
+    <div v-if="teams.length == 0 && !createTeam">
+      <el-alert
         v-if="!$store.getters.isStudent"
-        outlined
-        color="red"
-      >
-        <div class="warning-stye">
-          Não há equipes cadastradas neste projeto.
-        </div>
-      </v-alert>
-
-      <v-alert
+        title="Não há equipes cadastradas no momento"
+        type="warning"
+        center
+        show-icon
+      />
+      <el-alert
         v-if="$store.getters.isStudent && teams.length == 0 && !createTeam"
-        outlined
+        center
         type="warning"
         prominent
         border="left"
       >
-        <span
-          class="text-button"
-          @click="createTeam = !createTeam"
-        > Crie uma equipe </span> ou aguarde até ser convidado para uma.
-      </v-alert>
+        <el-button type="text" @click="createTeam = !createTeam">Crie uma equipe</el-button> ou peça para um colega te adicionar em uma.
+      </el-alert>
     </div>
-
-    <div v-if="createTeam">
-      <div class="flex-box">
-        <v-text-field
-          v-model="teamName"
-          class="mr-3"
-          label="Nome da equipe"
-          hide-details="auto"
-        />
-
-        <v-select
-          v-model="role"
-          :items="roles"
-          :item-text="'label'"
-          :item-value="'value'"
-          label="Sua função no projeto"
-        />
-      </div>
-
-      <v-row class="button-position ml-65p">
-        <v-col
-          cols="6"
-          class="ml-0"
+    <div v-else-if="teams.length > 0 && !createTeam">
+      <div v-for="team in teams" :key="team.id">
+        <h2>{{ team.name }}</h2>
+        <h4>Membros</h4>
+        <div
+          v-for="member in team.studentTeamList"
+          :key="member.label"
+          :type="member.type"
         >
-          <v-btn
-            small
-            color="#4472E9"
-            class="white--text"
-            type="button"
-            @click="submit()"
+          <div @click="editMember(member)">
+            {{ member.student.name }}
+            <br>
+            {{ formatStudentRoles(member) }}
+          </div>
+          <el-button
+            icon="el-icon-close"
+            @click="removeStudent(member)"
+          />
+        </div>
+        <br><br>
+        <el-button
+          plain
+          type="primary"
+          @click="addMember = !addMember"
+        >
+          {{ 'Adicionar novo membro' }}
+        </el-button>
+        <el-dialog
+          :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
+          :visible.sync="addMember"
+          width="50%"
+        >
+          <el-form
+            ref="form"
+            v-loading="$store.getters.loading"
+            class="team-form-1"
+            label-position="top"
+            label-width="130px"
           >
-            <v-icon left>
-              save
-            </v-icon>
-            Criar
-          </v-btn>
-        </v-col>
+            <el-row :gutter="20">
+              <el-col :span="16">
+                <el-form-item label="Aluno" prop="name">
+                  <el-select v-model="newTeamMember" :disabled="editingMember">
+                    <el-option
+                      v-for="student in students"
+                      :key="student.id"
+                      :label="student.name"
+                      :value="student.id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="Função na equipe" prop="role">
+                  <el-select v-model="roles" multiple>
+                    <el-option
+                      v-for="roleList in rolesSelect"
+                      :key="roleList.id"
+                      :label="roleList.name"
+                      :value="roleList.id"
+                    />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <div class="justify-end d-flex">
+              <el-button
+                plain
+                @click="clear()"
+              >
+                Cancelar
+              </el-button>
 
-        <v-col cols="6">
-          <v-btn
-            small
-            color="#DD2C2C"
-            type="button"
-            class="white--text"
-            @click="createTeam = !createTeam"
-          >
-            <v-icon left>
-              close
-            </v-icon>
-            Cancelar
-          </v-btn>
-        </v-col>
-      </v-row>
+              <el-button
+                plain
+                type="success"
+                @click="editingMember ? updateRole() : update(team)"
+              >
+                {{ editingMember ? 'Salvar' : 'Adicionar' }}
+              </el-button>
+            </div>
+          </el-form>
+        </el-dialog>
+      </div>
     </div>
-
-    <v-expansion-panels
-      v-for="team in teams"
-      :key="team.id"
-      :disabled="false"
-      multiple
+    <el-dialog
+      title="Criar equipe"
+      :visible.sync="createTeam"
+      width="50%"
     >
-      <v-expansion-panel :aria-expanded="$store.getters.isStudent">
-        <v-expansion-panel-header class="team-view__title">
-          <v-row>
-            <h5> {{ team.name }} </h5>
-          </v-row>
-        </v-expansion-panel-header>
-
-        <v-expansion-panel-content class="team-view">
-          <div class="student-flex-box">
-            <div
-              v-for="member in team.studentTeamList"
-              :key="member.id"
-              class="team-member"
-            >
-              <div class="student-flex-box">
-                <div>
-                  <div class="member-name">
-                    {{ member.student.name }}
-                  </div>
-                  <div class="role-view">
-                    {{ member.role }}
-                  </div>
-                </div>
-
-                <a
-                  v-if="$store.getters.isStudent"
-                  @click.prevent="removeStudent(member.student.id)"
-                >
-                  <i class="material-icons material-icons-padding">close</i>
-                </a>
-              </div>
-            </div>
-          </div>
-          <div v-if="$store.getters.isStudent">
-            <v-row>
-              <v-col cols="11">
-                <v-text-field
-                  v-model="team.communicationLink"
-                  label="Link de comunicação"
-                  :rules="rules.link"
-                  append-icon="link"
-                  hide-details="auto"
+      <el-form
+        ref="form"
+        v-loading="$store.getters.loading"
+        class="team-form"
+        label-position="top"
+        label-width="130px"
+      >
+        <el-row :gutter="20">
+          <el-col :span="16">
+            <el-form-item label="Nome" prop="name">
+              <el-input
+                v-model="teamName"
+                type="text"
+                maxlength="15"
+                show-word-limit
+              />
+            </el-form-item>
+          </el-col>
+          {{ rolesSelect }}
+          <el-col :span="8">
+            <el-form-item label="Sua função na equipe" prop="role">
+              <el-select v-model="roles" multiple>
+                <el-option
+                  v-for="roleList in rolesSelect"
+                  :key="roleList.id"
+                  :label="roleList.name"
+                  :value="roleList.id"
                 />
-              </v-col>
-
-              <v-col
-                cols="1"
-                class="save-button"
-              >
-                <span
-                  v-if="$store.getters.isStudent"
-                  class="material-icons material-icons-p25 pointer "
-                  @click="saveLink(team, team.communicationLink)"
-                >
-                  save
-                </span>
-              </v-col>
-            </v-row>
-
-            <v-row>
-              <v-col cols="11">
-                <v-text-field
-                  v-model="team.projectUrl"
-                  label="Link do projeto"
-                  append-icon="link"
-                  :rules="rules.link"
-                  hide-details="auto"
-                />
-              </v-col>
-
-              <v-col
-                cols="1"
-                class="save-button"
-              >
-                <span
-                  v-if="$store.getters.isStudent"
-                  class="material-icons material-icons-p25 pointer "
-                  @click="saveLink(team, team.projectUrl)"
-                >
-                  save
-                </span>
-              </v-col>
-            </v-row>
-          </div>
-
-          <div v-else>
-            <div>
-              <div class="link-title">
-                Link de comunicação
-              </div>
-              <div
-                class="link-view flex-box"
-                @click="upenUrl(team.communicationLink)"
-              >
-                <span>
-                  {{ getLink(team.communicationLink) }}
-                </span>
-
-                <div class="spacer" />
-                <span class="material-icons"> link </span>
-              </div>
-            </div>
-
-            <div>
-              <div class="link-title">
-                Link do projeto
-              </div>
-              <div
-                class="link-view flex-box"
-                @click="upenUrl(team.projectUrl)"
-              >
-                <span>
-                  {{ getLink(team.projectUrl) }}
-                </span>
-
-                <div class="spacer" />
-                <span class="material-icons"> link </span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            v-if="$store.getters.isStudent"
-            class="add-member"
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <div class="justify-end d-flex">
+          <el-button
+            plain
+            type="primary"
+            @click="save()"
           >
-            <div class="my-2">
-              <v-btn
-                text
-                color="primary"
-                @click="addMember = !addMember"
-              >
-                <v-icon left>
-                  person_add
-                </v-icon> Adicionar novo membro
-              </v-btn>
-            </div>
-
-            <v-row v-if="addMember">
-              <v-col cols="6">
-                <v-select
-                  v-model="newTeamMember"
-                  :items="getSudentOptions()"
-                  label="Nome"
-                  :item-text="'label'"
-                  :item-value="'value'"
-                />
-              </v-col>
-
-              <v-col cols="6">
-                <v-select
-                  v-model="role"
-                  :items="roles"
-                  :item-text="'label'"
-                  :item-value="'value'"
-                  label="Função"
-                />
-              </v-col>
-            </v-row>
-
-            <v-row
-              v-if="addMember"
-              class="button-position"
-            >
-              <v-col
-                cols="6"
-                class="ml-0"
-              >
-                <v-btn
-                  small
-                  color="#4472E9"
-                  class="white--text "
-                  type="button"
-                  @click="submit(team)"
-                >
-                  <v-icon left>
-                    save
-                  </v-icon>
-                  Salvar
-                </v-btn>
-              </v-col>
-
-              <v-col cols="6">
-                <v-btn
-                  small
-                  color="#DD2C2C"
-                  type="button"
-                  class="white--text pl-30"
-                  @click="addMember = !addMember"
-                >
-                  <v-icon left>
-                    close
-                  </v-icon>
-                  Cancelar
-                </v-btn>
-              </v-col>
-            </v-row>
-          </div>
-        </v-expansion-panel-content>
-      </v-expansion-panel>
-    </v-expansion-panels>
+            Salvar
+          </el-button>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import TeamService from '@/services/TeamService'
 import UserService from '@/services/UserService.js'
-import EventBus from '@/helpers/EventBus.js'
 
 export default {
-  name: 'TeamView',
   props: {
-    projectId: {
-      type: Number,
-      default: 0
+    project: {
+      type: Object,
+      default () {
+        return {}
+      }
     }
   },
   data () {
@@ -307,300 +173,149 @@ export default {
       students: [],
       addMember: false,
       createTeam: false,
-
+      editingMember: false,
       teamName: '',
-      role: '',
-      newTeamMember: 0,
-      roles: [
-        { value: 'DevOps', label: 'DevOps' },
-        { value: 'Dev', label: 'Dev' },
-        { value: 'Scrum Master', label: 'Scrum Master' }
-      ],
-      rules: {
-        link: [
-          link => (link.includes('http://') || link.includes('https://')) || 'É necessário que o link possua http:// ou https://',
-          link => !!link || 'Campo obrigatório'
-        ],
-
-        semester_rules: [
-          semester => !!semester || 'Campo obrigatório',
-          semester => (semester && semester < 7) || 'Insira um semestre válido.',
-          semester => (semester && semester > 0) || 'Insira um semestre válido.'
-        ]
-      }
+      roles: [],
+      newTeamMember: '',
+      rolesSelect: []
     }
   },
-  mounted () {
-    UserService
-      .getStudentsUsers()
-      .then(students => {
-        this.students = students.filter(student => {
-          // TODO alterar esse cara
-          return student.id.toString() !== localStorage.getItem('USER_ID').toString()
-        })
-      })
-
-    this.updateTeams(this.projectId)
-
-    EventBus.$on('selectProject', (projectId) => {
-      this.updateTeams(projectId)
-    })
-  },
   methods: {
-    updateTeams (projectId) {
+    updateTeams () {
       TeamService
-        .getTeam(projectId)
+        .getTeam(this.project.id)
         .then(teams => {
           this.teams = teams
         })
     },
-
-    submit (team) {
-      const updatedTeams = team
-
-      if (updatedTeams !== undefined) {
-        if ((this.teamName && this.role) || this.newTeamMember !== 0) {
-          updatedTeams.studentTeamList.push({
-            role: this.role,
-            student: {
-              id: this.newTeamMember !== 0 ? this.newTeamMember : this.$store.state.selectedProject.id
-            }
+    getRoles () {
+      if (this.$store.getters.isStudent) {
+        TeamService
+          .getRoles()
+          .then(roles => {
+            this.rolesSelect = roles
           })
+      }
+    },
+    getRoleObject () {
+      const roleList = []
+      this.roles.forEach(role => {
+        roleList.push({ id: role })
+      })
+      return roleList
+    },
+    save () {
+      TeamService.addTeam(
+        {
+          project: { id: this.project.id },
+          name: this.teamName,
+          roles: this.getRoleObject()
+        }).then(() => {
+        alert('Equipe criada')
+        this.updateTeams()
+          .catch(() => {
+            alert('Ocorreu um erro ao criar a equipe')
+          })
+      })
+      this.clear()
+    },
+    update (team) {
+      team.studentTeamList.push({
+        role: this.getRoleObject(),
+        student: {
+          id: this.newTeamMember
         }
-
-        TeamService.updateTeam(updatedTeams).then(() => {
-          this.updateTeams(this.projectId)
+      })
+      TeamService.updateTeam(team)
+        .then(() => {
+          alert('Equipe atualizada')
+          this.updateTeams()
         })
-        this.addMember = false
-      } else {
-        TeamService.addTeam(
-          {
-            project: { id: this.projectId },
-            name: this.teamName
-          },
-          this.role).then(() => {
-          this.updateTeams(this.projectId)
+        .catch((err) => {
+          if (err.response.status === 409) {
+            alert('Este aluno já pertence a uma equpe.')
+          } else {
+            alert('Ocorreu um erro ao atualizar a equipe')
+          }
         })
-        this.createTeam = false
-      }
+      this.clear()
     },
-
-    getSudentOptions () {
-      return [...this.students.map(student => ({ label: student.name, value: student.id }))]
+    formatStudentRoles (member) {
+      let roleString = ''
+      member.role.forEach(role => {
+        if (roleString.length > 0) {
+          roleString += ' / '
+        }
+        roleString += role.name
+      })
+      return roleString
     },
-
-    getLink (link) {
-      return link || 'A equipe ainda não adicionou um Link.'
-    },
-
-    getClassTextField () {
-      const class1 = 'input-link'
-      return [class1]
-    },
-
-    upenUrl (url) {
-      if (url) {
-        window.open(url)
-      }
-    },
-
     removeStudent (student) {
-      TeamService.removeStudent(student).then(() => {
-        this.updateTeams(this.projectId)
+      this.$confirm(`Tem certeza que deseja remover ${student.student.name} da equipe?`, 'Remover aluno', {
+        confirmButtonText: 'Remover',
+        cancelButtonText: 'Cancelar',
+        confirmButtonClass: 'el-button--danger'
+      }).then(() => {
+        this.$store.commit('SHOW_LOADING')
+        TeamService.removeStudent(student.id)
+          .then(() => {
+            this.updateTeams()
+            alert(`${student.student.name} foi removido do grupo`)
+          })
+          .catch(err => {
+            this.$throwError(err)
+            alert('Ocorreu um erro ao remover o aluno da equipe')
+          })
+          .finally(() => {
+            this.$store.commit('HIDE_LOADING')
+          })
       })
     },
-
-    saveLink (team, link) {
-      if ((!link.includes('http://') && !link.includes('https://')) || !link) {
-        alert('Link incorreto')
-      } else {
-        this.submit(team)
-      }
+    getTeam () {
+      this.updateTeams()
+      UserService
+        .getStudentsUsers()
+        .then(students => {
+          this.students = students
+        })
+      this.getRoles()
+    },
+    editMember (member) {
+      this.editingMember = member
+      this.addMember = true
+      this.newTeamMember = member.student.name
+      this.roles = member.role
+      console.log(this.roles)
+      console.log(this.rolesSelect)
+    },
+    clear () {
+      this.editingMember = ''
+      this.addMember = false
+      this.newTeamMember = ''
+      this.roles = []
+    },
+    updateRole () {
+      this.editingMember.role = this.getRoleObject()
+      TeamService.updateStudentTeam(this.editingMember)
+        .then(() => {
+          alert('Equipe atualizada')
+          this.updateTeams()
+        })
+        .catch(() => alert('Ocorreu um erro ao atualizar as informações'))
+      this.clear()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-
-.warning-stye {
-    text-align: center;
-    font-weight: 600;
+.el-alert .el-alert__description {
+  font-size: 14px;
 }
-
-.text-button {
-    padding-left: 0;
-    color: #516cf5!important;
-    cursor: pointer;
-    text-transform: none !important;
+.el-icon-close {
+  visibility: hidden !important;
 }
-
-.text-button:hover {
-    cursor: pointer;
-    border-bottom: 1px solid #516cf5;
-    font-weight: 700 ;
+.el-select {
+    width: 100%;
 }
-
-.pl-30 {
-    margin-left: 30px !important;
-}
-
-.spacer {
-    flex-grow: 1 !important;
-}
-
-.row {
-    margin-left: 0;
-}
-
-.link-title {
-    margin-top: 20px;
-    font-weight: 100;
-    font-size: 12px;
-}
-
-.link-view {
-    padding-left: 0;
-    border-bottom: 1px dashed #353535;
-    color: #516cf5;;
-    cursor: pointer;
-}
-
-.add-member {
-    padding-top: 25px;
-}
-
-.role-view {
-    font-family: Open Sans;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 10px;
-    line-height: 14px;
-    color: #9F9D9D;
-    padding-top: 5px;
-}
-
-.title-style {
-    font-weight: 600;
-    font-size: 17px;
-    line-height: 23px;
-    display: block;
-}
-
-.save-button {
-    color: #4472E9;
-    padding-right: 15px;
-    padding-left: 0px;
-    padding-top: 5% !important;
-}
-
-.pointer {
-    cursor:pointer !important;
-}
-
-.ml-65p {
-    margin-left: 65% !important;
-}
-
-.button-position {
-    width: 30%;
-    margin-left: 58%;
-}
-
-.input-link {
-    padding: 20px 5px 5px 5px;
-}
-
-.student-flex-box {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-.v-expansion-panels {
-   justify-content: left;
-}
-
-.team-member {
-    background-color: white;
-    border-radius: 0px 21px 21px 21px;
-    padding: 5px 0px 5px 17px;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.123));
-}
-
-.material-icons {
-    cursor: pointer;
-}
-
-.material-icons-padding {
-    padding-right: 10px;
-    padding-top: 8px;
-    color: #6e6e6e;
-}
-
-.col {
-    padding-bottom: 0px;
-    padding-top: 0px;
-}
-
-.member-name {
-    padding-right: 18px;
-}
-
-.box-team {
-    padding: 16px 15px;
-    height: calc(100% - 20px - (16px * 2));
-    overflow-y: auto;
-}
-
-.v-expansion-panel-header {
-    min-height: 0px;
-}
-
-.v-expansion-panel {
-    padding-bottom: 20px;
-}
-
-.v-expansion-panel::before {
-    box-shadow: none;
-}
-
-.team-view {
-    background-color: #eaf0ff;
-    border: solid 1px #a3b8ec;
-    padding: 8px 0 8px 0;
-    border-radius: 0px 0px 3px 3px;
-    border-top: none;
-
-    &__title {
-        font-weight: 600;
-        padding-top: 5px;
-        font-size: 18px;
-        line-height: 22px;
-        // border-radius: 10px 10px 0px 0px;
-        background-color: #eaf0ff;
-        border: solid 1px #a3b8ec;
-        padding-left: 10px;
-        padding-right: 5px;
-    }
-
-    &__section {
-        margin-bottom: spacing(2);
-
-        .form-button {
-            margin-right: spacing(2);
-
-            &:last-child {
-                margin-right: 0;
-            }
-
-            &-mr-15 {
-                margin-right: 15px !important;
-            }
-        }
-    }
-}
-
 </style>

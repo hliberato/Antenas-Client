@@ -21,7 +21,7 @@ export default {
       company,
       telephone
     }
-    return http.post(role, user).then(res => {
+    return http.post(role.toLowerCase(), user).then(res => {
       return res.data
     })
   },
