@@ -55,7 +55,6 @@
                   <h3> Telefone: </h3> {{ project.createdBy.telephone }}
                   <h3> Empresa: </h3> {{ project.createdBy.company }}
                   <br><br>
-                  {{project.createdBy}}
                   <h3> Aprovado por: </h3> {{ project.approvedBy.name }}
                 </div>
                 <!-- NUM APAGA ESSES COMENTARIOS
