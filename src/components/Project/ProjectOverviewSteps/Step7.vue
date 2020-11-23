@@ -12,7 +12,7 @@
         icon="el-icon-check"
         @click="update(false)"
       >
-        {{ project.open ? 'Encerrar projeto' : 'Iniciar projeto'}}
+        {{ project.open ? 'Encerrar projeto' : 'Iniciar projeto' }}
       </el-button>
     </el-alert>
   </div>

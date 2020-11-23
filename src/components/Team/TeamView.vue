@@ -33,12 +33,14 @@
             {{ formatStudentRoles(member) }}
           </div>
           <el-button
+            v-if="$store.getters.isStudent"
             icon="el-icon-close"
             @click="removeStudent(member)"
           />
         </div>
         <br><br>
         <el-button
+          v-if="$store.getters.isStudent"
           plain
           type="primary"
           @click="addMember = !addMember"
@@ -46,6 +48,7 @@
           {{ 'Adicionar novo membro' }}
         </el-button>
         <el-dialog
+          v-if="$store.getters.isStudent"
           :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
           :visible.sync="addMember"
           width="50%"
@@ -104,6 +107,7 @@
       </div>
     </div>
     <el-dialog
+      v-if="$store.getters.isStudent"
       title="Criar equipe"
       :visible.sync="createTeam"
       width="50%"
