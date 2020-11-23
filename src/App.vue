@@ -71,4 +71,7 @@ html, body, body > [class*=-view], .el-container, .el-main {
 .fade-enter, .fade-leave-to{
   opacity:0
 }
+.el-dialog__title {
+  font-weight: 600;
+}
 </style>

@@ -13,6 +13,7 @@ import './plugins/element/element.js'
 import './plugins/datetime.js'
 import './plugins/loading.js'
 import './plugins/utils.js'
+import './plugins/fuse.js'
 
 import { Loading } from 'element-ui'
 Vue.prototype.$loading = Loading.service

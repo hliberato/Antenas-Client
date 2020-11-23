@@ -1,5 +1,5 @@
 <template>
-  <div :class="`project-card--${status}`" class="mt-20 mr-12 project-card">
+  <div :class="`project-card--${project.status}`" class="mt-20 mb-20 mr-12 project-card">
     <el-card
       :shadow="isActive ? 'always' : 'hover'"
       @click.native="$emit('click', project.id)"
@@ -15,11 +15,11 @@
           <b>{{ project.updatedAt ? project.updatedAt : project.createdAt | moment("DD/MM/YYYY") }}</b>
         </span>
         <h5 class="progress">
-          {{ labelPhase }}
+          {{ project.labelPhase }}
         </h5>
       </div>
     </el-card>
-    <i v-if="status === 'pending'" class="alert el-icon-warning-outline" />
+    <i v-if="project.status === 'pending'" class="alert el-icon-warning-outline" />
   </div>
 </template>
 
@@ -33,14 +33,6 @@ export default {
     isActive: {
       type: Boolean,
       default: false
-    }
-  },
-  computed: {
-    status () {
-      return this.$getProjectStatus(this.project)
-    },
-    labelPhase () {
-      return this.$getProjectLabelPhase(this.status, this.project)
     }
   }
 }
@@ -84,7 +76,7 @@ export default {
       color: $--color-danger;
     }
   }
-  &--conclused {
+  &--concluded {
     .el-card {
       border-left-color: $--color-success;
     }
