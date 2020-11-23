@@ -8,7 +8,15 @@ export default {
   },
   mutations: {
     SET_PROJECTS (state, projects) {
-      state.projects = state.projects.concat(projects)
+      state.projects = projects.map(project => {
+        const status = Vue.prototype.$getProjectStatus(project)
+        const labelPhase = Vue.prototype.$getProjectLabelPhase(status, project)
+        return {
+          ...project,
+          status,
+          labelPhase
+        }
+      })
     },
     SET_SELECTED_PROJECT_ID (state, selectedProjectId) {
       state.selectedProjectId = selectedProjectId
@@ -71,6 +79,7 @@ export default {
   },
   getters: {
     projects: state => state.projects,
-    selectedProject: state => state.projects.find(p => p.id === state.selectedProjectId)
+    selectedProject: state => state.projects.find(p => p.id === state.selectedProjectId),
+    availableFilters: state => [...new Set(state.projects.map(p => p.labelPhase))]
   }
 }

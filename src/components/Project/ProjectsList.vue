@@ -12,36 +12,75 @@
         Novo projeto
       </el-button>
     </div>
-    <el-input
-      v-model="searchTerm"
-      placeholder="Buscar por projetos"
-      suffix-icon="el-icon-search"
-    />
-    <br><br>
+    <div class="d-flex align-center">
+      <el-input
+        v-model="searchTerm"
+        placeholder="Buscar por projetos"
+        suffix-icon="el-icon-search"
+        class="w100"
+        clearable
+        @input="searchProjects"
+      />
+      <el-popover
+        width="220"
+        trigger="click"
+      >
+        <el-select
+          v-model="filterStatus"
+          multiple
+          placeholder="Filtrar por status"
+          collapse-tags
+          clearable
+          @change="searchProjects"
+        >
+          <el-option
+            v-for="filter in availableFilters"
+            :key="filter"
+            :label="filter"
+            :value="filter"
+          />
+        </el-select>
+        <el-badge
+          slot="reference"
+          :value="filterStatus.length"
+          :hidden="!filterStatus.length"
+          type="primary"
+        >
+          <el-tooltip :open-delay="500" content="Filtre por status" placement="top">
+            <el-button
+              type="text"
+              icon="el-icon-s-operation"
+              class="filter"
+            />
+          </el-tooltip>
+        </el-badge>
+      </el-popover>
+    </div>
     <div class="list">
       <ProjectCard
-        v-for="(project, index) in projects"
+        v-for="(project, index) in filteredProjects"
         :key="index"
         :project="project"
         :is-active="activeProjectId === project.id"
         @click="selectProject"
       />
+      <div v-if="!filteredProjects.length && (searchTerm || filterStatus.length)" class="mt-4 text-center">
+        <i>Sem resultados para os filtros selecionados.</i>
+      </div>
     </div>
   </el-card>
 </template>
 
 <script>
 import ProjectCard from '@/components/Project/ProjectCard'
+import { debounce } from 'lodash'
+import { mapGetters } from 'vuex'
 
 export default {
   components: {
     ProjectCard
   },
   props: {
-    projects: {
-      type: Array,
-      default: () => []
-    },
     activeProjectIdProps: {
       type: Number,
       default: 0
@@ -49,10 +88,16 @@ export default {
   },
   data () {
     return {
-      searchTerm: ''
+      searchTerm: '',
+      filterStatus: [],
+      filteredProjects: []
     }
   },
   computed: {
+    ...mapGetters([
+      'projects',
+      'availableFilters'
+    ]),
     activeProjectId: {
       get () {
         return this.$store.getters.selectedProject?.id || 0
@@ -62,15 +107,34 @@ export default {
       }
     }
   },
+  mounted () {
+    this.filteredProjects = this.projects
+  },
   methods: {
     selectProject (id) {
       this.activeProjectId = id
     },
     showProjectModal () {
       this.$store.commit('SET_PROJECT_MODAL', true)
+    },
+    searchProjects: debounce(function () {
+      this.$search(this.searchTerm, this.projects, {
+        keys: ['title', 'shortDescription'],
+        threshold: 0.2
+      }).then(results => {
+        let filtered
+        if (this.searchTerm) filtered = results
+        else filtered = this.projects
+        this.filteredProjects = filtered.filter(p => {
+          return !this.filterStatus.length || this.filterStatus.includes(p.labelPhase)
+        })
+      })
+    }, 500),
+    handleClose (tag) {
+      this.filterStatus.splice(this.filterStatus.indexOf(tag), 1)
+      this.searchProjects()
     }
   }
-
 }
 </script>
 
@@ -84,12 +148,18 @@ export default {
     height: 100%;
   }
   .list {
-    height: calc(100% - 126px);
+    height: calc(100% - 88px);
     overflow-y: auto;
     overflow-x: hidden;
+    margin-top: 12px;
   }
   .new {
     font-size: .9rem;
+  }
+  .filter {
+    font-size: 1.2rem;
+    padding: 0;
+    margin-left: 16px;
   }
 }
 </style>

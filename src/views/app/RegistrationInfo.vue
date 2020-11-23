@@ -55,11 +55,15 @@ export default {
 <style lang="scss">
 @import '@/plugins/element/_colors.scss';
 .registration-info-view {
+  .tabs {
+    background: #fff;
+  }
   .el-tabs__header {
+    margin-right: 0 !important;
     background-color: mix(#fff, $--color-primary, 90%);
   }
   .el-tab-pane {
-    padding: 30px 65px 20px 18px;
+    padding: 40px;
   }
   .el-tabs__nav {
     margin-top: 2rem;

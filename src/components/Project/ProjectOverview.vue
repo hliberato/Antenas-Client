@@ -59,7 +59,7 @@
                 <!-- NUM APAGA ESSES COMENTARIOS
                 <div v-else>
                   <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
-                </div> -->
+                </div>-->
               </div>
               <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />
@@ -75,7 +75,7 @@
     <div v-else>
       <div class="text-center empty h100 d-flex align-center">
         <div>
-          Selecione um projeto ao lado para saber mais
+          Selecione um projeto ao lado para saber mais<span v-if="!$store.getters.isRepresentative">.</span>
           <span v-if="$store.getters.isRepresentative">
             ou
             <el-link type="primary">crie um novo projeto</el-link>.
@@ -183,6 +183,10 @@ export default {
   // Step
   .el-steps {
     margin-top: 1.4rem;
+  }
+  .el-step__title {
+    line-height: 1.2rem;
+    margin-top: 12px;
   }
   // Tab
   .el-tabs {
