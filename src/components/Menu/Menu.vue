@@ -3,10 +3,10 @@
     <div @click="view('Informações pessoais')">
       Informações pessoais
     </div>
-    <div @click="view('Informações profissionais')">
+    <div v-if="$store.getters.isStudent" @click="view('Informações profissionais')">
       Informações profissionais
     </div>
-    <div @click="view('Informações Acadêmicas')">
+    <div v-if="$store.getters.isStudent" @click="view('Informações Acadêmicas')">
       Informações Acadêmicas
     </div>
   </div>

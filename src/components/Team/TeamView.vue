@@ -180,7 +180,6 @@
               />
             </el-form-item>
           </el-col>
-          {{ rolesSelect }}
           <el-col :span="8">
             <el-form-item label="Sua função na equipe" prop="role">
               <el-select v-model="roles" multiple>

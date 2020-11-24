@@ -59,7 +59,7 @@
                       <strong> Empresa: </strong> {{ project.createdBy.company }}
                       <br>
                       <br>
-                      <strong> Aprovado por: </strong> {{ project.approvedBy.name }}
+                      <div v-if="project.approvedBy"><strong> Aprovado por: </strong> {{ project.approvedBy.name }}</div>
                     </div>
                     <!-- NUM APAGA ESSES COMENTARIOS
                     <div v-else>

@@ -4,15 +4,15 @@
       <el-tab-pane v-loading="loading" label="Informações pessoais" name="info">
         <PersonalInfo :user.sync="user" />
       </el-tab-pane>
-      <el-tab-pane v-loading="loading" label="Informações profissionais" name="job">
+      <el-tab-pane v-if="$store.getters.isStudent" v-loading="loading" label="Informações profissionais" name="job">
         <ProfessionalInfo :user.sync="user" />
       </el-tab-pane>
-      <el-tab-pane v-loading="loading" label="Informações acadêmicas" name="school">
+      <el-tab-pane v-if="$store.getters.isStudent" v-loading="loading" label="Informações acadêmicas" name="school">
         <AcademicInfo :user.sync="user" />
       </el-tab-pane>
-      <el-tab-pane v-loading="loading" label="Medalhas" name="medals">
+      <!-- <el-tab-pane v-loading="loading" label="Medalhas" name="medals">
         Medalhas
-      </el-tab-pane>
+      </el-tab-pane> -->
     </el-tabs>
   </div>
 </template>

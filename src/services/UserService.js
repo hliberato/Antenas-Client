@@ -68,14 +68,13 @@ export default {
   getUser () {
     return http
       .get('user').then(res => {
+        console.log(res.data)
         return res.data
       })
   },
 
   updateUser (user) {
     return http
-      .post(`${store.getters.userRole}/update`, user).then(res => {
-        return res.data
-      })
+      .put(`${store.getters.userRole}/update`, user).then(res => res.data)
   }
 }

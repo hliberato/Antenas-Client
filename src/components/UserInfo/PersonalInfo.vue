@@ -21,23 +21,37 @@
             <el-input v-model="form.email" />
           </el-form-item>
         </el-col>
-        <el-col :span="5">
-          <el-form-item label="RA" prop="ra">
-            <el-input v-model="form.ra" v-mask="'#############'" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="Cidade" prop="city">
-            <el-input v-model="form.city" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="11">
-          <el-form-item label="LinkedIn" prop="LinkedIn">
-            <el-input v-model="form.linkedin" />
-          </el-form-item>
-        </el-col>
+        <div v-if="$store.getters.isStudent">
+          <el-col :span="5">
+            <el-form-item label="RA" prop="ra">
+              <el-input v-model="form.ra" v-mask="'#############'" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="Cidade" prop="city">
+              <el-input v-model="form.city" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="11">
+            <el-form-item label="LinkedIn" prop="LinkedIn">
+              <el-input v-model="form.linkedin" />
+            </el-form-item>
+          </el-col>
+        </div>
+        <div v-if="$store.getters.isRepresentative">
+          <el-col :span="12">
+            <el-form-item label="Empresa" prop="company">
+              <el-input v-model="form.company" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="Telefone" prop="telephone">
+              <el-input v-model="form.telephone" v-mask="['(##) ####-####', '(##) #####-####']" />
+            </el-form-item>
+          </el-col>
+        </div>
       </el-row>
-      <el-form-item label="Biografia" prop="biography">
+      <el-form-item v-if="$store.getters.isStudent" label="Biografia" prop="biography">
         <el-input v-model="form.biography" type="textarea" :rows="4" />
       </el-form-item>
       <el-form-item label="Foto de perfil">
@@ -53,7 +67,7 @@
         </el-upload>
         <div class="info">Formato JPG e PNG, tamanho máximo de 2 MB.</div>
       </el-form-item>
-      <el-button type="primary" @click="update">
+      <el-button type="primary" :disabled="buttonDisabled()" @click="update">
         Salvar
       </el-button>
     </el-form>
@@ -80,7 +94,9 @@ export default {
           city: '',
           linkedIn: '',
           biography: '',
-          photo: ''
+          photo: '',
+          company: '',
+          telephone: ''
         }
       }
     }
@@ -99,7 +115,9 @@ export default {
       },
       rules: {
         name: required,
-        email: required
+        email: required,
+        telephone: required,
+        company: required
       }
     }
   },
@@ -126,6 +144,13 @@ export default {
         reader.readAsDataURL(file.raw)
       }
       return isJPG && isLt2M
+    },
+    buttonDisabled () {
+      let returnValue = this.form.name && this.form.email
+      if (this.$store.getters.isRepresentative) {
+        returnValue = returnValue && this.form.company && this.form.telephone
+      }
+      return !returnValue
     }
   }
 }
