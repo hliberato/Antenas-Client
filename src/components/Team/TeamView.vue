@@ -19,45 +19,44 @@
       </el-alert>
     </div>
     <div v-else-if="teams.length > 0 && !createTeam">
-      <div v-for="teamInfo in teams" :key="teamInfo.id">
-        <el-row>
-          <el-col :span="12">
-            <h2>{{ teamInfo.name }}</h2>
-          </el-col>
-          <el-col v-if="$store.getters.isStudent" :span="12" class="justify-end d-flex">
+      <el-collapse v-for="teamInfo in teams" :key="teamInfo.id" value="1">
+        <el-collapse-item :title="teamInfo.name " name="1">
+          <div class="student-flex-box">
+            <div
+              v-for="member in teamInfo.studentTeamList"
+              :key="member.label"
+              :type="member.type"
+              class="team-member member-view"
+            >
+              <div class="student-flex-box">
+                <div>
+                  <div class="member-name">{{ member.student.name }}</div>
+                  <div class="role-view">{{ formatStudentRoles(member) }}</div>
+                </div>
+                <i
+                  v-if="$store.getters.isStudent"
+                  class="el-icon-close"
+                  @click="removeStudent(member)"
+                />
+                <div v-if="$store.getters.isStudent" class="overlay">
+                  <a class="icon" @click="editMember(member)">
+                    <i class="el-icon-edit-outline" /> Editar
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div v-if="$store.getters.isStudent" class="justify-end d-flex">
             <el-button
               v-if="$store.getters.isStudent"
-              plain
-              type="primary"
+              icon="el-icon-plus"
+              type="text"
               @click="addMember = !addMember"
             >
               Adicionar novo membro
             </el-button>
-          </el-col>
-        </el-row>
-        <br><br>
-        <div class="student-flex-box">
-          <div
-            v-for="member in teamInfo.studentTeamList"
-            :key="member.label"
-            :type="member.type"
-            class="team-member"
-          >
-            <div class="student-flex-box">
-              <div @click="editMember(member)">
-                <div class="member-name">{{ member.student.name }}</div>
-                <div class="role-view">{{ formatStudentRoles(member) }}</div>
-              </div>
-              <i
-                v-if="$store.getters.isStudent"
-                class="el-icon-plus"
-                @click="removeStudent(member)"
-              />
-            </div>
           </div>
-        </div>
-        <br>
-        <div>
+          <br><br>
           <div v-if="$store.getters.isStudent">
             <el-form
               ref="form"
@@ -87,71 +86,69 @@
             </el-form>
           </div>
           <div v-else>
-            <strong>Url do projeto: </strong> <el-link type="primary"> {{ teamInfo.projectUrl }} </el-link>
+            <strong>Url do projeto: </strong> <el-link type="primary" @click="openUrl(teamInfo.projectUrl)"> {{ teamInfo.projectUrl }} </el-link>
             <br>
-            <strong>Link de comunicação: </strong> <el-link type="primary"> {{ teamInfo.communicationLink }} </el-link>
+            <strong>Link de comunicação: </strong> <el-link type="primary" @click="openUrl(teamInfo.communicationLink)"> {{ teamInfo.communicationLink }} </el-link>
           </div>
-        </div>
-        <br><br>
-        <el-dialog
-          v-if="$store.getters.isStudent"
-          :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
-          :visible.sync="addMember"
-          width="50%"
+        </el-collapse-item>
+      </el-collapse>
+      <el-dialog
+        v-if="$store.getters.isStudent"
+        :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
+        :visible.sync="addMember"
+        width="50%"
+      >
+        <el-form
+          ref="form"
+          v-loading="$store.getters.loading"
+          class="team-form-1"
+          label-position="top"
+          label-width="130px"
         >
-          <el-form
-            ref="form"
-            v-loading="$store.getters.loading"
-            class="team-form-1"
-            label-position="top"
-            label-width="130px"
-          >
-            <el-row :gutter="20">
-              <el-col :span="16">
-                <el-form-item label="Aluno" prop="name">
-                  <el-select v-model="newTeamMember" :disabled="editingMember" filterable>
-                    <el-option
-                      v-for="student in students"
-                      :key="student.id"
-                      :label="`${student.name} (${student.email})`"
-                      :value="student.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-              <el-col :span="8">
-                <el-form-item label="Função na equipe" prop="role">
-                  <el-select v-model="roles" multiple>
-                    <el-option
-                      v-for="roleList in rolesSelect"
-                      :key="roleList.id"
-                      :label="roleList.name"
-                      :value="roleList.id"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <div class="justify-end d-flex">
-              <el-button
-                plain
-                @click="clear()"
-              >
-                Cancelar
-              </el-button>
-              <el-button
-                :disabled="!roles.length > 0 || !newTeamMember"
-                plain
-                type="success"
-                @click="editingMember ? updateRole() : update(teamInfo)"
-              >
-                {{ editingMember ? 'Salvar' : 'Adicionar' }}
-              </el-button>
-            </div>
-          </el-form>
-        </el-dialog>
-        <hr>
-      </div>
+          <el-row :gutter="20">
+            <el-col :span="16">
+              <el-form-item label="Aluno" prop="name">
+                <el-select v-model="newTeamMember" :disabled="editingMember" filterable>
+                  <el-option
+                    v-for="student in students"
+                    :key="student.id"
+                    :label="`${student.name} (${student.email})`"
+                    :value="student.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="Função na equipe" prop="role">
+                <el-select v-model="roles" multiple>
+                  <el-option
+                    v-for="roleList in rolesSelect"
+                    :key="roleList.id"
+                    :label="roleList.name"
+                    :value="roleList.id"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <div class="justify-end d-flex">
+            <el-button
+              plain
+              @click="clear()"
+            >
+              Cancelar
+            </el-button>
+            <el-button
+              :disabled="!roles.length > 0 || !newTeamMember"
+              plain
+              type="success"
+              @click="editingMember ? updateRole() : update(teamInfo)"
+            >
+              {{ editingMember ? 'Salvar' : 'Adicionar' }}
+            </el-button>
+          </div>
+        </el-form>
+      </el-dialog>
     </div>
     <el-dialog
       v-if="$store.getters.isStudent"
@@ -285,7 +282,6 @@ export default {
       team.project = { id: this.project.id }
       TeamService.updateTeam(team)
         .then(() => {
-          alert('Equipe atualizada')
           this.updateTeams()
         })
         .catch((err) => {
@@ -336,11 +332,17 @@ export default {
           this.students = students
         })
       this.getRoles()
+      if (this.$store.getters.isStudent) {
+        this.projectUrl = this.teams[0].projectUrl
+        this.communicationLink = this.teams[0].communicationLink
+      }
     },
     editMember (member) {
       this.editingMember = member
       this.addMember = true
       this.newTeamMember = member.student.name
+      console.log(member.role)
+      console.log(this.rolesSelect)
       this.roles = member.role
     },
     clear () {
@@ -358,16 +360,22 @@ export default {
         })
         .catch(() => alert('Ocorreu um erro ao atualizar as informações'))
       this.clear()
+    },
+    openUrl (url) {
+      const win = window.open(url, '_blank')
+      win.focus()
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
+@import '@/plugins/element/_colors.scss';
+
 .el-alert .el-alert__description {
   font-size: 14px;
 }
-.el-icon-close {
+.el-alert__closebtn el-icon-close {
   visibility: hidden !important;
 }
 .el-select {
@@ -394,10 +402,53 @@ export default {
   color: #9F9D9D;
   padding-top: 5px;
 }
-.el-icon-plus {
+
+// overlay
+.el-icon-close {
   padding-left: 10px;
   padding-top: 10px;
   cursor: pointer;
 }
-
+.member-view {
+  position: relative;
+}
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.overlay {
+  border-radius: 50px;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transition: .60s ease;
+  background-color: #00000094
+}
+.member-view:hover .overlay {
+  opacity: 1;
+}
+.icon {
+  color: #e6e5e5;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+  cursor: pointer;
+}
+.icon:hover {
+  color: #d0cccc;
+}
+.member-name {
+  color: $--color-text-regular;
+}
+.el-collapse {
+    border-top: none;
+}
 </style>
