@@ -25,43 +25,49 @@
                 <el-collapse-item v-if="project.technologyDescription" title="Tecnologias" name="3">
                   {{ project.technologyDescription }}
                 </el-collapse-item>
-                <el-collapse-item v-if="project.notes" title="Notas adicionais" name="4">
+                <el-collapse-item v-if="project.notes && !$store.getters.isStudent" title="Notas adicionais" name="4">
                   {{ project.notes }}
                 </el-collapse-item>
+                <el-collapse-item v-if="project.notes" title="Outras informações" name="5">
+                  <div v-if="showMeetingDetails()">
+                    <h3> Local da reunião: </h3>
+                    <div>
+                      {{ project.meeting.address.place }}
+                      <br>
+                      {{ project.meeting.address.neighborhood }},
+                      {{ project.meeting.address.street }},
+                      {{ project.meeting.address.number }}
+                      <br>
+                      {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
+                    </div>
+                    <div>
+                      <h3>Data e hora:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
+                    </div>
+                  </div>
+                  <div v-if="project.progress === 7">
+                    <strong> Professor responsável: </strong> {{ project.teacher.name }}
+                    <br>
+                    <strong> Semestre: </strong> {{ project.semester }}º
+                  </div>
+                  <div v-if="$store.getters.isCadi">
+                    <div v-if="!project.refused && project.createdBy">
+                      <br>
+                      <strong> Criado por: </strong> {{ project.createdBy.name }}
+                      <br>
+                      <strong> Telefone: </strong> {{ project.createdBy.telephone }}
+                      <br>
+                      <strong> Empresa: </strong> {{ project.createdBy.company }}
+                      <br>
+                      <br>
+                      <strong> Aprovado por: </strong> {{ project.approvedBy.name }}
+                    </div>
+                    <!-- NUM APAGA ESSES COMENTARIOS
+                    <div v-else>
+                      <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
+                    </div>-->
+                  </div>
+                </el-collapse-item>
               </el-collapse>
-              <div v-if="showMeetingDetails()">
-                <h3> Local da reunião: </h3>
-                <div>
-                  {{ project.meeting.address.place }}
-                  <br>
-                  {{ project.meeting.address.neighborhood }},
-                  {{ project.meeting.address.street }},
-                  {{ project.meeting.address.number }}
-                  <br>
-                  {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
-                </div>
-                <div>
-                  <h3>Data e hora:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
-                </div>
-              </div>
-              <div v-if="project.progress === 7">
-                <h3> Professor responsável: </h3> {{ project.teacher.name }}
-                <h3> Projeto aplicado no {{ project.semester }} semestre </h3>
-              </div>
-              <div v-if="$store.getters.isCadi">
-                <div v-if="!project.refused && project.createdBy">
-                  <br>
-                  <h3> Criado por: </h3> {{ project.createdBy.name }}
-                  <h3> Telefone: </h3> {{ project.createdBy.telephone }}
-                  <h3> Empresa: </h3> {{ project.createdBy.company }}
-                  <br><br>
-                  <h3> Aprovado por: </h3> {{ project.approvedBy.name }}
-                </div>
-                <!-- NUM APAGA ESSES COMENTARIOS
-                <div v-else>
-                  <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
-                </div>-->
-              </div>
               <div class="content mt-28 mb-36">
                 <component :is="currentStep" :project="project" />
               </div>
