@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.getters.isCadi" class="project-step-2">
+  <div v-if="$store.getters.isCadi && !project.refused" class="project-step-2">
     <el-alert
       :closable="false"
       title="Leia as especificações do projeto e decida-se se ele está apto a continuar:"

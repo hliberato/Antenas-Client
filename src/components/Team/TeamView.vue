@@ -20,8 +20,22 @@
     </div>
     <div v-else-if="teams.length > 0 && !createTeam">
       <div v-for="teamInfo in teams" :key="teamInfo.id">
-        <h2>{{ teamInfo.name }}</h2>
-        <br>
+        <el-row>
+          <el-col :span="12">
+            <h2>{{ teamInfo.name }}</h2>
+          </el-col>
+          <el-col v-if="$store.getters.isStudent" :span="12" class="justify-end d-flex">
+            <el-button
+              v-if="$store.getters.isStudent"
+              plain
+              type="primary"
+              @click="addMember = !addMember"
+            >
+              Adicionar novo membro
+            </el-button>
+          </el-col>
+        </el-row>
+        <br><br>
         <div class="student-flex-box">
           <div
             v-for="member in teamInfo.studentTeamList"
@@ -58,6 +72,7 @@
                   type="text"
                   maxlength="50"
                   show-word-limit
+                  @blur="update(teamInfo)"
                 />
               </el-form-item>
               <el-form-item label="Link de comunicação" prop="communicationLink">
@@ -66,17 +81,9 @@
                   type="text"
                   maxlength="50"
                   show-word-limit
+                  @blur="update(teamInfo)"
                 />
               </el-form-item>
-              <div class="justify-end d-flex">
-                <el-button
-                  plain
-                  type="primary"
-                  @click="update(teamInfo)"
-                >
-                  Salvar
-                </el-button>
-              </div>
             </el-form>
           </div>
           <div v-else>
@@ -86,16 +93,6 @@
           </div>
         </div>
         <br><br>
-        <div class="justify-end d-flex">
-          <el-button
-            v-if="$store.getters.isStudent"
-            plain
-            type="primary"
-            @click="addMember = !addMember"
-          >
-            Adicionar novo membro
-          </el-button>
-        </div>
         <el-dialog
           v-if="$store.getters.isStudent"
           :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
@@ -402,4 +399,5 @@ export default {
   padding-top: 10px;
   cursor: pointer;
 }
+
 </style>

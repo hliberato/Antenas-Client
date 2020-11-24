@@ -12,7 +12,7 @@ export default {
       .then(res => res.data)
   },
 
-  updateProject (project, approved) {
+  updateProject (project) {
     return http.post('/project/update', project)
       .then(res => res.data)
   },
