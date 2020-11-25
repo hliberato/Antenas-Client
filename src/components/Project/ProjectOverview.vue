@@ -31,17 +31,22 @@
                 <el-collapse-item v-if="project.notes" title="Outras informações" name="5">
                   <div v-if="showMeetingDetails()">
                     <h3> Local da reunião: </h3>
-                    <div>
-                      {{ project.meeting.address.place }}
-                      <br>
-                      {{ project.meeting.address.neighborhood }},
-                      {{ project.meeting.address.street }},
-                      {{ project.meeting.address.number }}
-                      <br>
-                      {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
+                    <div v-if="showAddress(project)">
+                      <div>
+                        {{ project.meeting.address.place }}
+                        <br>
+                        {{ project.meeting.address.neighborhood }},
+                        {{ project.meeting.address.street }},
+                        {{ project.meeting.address.number }}
+                        <br>
+                        {{ project.meeting.address.zipCode }} {{ project.meeting.address.city }}
+                      </div>
+                      <div>
+                        <h3>Data e hora:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
+                      </div>
                     </div>
-                    <div>
-                      <h3>Data e hora:</h3> {{ project.meeting.chosenDate == null ? 'A definir' : project.meeting.chosenDate | moment("DD/MM/YYYY HH:mm") }}
+                    <div v-else>
+                      A definir
                     </div>
                   </div>
                   <div v-if="project.progress === 7">
@@ -168,6 +173,12 @@ export default {
       if (tab.label === 'Equipe') {
         this.$refs.teamView.getTeam()
       }
+    },
+    showAddress (project) {
+      return project.meeting.address.place && project.meeting.address.neighborhood &&
+      project.meeting.address.neighborhood && project.meeting.address.street &&
+      project.meeting.address.number && project.meeting.address.zipCode &&
+      project.meeting.address.city
     }
   }
 }
