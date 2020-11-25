@@ -45,6 +45,7 @@ export default {
       }).then(() => {
         this.$store.commit('SHOW_LOADING')
         this.project.refused = refused
+        this.project.reason = 'blablablablablabla'
         this.$store.dispatch('updateProject', this.project)
           .catch(err => this.$throwError(err))
           .finally(() => this.$store.commit('HIDE_LOADING'))
