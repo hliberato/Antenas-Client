@@ -58,9 +58,9 @@ export default {
         notes: ''
       },
       rules: {
-        title: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        shortDescription: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        notes: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
+        title: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        shortDescription: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        notes: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },

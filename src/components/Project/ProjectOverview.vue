@@ -1,5 +1,5 @@
 <template>
-  <el-card class="project-overview h100">
+  <el-card v-loading="$store.getters.loading" class="project-overview h100">
     <div v-if="project">
       <transition name="fade">
         <div v-if="!fade">
@@ -15,7 +15,7 @@
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
               </el-steps>
-              <el-collapse class="mt-28">
+              <el-collapse class="mt-40">
                 <el-collapse-item v-if="project.shortDescription" title="Resumo" name="1">
                   {{ project.shortDescription }}
                 </el-collapse-item>
@@ -28,10 +28,10 @@
                 <el-collapse-item v-if="project.notes && !$store.getters.isStudent" title="Notas adicionais" name="4">
                   {{ project.notes }}
                 </el-collapse-item>
-                <el-collapse-item v-if="project.notes" title="Outras informações" name="5">
-                  <div v-if="showMeetingDetails()">
+                <el-collapse-item v-if="!this.$store.getters.isStudent" title="Outras informações" name="5">
+                  <div v-if="showMeetingDetails">
                     <h3> Local da reunião: </h3>
-                    <div v-if="showAddress(project)">
+                    <div v-if="showAddress">
                       <div>
                         {{ project.meeting.address.place }}
                         <br>
@@ -54,31 +54,32 @@
                     <br>
                     <strong> Semestre: </strong> {{ project.semester }}º
                   </div>
-                  <div v-if="$store.getters.isCadi">
-                    <div v-if="!project.refused && project.createdBy">
-                      <br>
+                  <div>
+                    <div v-if="project.createdBy">
                       <strong> Criado por: </strong> {{ project.createdBy.name }}
                       <br>
                       <strong> Telefone: </strong> {{ project.createdBy.telephone }}
                       <br>
                       <strong> Empresa: </strong> {{ project.createdBy.company }}
-                      <br>
-                      <br>
-                      <div v-if="project.approvedBy"><strong> Aprovado por: </strong> {{ project.approvedBy.name }}</div>
+                      <div v-if="project.approvedBy">
+                        <br>
+                        <br>
+                        <strong> Aprovado por: </strong> {{ project.approvedBy.name }}
+                      </div>
                     </div>
-                    <!-- NUM APAGA ESSES COMENTARIOS
-                    <div v-else>
-                      <h3> Motivo pelo qual foi rejeitado: </h3> {{ project.reason }}
-                    </div>-->
+                    <div v-if="project.reason">
+                      <br>
+                      <h4> Motivo pelo qual foi rejeitado: </h4> {{ project.reason }}
+                    </div>
                   </div>
                 </el-collapse-item>
               </el-collapse>
               <div class="content mt-28 mb-36">
-                <component :is="currentStep" :project="project" />
+                <component :is="currentStep" />
               </div>
             </el-tab-pane>
             <el-tab-pane label="Equipe">
-              <TeamView ref="teamView" :project="project" />
+              <TeamView ref="teamView" />
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -149,6 +150,17 @@ export default {
     }),
     currentStep () {
       return 'Step' + this.project.progress
+    },
+    showMeetingDetails () {
+      return (this.project && this.project.meeting &&
+        (this.project.progress === 5 || this.project.progress === 6) &&
+        (this.$store.getters.isCadi || this.$store.getters.isRepresentative))
+    },
+    showAddress () {
+      return this.project.meeting.address.place && this.project.meeting.address.neighborhood &&
+        this.project.meeting.address.neighborhood && this.project.meeting.address.street &&
+        this.project.meeting.address.number && this.project.meeting.address.zipCode &&
+        this.project.meeting.address.city
     }
   },
   watch: {
@@ -164,21 +176,10 @@ export default {
     }
   },
   methods: {
-    showMeetingDetails () {
-      return (this.project && this.project.meeting &&
-            (this.project.progress === 5 || this.project.progress === 6) &&
-            (this.$store.getters.isCadi || this.$store.getters.isRepresentative))
-    },
     tabClick (tab) {
       if (tab.label === 'Equipe') {
         this.$refs.teamView.getTeam()
       }
-    },
-    showAddress (project) {
-      return project.meeting.address.place && project.meeting.address.neighborhood &&
-      project.meeting.address.neighborhood && project.meeting.address.street &&
-      project.meeting.address.number && project.meeting.address.zipCode &&
-      project.meeting.address.city
     }
   }
 }

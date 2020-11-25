@@ -38,18 +38,34 @@ export default {
   },
   methods: {
     update (refused) {
-      this.$confirm('Tem certeza que deseja continuar?', 'Avaliação Inicial', {
-        confirmButtonText: refused ? 'Rejeitar' : 'Aprovar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonClass: refused ? 'el-button--danger' : 'el-button--success'
-      }).then(() => {
-        this.$store.commit('SHOW_LOADING')
-        this.project.refused = refused
-        this.project.reason = 'blablablablablabla'
-        this.$store.dispatch('updateProject', this.project)
-          .catch(err => this.$throwError(err))
-          .finally(() => this.$store.commit('HIDE_LOADING'))
-      })
+      if (refused) {
+        this.$prompt('* Informe o motivo da recusa', 'Avaliação Inicial', {
+          confirmButtonText: 'Rejeitar',
+          cancelButtonText: 'Cancelar',
+          confirmButtonClass: 'el-button--danger',
+          inputPattern: /([^\s])/,
+          inputErrorMessage: 'Campo obrigatório'
+        }).then(({ value }) => {
+          this.$store.commit('SHOW_LOADING')
+          this.project.refused = true
+          this.project.reason = value
+          this.$store.dispatch('updateProject', this.project)
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        })
+      } else {
+        this.$confirm('Tem certeza que deseja continuar?', 'Avaliação Inicial', {
+          confirmButtonText: 'Aprovar',
+          cancelButtonText: 'Cancelar',
+          confirmButtonClass: 'el-button--success'
+        }).then(() => {
+          this.$store.commit('SHOW_LOADING')
+          this.project.refused = false
+          this.$store.dispatch('updateProject', this.project)
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        })
+      }
     }
   }
 }

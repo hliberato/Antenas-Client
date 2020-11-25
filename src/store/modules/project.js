@@ -11,11 +11,7 @@ export default {
       state.projects = projects.map(project => {
         const status = Vue.prototype.$getProjectStatus(project)
         const labelPhase = Vue.prototype.$getProjectLabelPhase(status, project)
-        return {
-          ...project,
-          status,
-          labelPhase
-        }
+        return { ...project, status, labelPhase }
       })
     },
     SET_SELECTED_PROJECT_ID (state, selectedProjectId) {
@@ -26,11 +22,15 @@ export default {
       state.selectedProjectId = 0
     },
     UPDATE_PROJECT (state, project) {
+      const status = Vue.prototype.$getProjectStatus(project)
+      const labelPhase = Vue.prototype.$getProjectLabelPhase(status, project)
       const index = state.projects.findIndex(item => item.id === project.id)
-      Vue.set(state.projects, index, project)
+      Vue.set(state.projects, index, { ...project, status, labelPhase })
     },
     ADD_PROJECT (state, project) {
-      state.projects.push(project)
+      const status = Vue.prototype.$getProjectStatus(project)
+      const labelPhase = Vue.prototype.$getProjectLabelPhase(status, project)
+      state.projects.push({ ...project, status, labelPhase })
     }
   },
   actions: {

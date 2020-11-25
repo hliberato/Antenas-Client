@@ -152,7 +152,6 @@
 <script>
 import TeamService from '@/services/TeamService'
 import EventBus from '@/helpers/EventBus.js'
-import $ from 'jQuery'
 
 export default {
   name: 'Evaluation',
@@ -193,7 +192,6 @@ export default {
 
     selectAllTeam (team) {
       team.studentTeamList.forEach(studentTeam => {
-        $(`#checkbox-${studentTeam.student.id}`).click()
       })
     },
 

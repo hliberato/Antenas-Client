@@ -1,13 +1,12 @@
 <template>
-  <div v-if="$store.getters.isCadi || $store.getters.isRepresentative">
+  <div v-if="$store.getters.isCadi || $store.getters.isRepresentative" class="project-step-5">
     <div v-if="$store.getters.isCadi">
-      <h3>
+      <h3 class="mb-12">
         Adicione um local e as datas possíveis para a reunião
       </h3>
       <el-form
         ref="form"
-        v-loading="$store.getters.loading"
-        class="login-form"
+        :model="form"
         :rules="rules"
         label-position="top"
         label-width="130px"
@@ -16,7 +15,7 @@
           <el-col :span="19">
             <el-form-item label="Local" prop="place">
               <el-input
-                v-model="address.place"
+                v-model="form.place"
                 type="text"
                 maxlength="100"
                 show-word-limit
@@ -26,7 +25,7 @@
           <el-col :span="5">
             <el-form-item label="CEP" prop="zipCode">
               <el-input
-                v-model="address.zipCode"
+                v-model="form.zipCode"
                 v-mask="'#####-###'"
                 type="text"
                 maxlength="9"
@@ -40,7 +39,7 @@
           <el-col :span="12">
             <el-form-item label="Cidade" prop="city">
               <el-input
-                v-model="address.city"
+                v-model="form.city"
                 type="text"
                 maxlength="50"
                 show-word-limit
@@ -50,7 +49,7 @@
           <el-col :span="12">
             <el-form-item label="Bairro" prop="neighborhood">
               <el-input
-                v-model="address.neighborhood"
+                v-model="form.neighborhood"
                 type="text"
                 maxlength="50"
                 show-word-limit
@@ -62,7 +61,7 @@
           <el-col :span="19">
             <el-form-item label="Rua" prop="street">
               <el-input
-                v-model="address.street"
+                v-model="form.street"
                 type="text"
                 maxlength="200"
                 show-word-limit
@@ -71,65 +70,64 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="Número" prop="number">
-              <el-input-number
-                v-model="address.number"
-                :min="0"
-                controls-position="right"
+              <el-input
+                v-model="form.number"
+                type="number"
               />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="Data e hora da reunião" prop="date">
-          <el-date-picker
-            v-model="newMeetingDate"
-            type="datetime"
-            @change="addPossibleDate()"
-          />
-        </el-form-item>
-        <div class="tag-group">
-          <h3> Datas cadastradas </h3>
-          <el-tag
-            v-for="date in dates"
-            :key="date.dateTime"
-            closable
-            effect="plain"
-            @close="handleClose(date)"
-          >
-            {{ date.dateTime | moment("DD/MM/YYYY HH:mm") }}
-          </el-tag>
-        </div>
+        <el-row :gutter="20">
+          <el-col :span="7">
+            <el-form-item label="* Data e hora da reunião" prop="dates">
+              <el-date-picker
+                v-model="newMeetingDate"
+                type="datetime"
+                @change="addPossibleDate()"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <h4 v-if="form.dates.length" class="mt-24 mb-16">Data(s) cadastrada(s):</h4>
+        <el-tag
+          v-for="(date, index) in form.dates"
+          :key="index"
+          closable
+          effect="plain"
+          @close="handleClose(date)"
+        >
+          {{ date.dateTime | moment("DD/MM/YYYY HH:mm") }}
+        </el-tag>
       </el-form>
     </div>
     <div v-else-if="$store.getters.isRepresentative">
-      <h3> Selecione uma data para a reunião </h3>
+      <h4>Selecione uma data para a reunião:</h4>
       <el-form
         ref="form"
-        v-loading="$store.getters.loading"
-        class="login-form"
+        :model="form"
         :rules="rules"
         label-position="top"
         label-width="130px"
       >
-        <el-form-item label="Data" prop="role">
-          <el-select v-model="chosenDate" class="w100">
-            <el-option
-              v-for="date in project.meeting.possibleDate"
-              :key="date.dateTime"
-              :value="date.dateTime"
-              :label="$moment(date.dateTime).format('DD/MM/YYYY HH:mm')"
-            />
-          </el-select>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-col :span="7">
+            <el-form-item prop="chosenDate">
+              <el-select v-model="form.chosenDate" class="w100 mt-20">
+                <el-option
+                  v-for="date in project.meeting.possibleDate"
+                  :key="date.dateTime"
+                  :value="date.dateTime"
+                  :label="$moment(date.dateTime).format('DD/MM/YYYY HH:mm')"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
       </el-form>
     </div>
-    <div class="justify-end d-flex">
-      <el-button
-        plain
-        type="success"
-        :disabled="buttonDisabled()"
-        @click="update()"
-      >
-        Salvar
+    <div class="justify-end d-flex mt-28">
+      <el-button type="primary" @click="update()">
+        {{ $store.getters.isCadi ? 'Adicionar local e datas' : 'Selecionar' }}
       </el-button>
     </div>
   </div>
@@ -137,93 +135,108 @@
 
 <script>
 import { mask } from 'vue-the-mask'
-import $ from 'jQuery'
+import jsonp from 'jsonp'
+import { mapGetters } from 'vuex'
 
 export default {
   directives: { mask },
-  props: {
-    project: {
-      type: Object,
-      default () {
-        return {}
+  data () {
+    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
+    const validateDates = (rule, value, callback) => {
+      if (!this.form.dates.length) {
+        callback(new Error('Campo obrigatório'))
+      } else {
+        callback()
       }
     }
-  },
-  data () {
-    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
     return {
       newMeetingDate: '',
-      chosenDate: '',
-      address: {
-        id: '',
+      form: {
         place: '',
         number: '',
         street: '',
         neighborhood: '',
         city: '',
-        zipCode: ''
+        zipCode: '',
+        dates: [],
+        chosenDate: ''
       },
-      dates: [],
       rules: {
         place: required,
         number: required,
         street: required,
         neighborhood: required,
         city: required,
-        zipCode: required
+        zipCode: required,
+        dates: [{ validator: validateDates, trigger: 'submit' }],
+        chosenDate: required
       }
     }
   },
+  computed: {
+    ...mapGetters({
+      project: 'selectedProject'
+    })
+  },
   mounted () {
-    this.address = this.project.meeting.address
-    this.dates = this.project.meeting.possibleDate
+    this.form = this.project.meeting.address
+    this.form.dates = this.project.meeting.possibleDate
   },
   methods: {
     update () {
-      this.$store.commit('SHOW_LOADING')
-      if (this.chosenDate) {
-        this.project.meeting.chosenDate = this.chosenDate
-      } else {
-        this.project.meeting.address = this.address
-        this.project.meeting.possibleDate = this.dates
-      }
-      this.$store.dispatch('updateProject', this.project)
-        .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$store.commit('SHOW_LOADING')
+          const project = JSON.parse(JSON.stringify(this.project))
+          if (this.form.chosenDate) project.meeting.chosenDate = this.form.chosenDate
+          else {
+            project.meeting.address = this.form
+            project.meeting.possibleDate = this.form.dates
+          }
+          this.$store.dispatch('updateProject', project)
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        }
+      })
     },
     findAddressByCep () {
-      const cep = this.address.zipCode
-      let address
+      const self = this
+      const cep = this.form.zipCode
       if (/^[0-9]{5}-[0-9]{3}$/.test(cep) || /^[0-9]{5}[0-9]{3}$/.test(cep)) {
-        $.getJSON(`https://viacep.com.br/ws/${cep}/json/`, function (res) {
-          address = res
-        }).then(() => {
-          this.address.city = address.localidade
-          this.address.street = address.logradouro
-          this.address.neighborhood = address.bairro
-          this.address.zipCode = address.cep
+        jsonp(`https://viacep.com.br/ws/${cep}/json/`, null, function (err, address) {
+          if (err) this.$throwError(err)
+          else {
+            self.form.city = address.localidade
+            self.form.street = address.logradouro
+            self.form.neighborhood = address.bairro
+            self.form.zipCode = address.cep
+          }
         })
       }
     },
-    buttonDisabled () {
-      return !((this.address.place && this.address.number &&
-      this.address.street && this.address.neighborhood &&
-      this.address.city && this.address.zipCode &&
-      this.dates.length > 0) || this.chosenDate)
-    },
     addPossibleDate () {
-      this.dates.push({ dateTime: this.newMeetingDate })
+      this.form.dates.push({ dateTime: this.newMeetingDate })
       this.newMeetingDate = ''
     },
     handleClose (tag) {
-      this.dates.splice(this.dates.indexOf(tag), 1)
+      this.form.dates.splice(this.form.dates.indexOf(tag), 1)
     }
   }
 }
 </script>
 
 <style lang="scss">
-.el-input-number {
-  width: 100%;
+.project-step-5 {
+  .el-tag {
+    margin: 0 12px 12px 0;
+  }
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
 }
 </style>
