@@ -102,7 +102,7 @@ export default {
     }
   },
   data () {
-    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
+    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     return {
       form: {
         name: '',

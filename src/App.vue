@@ -47,6 +47,9 @@ html, body, body > [class*=-view], .el-container, .el-main {
 .el-header {
   margin: 20px 0;
 }
+.el-input-number {
+  width: 100% !important;
+}
 .el-aside {
   width: 400px !important;
   padding: 20px !important;

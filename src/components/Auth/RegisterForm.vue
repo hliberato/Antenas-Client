@@ -93,19 +93,19 @@ export default {
         confirmPassword: ''
       },
       rules: {
-        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
+        role: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        name: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         email: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submmit' },
-          { type: 'email', message: 'Insira um e-mail válido', trigger: 'submmit' }
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+          { type: 'email', message: 'Insira um e-mail válido', trigger: 'submit' }
         ],
-        cpf: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        ra: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        city: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        telephone: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
-        password: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }],
+        cpf: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        ra: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        city: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        telephone: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
         confirmPassword: [
-          { required: true, message: 'Campo obrigatório', trigger: 'submmit' },
+          { required: true, message: 'Campo obrigatório', trigger: 'submit' },
           { validator: validatePass, trigger: 'blur' }
         ]
       }

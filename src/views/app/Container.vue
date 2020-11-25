@@ -1,6 +1,6 @@
 <template>
   <div
-    v-loading="$store.getters.loading"
+    v-loading="!completeLoading"
     element-loading-text="Carregando informações..."
     class="container-view"
   >
@@ -69,14 +69,12 @@ export default {
     }
   },
   mounted () {
-    this.$store.commit('SHOW_LOADING')
     Promise.all([
       this.$store.dispatch('loadCurrentUserInfo'),
       this.$store.dispatch('loadProjects')
     ])
-      .then(() => { this.completeLoading = true })
       .catch(err => this.$throwError(err))
-      .finally(() => this.$store.commit('HIDE_LOADING'))
+      .finally(() => { this.completeLoading = true })
   },
   methods: {
     dropdownClick (action) {

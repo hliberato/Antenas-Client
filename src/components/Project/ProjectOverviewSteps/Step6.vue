@@ -6,7 +6,6 @@
       </h3>
       <el-form
         ref="form"
-        v-loading="$store.getters.loading"
         class="step6-form"
         :rules="rules"
         label-position="top"
@@ -74,7 +73,7 @@ export default {
     }
   },
   data () {
-    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
+    const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     return {
       form: {
         teacher: '',

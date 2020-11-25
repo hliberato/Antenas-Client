@@ -6,10 +6,10 @@
       </h3>
       <el-form
         ref="form"
-        v-loading="$store.getters.loading"
+        :rules="rules"
+        :model="form"
         class="login-form"
         label-position="top"
-        label-width="130px"
       >
         <el-form-item label="Descrição completa" prop="completeDescription">
           <el-input
@@ -29,13 +29,9 @@
             show-word-limit
           />
         </el-form-item>
-        <div class="justify-end d-flex">
-          <el-button
-            plain
-            type="success"
-            @click="update(false)"
-          >
-            Salvar
+        <div class="justify-end d-flex mt-28">
+          <el-button type="primary" @click="update()">
+            Adicionar informações
           </el-button>
         </div>
       </el-form>
@@ -58,17 +54,25 @@ export default {
       form: {
         completeDescription: '',
         technologyDescription: ''
+      },
+      rules: {
+        completeDescription: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }],
+        technologyDescription: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },
   methods: {
     update () {
-      this.$store.commit('SHOW_LOADING')
-      this.project.completeDescription = this.form.completeDescription
-      this.project.technologyDescription = this.form.technologyDescription
-      this.$store.dispatch('updateProject', this.project)
-        .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$store.commit('SHOW_LOADING')
+          const completeDescription = this.form.completeDescription
+          const technologyDescription = this.form.technologyDescription
+          this.$store.dispatch('updateProject', { ...this.project, completeDescription, technologyDescription })
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        }
+      })
     }
   }
 }

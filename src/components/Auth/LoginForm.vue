@@ -22,10 +22,10 @@ export default {
       },
       rules: {
         // email: [
-        //   { required: true, message: 'Campo obrigatório', trigger: 'submmit' },
-        //   { type: 'email', message: 'Insira um e-mail válido', trigger: 'submmit' }
+        //   { required: true, message: 'Campo obrigatório', trigger: 'submit' },
+        //   { type: 'email', message: 'Insira um e-mail válido', trigger: 'submit' }
         // ],
-        password: [{ required: true, message: 'Campo obrigatório', trigger: 'submmit' }]
+        password: [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
       }
     }
   },
