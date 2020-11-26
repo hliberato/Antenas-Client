@@ -9,7 +9,7 @@
               <el-steps
                 :active="project.progress - 1"
                 finish-status="success"
-                :process-status="project.progress == 8 ? 'success' : project.refused ? 'error' : 'finish'"
+                :process-status="project.progress == 9 ? 'success' : project.refused ? 'error' : 'finish'"
                 align-center
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
@@ -138,7 +138,7 @@ export default {
         'Reunião',
         'Designar professor',
         'Entrega',
-        // 'Avaliação',
+        'Avaliação dos alunos',
         'Finalizado'
       ]
     }

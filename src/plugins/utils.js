@@ -45,6 +45,7 @@ Utils.install = function (Vue, options) {
   }
 
   Vue.prototype.$getProjectStatus = (project) => {
+    console.log('a')
     if (!Object.keys(project).length) return ''
     const isMeetingPhase = project.progress === 5
     const isRefused = project.refused
@@ -56,7 +57,7 @@ Utils.install = function (Vue, options) {
     } else if (store.getters.isCadi) {
       isPending = [2, 4, 6].includes(project.progress) || (isMeetingPhase && !project.meeting.address.zipCode)
     } else if (store.getters.isTeacher) {
-      isPending = project.progress === 7 && !project.open
+      isPending = (project.progress === 7 && !project.open) || (project.open === false && project.progress === 8)
     } else if (store.getters.isStudent) {
       isPending = project.progress === 7 && project.open
     }
