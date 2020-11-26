@@ -46,7 +46,6 @@
 
 <script>
 export default {
-  name: 'Medal',
   props: {
     medal: {
       type: Object,

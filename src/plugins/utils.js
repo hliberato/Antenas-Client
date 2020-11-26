@@ -10,7 +10,7 @@ Utils.install = function (Vue, options) {
     if (err && err.response && err.response.data) {
       switch (err.response.data.status) {
         case 401:
-          message = 'E-mail ou senha incorretos.'
+          message = err.response.data.path.includes('/login') ? 'E-mail ou senha incorretos.' : message
           break
         case 403:
           message = 'Conta inativa. Ative-a clicando no link em seu e-mail.'

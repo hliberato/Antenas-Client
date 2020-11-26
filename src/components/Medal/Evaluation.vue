@@ -154,7 +154,6 @@ import TeamService from '@/services/TeamService'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-  name: 'Evaluation',
   props: {
     projectId: {
       type: Number,

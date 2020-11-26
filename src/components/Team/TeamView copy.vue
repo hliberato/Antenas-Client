@@ -294,7 +294,6 @@ import UserService from '@/services/UserService.js'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-  name: 'TeamView',
   props: {
     projectId: {
       type: Number,

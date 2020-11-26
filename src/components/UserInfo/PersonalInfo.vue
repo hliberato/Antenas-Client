@@ -79,7 +79,6 @@ import UserService from '@/services/UserService.js'
 import { mask } from 'vue-the-mask'
 
 export default {
-  name: 'PersonalInfo',
   directives: { mask },
   components: {
   },

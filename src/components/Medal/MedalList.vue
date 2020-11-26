@@ -48,7 +48,6 @@ import MedalService from '@/services/MedalService.js'
 import EventBus from '@/helpers/EventBus.js'
 
 export default {
-  name: 'MedalList',
   components: {
     Medal
   },

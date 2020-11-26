@@ -15,7 +15,6 @@
 
 <script>
 export default {
-  name: 'Logo',
   props: {
     variant: {
       type: String,

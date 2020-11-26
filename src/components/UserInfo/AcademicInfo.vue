@@ -118,7 +118,6 @@
 import UserService from '@/services/UserService.js'
 
 export default {
-  name: 'ProfessionalInfo',
   components: {
   },
   props: {
