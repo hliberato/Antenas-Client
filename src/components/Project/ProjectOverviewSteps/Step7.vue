@@ -7,10 +7,10 @@
     >
       <el-button
         plain
-        type="primary"
+        :type="project.open ? 'danger' : 'primary'"
         class="ml-16"
-        icon="el-icon-check"
-        @click="update(false)"
+        :icon="project.open ? 'el-icon-close' : 'el-icon-check'"
+        @click="update()"
       >
         {{ project.open ? 'Encerrar projeto' : 'Iniciar projeto' }}
       </el-button>
@@ -19,26 +19,26 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  props: {
-    project: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
+  computed: {
+    ...mapGetters({
+      project: 'selectedProject'
+    })
   },
   methods: {
-    update (refused) {
-      const confirmMessage = !this.project.open ? 'Deseja iniciar o projeto?' : 'Tem certeza de que deseja encerrar o projeto? Ele ficará invisível para os alunos.'
+    update () {
+      const confirmMessage = this.project.open ? 'Tem certeza de que deseja encerrar o projeto? Ele ficará invisível para os alunos.' : 'Deseja iniciar o projeto?'
       this.$confirm(confirmMessage, 'Entrega', {
-        confirmButtonText: 'Sim',
-        cancelButtonText: 'Não',
-        confirmButtonClass: 'el-button--success'
+        confirmButtonText: this.project.open ? 'Sim, encerrar' : 'Sim, iniciar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonClass: this.project.open ? 'el-button--danger' : 'el-button--success'
       }).then(() => {
         this.$store.commit('SHOW_LOADING')
-        this.project.open = !this.project.open
-        this.$store.dispatch('updateProject', this.project)
+        const project = JSON.parse(JSON.stringify(this.project))
+        project.open = !this.project.open
+        this.$store.dispatch('updateProject', project)
           .catch(err => this.$throwError(err))
           .finally(() => this.$store.commit('HIDE_LOADING'))
       })

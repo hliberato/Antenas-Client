@@ -2,11 +2,11 @@
   <div v-if="$store.getters.isCadi">
     <div>
       <h3>
-        Adicione mais informações ao projeto
+        Escolha o professor responsável pelo projeto
       </h3>
       <el-form
         ref="form"
-        class="step6-form"
+        :model="form"
         :rules="rules"
         label-position="top"
         label-width="130px"
@@ -45,14 +45,12 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <div class="justify-end d-flex">
+        <div class="justify-end d-flex mt-28">
           <el-button
-            plain
-            type="success"
-            :disabled="buttonDisabled()"
-            @click="update(false)"
+            type="primary"
+            @click="update()"
           >
-            Salvar
+            Escolher professor
           </el-button>
         </div>
       </el-form>
@@ -64,21 +62,18 @@
 import UserService from '@/services/UserService.js'
 
 export default {
-  props: {
-    project: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
   data () {
     const required = [{ required: true, message: 'Campo obrigatório', trigger: 'submit' }]
     return {
       form: {
         teacher: '',
-        semester: '',
+        semester: 1,
         course: ''
+      },
+      rules: {
+        teacher: required,
+        semester: required,
+        course: required
       },
       courses: [
         'Análise e Desenvolvimento de Sistemas',
@@ -89,12 +84,7 @@ export default {
         'Manutenção de Aeronaves',
         'Projetos de Estruturas Aeronáuticas'
       ],
-      teacherList: [],
-      rules: {
-        teacher: required,
-        semester: required,
-        course: required
-      }
+      teacherList: []
     }
   },
   mounted () {
@@ -106,17 +96,18 @@ export default {
   },
   methods: {
     update () {
-      this.$store.commit('SHOW_LOADING')
-      this.project.course = this.form.course
-      this.project.teacher = { id: this.form.teacher }
-      this.project.semester = this.form.semester
-
-      this.$store.dispatch('updateProject', this.project)
-        .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
-    },
-    buttonDisabled () {
-      return !(this.form.course && this.form.teacher && this.form.semester)
+      this.$refs.form.validate((valid) => {
+        if (valid) {
+          this.$store.commit('SHOW_LOADING')
+          const project = JSON.parse(JSON.stringify(this.$store.getters.selectedProject))
+          project.course = this.form.course
+          project.teacher = { id: this.form.teacher }
+          project.semester = this.form.semester
+          this.$store.dispatch('updateProject', project)
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        }
+      })
     }
   }
 }

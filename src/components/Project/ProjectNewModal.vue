@@ -35,7 +35,7 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button :disabled="loading" @click="dialogVisible = false">Cancelar</el-button>
-      <el-button :loading="loading" type="primary" @click="saveProject()">Criar</el-button>
+      <el-button :loading="loading" type="primary" @click="saveProject()">Criar projeto</el-button>
     </span>
   </el-dialog>
 </template>

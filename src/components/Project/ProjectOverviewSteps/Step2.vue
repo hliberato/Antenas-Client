@@ -27,17 +27,17 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  props: {
-    project: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
+  computed: {
+    ...mapGetters({
+      project: 'selectedProject'
+    })
   },
   methods: {
     update (refused) {
+      const project = JSON.parse(JSON.stringify(this.project))
       if (refused) {
         this.$prompt('* Informe o motivo da recusa', 'Avaliação Inicial', {
           confirmButtonText: 'Rejeitar',
@@ -46,12 +46,9 @@ export default {
           inputPattern: /([^\s])/,
           inputErrorMessage: 'Campo obrigatório'
         }).then(({ value }) => {
-          this.$store.commit('SHOW_LOADING')
-          this.project.refused = true
-          this.project.reason = value
-          this.$store.dispatch('updateProject', this.project)
-            .catch(err => this.$throwError(err))
-            .finally(() => this.$store.commit('HIDE_LOADING'))
+          project.refused = true
+          project.reason = value
+          this.dispatchUpdate(project)
         })
       } else {
         this.$confirm('Tem certeza que deseja continuar?', 'Avaliação Inicial', {
@@ -59,13 +56,16 @@ export default {
           cancelButtonText: 'Cancelar',
           confirmButtonClass: 'el-button--success'
         }).then(() => {
-          this.$store.commit('SHOW_LOADING')
-          this.project.refused = false
-          this.$store.dispatch('updateProject', this.project)
-            .catch(err => this.$throwError(err))
-            .finally(() => this.$store.commit('HIDE_LOADING'))
+          project.refused = false
+          this.dispatchUpdate(project)
         })
       }
+    },
+    dispatchUpdate (project) {
+      this.$store.commit('SHOW_LOADING')
+      this.$store.dispatch('updateProject', project)
+        .catch(err => this.$throwError(err))
+        .finally(() => this.$store.commit('HIDE_LOADING'))
     }
   }
 }
