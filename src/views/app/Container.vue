@@ -8,9 +8,9 @@
       <el-header height="auto">
         <Logo variant="blue" />
         <div class="align-center d-flex">
-          <el-badge :value="1" class="notification">
+          <!-- <el-badge :value="1" class="notification">
             <i class="el-icon-bell" />
-          </el-badge>
+          </el-badge> -->
           <el-avatar size="medium" class="avatar">
             <img v-if="userPhoto" :src="userPhoto">
             <span v-else>

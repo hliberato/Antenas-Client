@@ -71,7 +71,7 @@
                   type="text"
                   maxlength="50"
                   show-word-limit
-                  @blur="update(teamInfo)"
+                  @blur="update()"
                 />
               </el-form-item>
               <el-form-item label="Link de comunicação" prop="communicationLink">
@@ -80,7 +80,7 @@
                   type="text"
                   maxlength="50"
                   show-word-limit
-                  @blur="update(teamInfo)"
+                  @blur="update()"
                 />
               </el-form-item>
             </el-form>
@@ -142,7 +142,7 @@
               :disabled="!roles.length > 0 || !newTeamMember"
               plain
               type="success"
-              @click="editingMember ? updateRole() : update(teamInfo)"
+              @click="editingMember ? updateRole() : update()"
             >
               {{ editingMember ? 'Salvar' : 'Adicionar' }}
             </el-button>
@@ -206,14 +206,6 @@ import TeamService from '@/services/TeamService'
 import UserService from '@/services/UserService.js'
 
 export default {
-  props: {
-    project: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
   data () {
     return {
       teams: [],
@@ -226,8 +218,12 @@ export default {
       newTeamMember: '',
       rolesSelect: [],
       communicationLink: '',
-      projectUrl: ''
+      projectUrl: '',
+      project: {}
     }
+  },
+  created () {
+    this.project = JSON.parse(JSON.stringify(this.$store.getters.selectedProject))
   },
   methods: {
     updateTeams () {
@@ -235,6 +231,10 @@ export default {
         .getTeam(this.project.id)
         .then(teams => {
           this.teams = teams
+          if (this.$store.getters.isStudent) {
+            this.projectUrl = this.teams[0].projectUrl
+            this.communicationLink = this.teams[0].communicationLink
+          }
         })
     },
     getRoles () {
@@ -268,7 +268,9 @@ export default {
       })
       this.clear()
     },
-    update (team) {
+    update () {
+      const team = this.teams[0]
+
       if (this.newTeamMember) {
         team.studentTeamList.push({
           role: this.getRoleObject(),
@@ -332,10 +334,6 @@ export default {
           this.students = students
         })
       this.getRoles()
-      if (this.$store.getters.isStudent) {
-        this.projectUrl = this.teams[0].projectUrl
-        this.communicationLink = this.teams[0].communicationLink
-      }
     },
     editMember (member) {
       this.editingMember = member
