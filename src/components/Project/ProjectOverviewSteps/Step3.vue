@@ -41,14 +41,6 @@
 
 <script>
 export default {
-  props: {
-    project: {
-      type: Object,
-      default () {
-        return {}
-      }
-    }
-  },
   data () {
     return {
       form: {
@@ -68,7 +60,8 @@ export default {
           this.$store.commit('SHOW_LOADING')
           const completeDescription = this.form.completeDescription
           const technologyDescription = this.form.technologyDescription
-          this.$store.dispatch('updateProject', { ...this.project, completeDescription, technologyDescription })
+          const project = JSON.parse(JSON.stringify(this.$store.getters.selectedProject))
+          this.$store.dispatch('updateProject', { ...project, completeDescription, technologyDescription })
             .catch(err => this.$throwError(err))
             .finally(() => this.$store.commit('HIDE_LOADING'))
         }
