@@ -45,6 +45,7 @@ Utils.install = function (Vue, options) {
   }
 
   Vue.prototype.$getProjectStatus = (project) => {
+    console.log('a')
     if (!Object.keys(project).length) return ''
     const isMeetingPhase = project.progress === 5
     const isRefused = project.refused
