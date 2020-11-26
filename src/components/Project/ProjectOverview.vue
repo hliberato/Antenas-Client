@@ -7,10 +7,9 @@
           <el-tabs :key="tabsKey" @tab-click="tabClick">
             <el-tab-pane label="Projeto">
               <el-steps
-                :space="200"
                 :active="project.progress - 1"
                 finish-status="success"
-                process-status="finish"
+                :process-status="project.progress == 8 ? 'success' : project.refused ? 'error' : 'finish'"
                 align-center
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
