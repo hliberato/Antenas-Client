@@ -264,51 +264,70 @@ export default {
           name: this.teamName,
           roles: this.getRoleObject()
         }).then(() => {
-        alert('Equipe criada')
+        this.$notify({
+          title: 'Equipe criada',
+          message: 'A equipe foi criada com sucesso!',
+          type: 'success',
+          position: 'bottom-right'
+        })
         this.createTeam = false
         this.updateTeams()
           .catch(() => {
-            alert('Ocorreu um erro ao criar a equipe')
+            this.$notify({
+              title: 'Ops!',
+              message: 'Ocorreu um erro ao criar a equpe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
           })
       })
       this.clear()
     },
     update () {
-      const team = JSON.parse(JSON.stringify(this.teams[0]))
-
-      if (this.newTeamMember) {
-        team.studentTeamList.push({
-          role: this.getRoleObject(),
-          student: {
-            id: this.newTeamMember
-          }
+      if ((!this.projectUrl.includes('http://') && !this.projectUrl.includes('https://')) || !this.projectUrl ||
+      (!this.communicationLink.includes('http://') && !this.communicationLink.includes('https://')) || !this.communicationLink) {
+        this.$notify({
+          title: 'Ops!',
+          message: 'A url deve conter http:// ou https://.',
+          type: 'error',
+          position: 'bottom-right'
         })
+      } else {
+        const team = JSON.parse(JSON.stringify(this.teams[0]))
+        if (this.newTeamMember) {
+          team.studentTeamList.push({
+            role: this.getRoleObject(),
+            student: {
+              id: this.newTeamMember
+            }
+          })
+        }
+        team.projectUrl = this.projectUrl
+        team.communicationLink = this.communicationLink
+        team.project = { id: this.project.id }
+        TeamService.updateTeam(team)
+          .then(() => {
+            this.updateTeams()
+          })
+          .catch((err) => {
+            if (err.response.status === 409) {
+              this.$notify({
+                title: 'Ops!',
+                message: 'Este aluno já pertence a uma equpe.',
+                type: 'error',
+                position: 'bottom-right'
+              })
+            } else {
+              this.$notify({
+                title: 'Ops!',
+                message: 'Ocorreu um erro ao atualizar a equipe.',
+                type: 'error',
+                position: 'bottom-right'
+              })
+            }
+          })
+        this.clear()
       }
-      team.projectUrl = this.projectUrl
-      team.communicationLink = this.communicationLink
-      team.project = { id: this.project.id }
-      TeamService.updateTeam(team)
-        .then(() => {
-          this.updateTeams()
-        })
-        .catch((err) => {
-          if (err.response.status === 409) {
-            this.$notify({
-              title: 'Ops!!',
-              message: 'Este aluno já pertence a uma equpe.',
-              type: 'error',
-              position: 'bottom-right'
-            })
-          } else {
-            this.$notify({
-              title: 'Ops!!',
-              message: 'Ocorreu um erro ao atualizar a equipe.',
-              type: 'error',
-              position: 'bottom-right'
-            })
-          }
-        })
-      this.clear()
     },
     formatStudentRoles (member) {
       let roleString = ''
@@ -330,11 +349,21 @@ export default {
         TeamService.removeStudent(student.id)
           .then(() => {
             this.updateTeams()
-            alert(`${student.student.name} foi removido do grupo`)
+            this.$notify({
+              title: 'Sucesso!',
+              message: `${student.student.name} foi removido do grupo`,
+              type: 'success',
+              position: 'bottom-right'
+            })
           })
           .catch(err => {
             this.$throwError(err)
-            alert('Ocorreu um erro ao remover o aluno da equipe')
+            this.$notify({
+              title: 'Ops!',
+              message: 'Ocorreu um erro ao remover o aluno da equipe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
           })
           .finally(() => {
             this.$store.commit('HIDE_LOADING')
@@ -368,10 +397,22 @@ export default {
       this.editingMember.role = this.getRoleObject()
       TeamService.updateStudentTeam(this.editingMember)
         .then(() => {
-          alert('Equipe atualizada')
+          this.$notify({
+            title: 'Sucesso!',
+            message: 'Função do aluno foi alterada.',
+            type: 'success',
+            position: 'bottom-right'
+          })
           this.updateTeams()
         })
-        .catch(() => alert('Ocorreu um erro ao atualizar as informações'))
+        .catch(() => {
+          this.$notify({
+            title: 'Ops!',
+            message: 'Ocorreu um erro ao alterar a função do aluno.',
+            type: 'error',
+            position: 'bottom-right'
+          })
+        })
       this.clear()
     },
     openUrl (url) {
