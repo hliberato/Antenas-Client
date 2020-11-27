@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.getters.isTeacher" class="project-step-3">
+  <div v-if="$store.getters.isTeacher" class="project-step-7">
     <el-alert
       :closable="false"
       title="É necessário iniciar o projeto para que fique visível para os alunos."
@@ -9,7 +9,7 @@
         plain
         :type="project.open ? 'danger' : 'primary'"
         class="ml-16"
-        :icon="project.open ? 'el-icon-close' : 'el-icon-check'"
+        :icon="project.open ? 'el-icon-document-checked' : 'el-icon-check'"
         @click="update(true)"
       >
         {{ project.open ? 'Encerrar' : 'Iniciar' }}
@@ -132,7 +132,7 @@ export default {
 <style lang="scss">
 @import '@/plugins/element/_colors.scss';
 
-.project-step-3 {
+.project-step-7 {
   .el-alert__title {
     font-size: 1.17rem;
     color: $--color-text-regular;
