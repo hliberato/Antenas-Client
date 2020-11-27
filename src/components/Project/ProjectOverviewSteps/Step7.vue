@@ -10,11 +10,79 @@
         :type="project.open ? 'danger' : 'primary'"
         class="ml-16"
         :icon="project.open ? 'el-icon-close' : 'el-icon-check'"
-        @click="update()"
+        @click="update(true)"
       >
-        {{ project.open ? 'Encerrar projeto' : 'Iniciar projeto' }}
+        {{ project.open ? 'Encerrar' : 'Iniciar' }}
+      </el-button>
+
+      <el-button
+        plain
+        type="primary"
+        class="ml-16"
+        icon="el-icon-edit-outline"
+        @click="editProject = !editProject"
+      >
+        Editar informações do projeto
       </el-button>
     </el-alert>
+    <el-dialog
+      title="Editando informações do projeto"
+      :visible.sync="editProject"
+      width="50%"
+    >
+      <el-form
+        ref="form"
+        v-loading="$store.getters.loading"
+        class="edit-project-setp-7"
+        label-position="top"
+        label-width="130px"
+      >
+        <el-form-item label="Resumo" prop="shortDescription">
+          <el-input
+            v-model="project.shortDescription"
+            type="textarea"
+            :rows="4"
+            maxlength="1000"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="Descrição completa" prop="completeDescription">
+          <el-input
+            v-model="project.completeDescription"
+            type="textarea"
+            :rows="4"
+            maxlength="1000"
+            show-word-limit
+          />
+        </el-form-item>
+        <el-form-item label="Descrição da tecnologia" prop="technologyDescription">
+          <el-input
+            v-model="project.technologyDescription"
+            type="textarea"
+            :rows="4"
+            maxlength="1000"
+            show-word-limit
+          />
+        </el-form-item>
+        <div class="justify-end d-flex mt-28">
+          <el-button
+            plain
+            class="ml-16"
+            @click="editProject = !editProject"
+          >
+            Cancelar
+          </el-button>
+          <el-button
+            plain
+            type="primary"
+            class="ml-16"
+            @click="update(undefined)"
+          >
+            Salvar
+          </el-button>
+        </div>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -22,26 +90,40 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  data () {
+    return {
+      editProject: false
+    }
+  },
   computed: {
     ...mapGetters({
       project: 'selectedProject'
     })
   },
   methods: {
-    update () {
-      const confirmMessage = this.project.open ? 'Tem certeza de que deseja encerrar o projeto? Ele ficará invisível para os alunos.' : 'Deseja iniciar o projeto?'
-      this.$confirm(confirmMessage, 'Entrega', {
-        confirmButtonText: this.project.open ? 'Sim, encerrar' : 'Sim, iniciar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonClass: this.project.open ? 'el-button--danger' : 'el-button--success'
-      }).then(() => {
-        this.$store.commit('SHOW_LOADING')
-        const project = JSON.parse(JSON.stringify(this.project))
+    update (openProject) {
+      this.$store.commit('SHOW_LOADING')
+      const project = JSON.parse(JSON.stringify(this.project))
+      if (openProject !== undefined) {
         project.open = !this.project.open
-        this.$store.dispatch('updateProject', project)
-          .catch(err => this.$throwError(err))
-          .finally(() => this.$store.commit('HIDE_LOADING'))
-      })
+      }
+      this.$store.dispatch('updateProject', project)
+        .catch(err => this.$throwError(err))
+        .finally(() => this.$store.commit('HIDE_LOADING'))
+    },
+    confirmDialog (openProject) {
+      if (openProject !== undefined) {
+        const confirmMessage = this.project.open ? 'Tem certeza de que deseja encerrar o projeto? Ele ficará invisível para os alunos.' : 'Deseja iniciar o projeto?'
+        this.$confirm(confirmMessage, 'Entrega', {
+          confirmButtonText: this.project.open ? 'Sim, encerrar' : 'Sim, iniciar',
+          cancelButtonText: 'Cancelar',
+          confirmButtonClass: this.project.open ? 'el-button--danger' : 'el-button--success'
+        }).then(() => {
+          this.update(openProject)
+        })
+      } else {
+        this.update(openProject)
+      }
     }
   }
 }

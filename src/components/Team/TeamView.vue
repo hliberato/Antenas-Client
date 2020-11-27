@@ -33,15 +33,13 @@
                   <div class="member-name">{{ member.student.name }}</div>
                   <div class="role-view">{{ formatStudentRoles(member) }}</div>
                 </div>
-                <i
-                  v-if="$store.getters.isStudent"
-                  class="el-icon-close"
-                  @click="removeStudent(member)"
-                />
                 <div v-if="$store.getters.isStudent" class="overlay">
-                  <a class="icon" @click="editMember(member)">
+                  <div class="icon" @click="editMember(member)">
                     <i class="el-icon-edit-outline" /> Editar
-                  </a>
+                  </div>
+                  <div class="icon close" @click="removeStudent(member)">
+                    <i class="el-icon-close" /> Remover
+                  </div>
                 </div>
               </div>
             </div>
@@ -190,6 +188,12 @@
         <div class="justify-end d-flex">
           <el-button
             plain
+            @click="createTeam = !createTeam"
+          >
+            Cancelar
+          </el-button>
+          <el-button
+            plain
             type="primary"
             @click="save()"
           >
@@ -261,6 +265,7 @@ export default {
           roles: this.getRoleObject()
         }).then(() => {
         alert('Equipe criada')
+        this.createTeam = false
         this.updateTeams()
           .catch(() => {
             alert('Ocorreu um erro ao criar a equipe')
@@ -339,9 +344,9 @@ export default {
       this.editingMember = member
       this.addMember = true
       this.newTeamMember = member.student.name
-      console.log(member.role)
-      console.log(this.rolesSelect)
-      this.roles = member.role
+      member.role.forEach(item => {
+        this.roles.push(item.id)
+      })
     },
     clear () {
       this.editingMember = null
@@ -402,11 +407,6 @@ export default {
 }
 
 // overlay
-.el-icon-close {
-  padding-left: 10px;
-  padding-top: 10px;
-  cursor: pointer;
-}
 .member-view {
   position: relative;
 }
@@ -431,12 +431,7 @@ export default {
 }
 .icon {
   color: #e6e5e5;
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  font-size: 15px;
   text-align: center;
   cursor: pointer;
 }
