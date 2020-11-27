@@ -274,7 +274,7 @@ export default {
       this.clear()
     },
     update () {
-      const team = this.teams[0]
+      const team = JSON.parse(JSON.stringify(this.teams[0]))
 
       if (this.newTeamMember) {
         team.studentTeamList.push({
@@ -430,13 +430,14 @@ export default {
   opacity: 1;
 }
 .icon {
-  color: #e6e5e5;
-  font-size: 15px;
+  color: #d0cccc;
+  font-size: 16px;
   text-align: center;
+  font-weight: 500;
   cursor: pointer;
 }
 .icon:hover {
-  color: #d0cccc;
+  color: #e6e5e5;
 }
 .member-name {
   color: $--color-text-regular;
