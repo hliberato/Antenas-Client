@@ -10,7 +10,7 @@
         :type="project.open ? 'danger' : 'primary'"
         class="ml-16"
         :icon="project.open ? 'el-icon-document-checked' : 'el-icon-check'"
-        @click="update(true)"
+        @click="update(project.open)"
       >
         {{ project.open ? 'Encerrar' : 'Iniciar' }}
       </el-button>
@@ -104,8 +104,12 @@ export default {
     update (openProject) {
       this.$store.commit('SHOW_LOADING')
       const project = JSON.parse(JSON.stringify(this.project))
+      console.log('1')
       if (openProject !== undefined) {
         project.open = !this.project.open
+        if (project.open) {
+          project.finished = true
+        }
       }
       this.$store.dispatch('updateProject', project)
         .catch(err => this.$throwError(err))

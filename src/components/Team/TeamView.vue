@@ -9,7 +9,7 @@
         show-icon
       />
       <el-alert
-        v-if="$store.getters.isStudent && teams.length == 0 && !createTeam"
+        v-if="canEdit && teams.length == 0 && !createTeam"
         center
         type="warning"
         prominent
@@ -33,7 +33,7 @@
                   <div class="member-name">{{ member.student.name }}</div>
                   <div class="role-view">{{ formatStudentRoles(member) }}</div>
                 </div>
-                <div v-if="$store.getters.isStudent" class="overlay">
+                <div v-if="canEdit" class="overlay">
                   <div class="icon" @click="editMember(member)">
                     <i class="el-icon-edit-outline" /> Editar
                   </div>
@@ -44,9 +44,8 @@
               </div>
             </div>
           </div>
-          <div v-if="$store.getters.isStudent" class="justify-end d-flex">
+          <div v-if="canEdit" class="justify-end d-flex">
             <el-button
-              v-if="$store.getters.isStudent"
               icon="el-icon-plus"
               type="text"
               @click="addMember = !addMember"
@@ -55,7 +54,7 @@
             </el-button>
           </div>
           <br><br>
-          <div v-if="$store.getters.isStudent">
+          <div v-if="canEdit">
             <el-form
               ref="form"
               v-loading="$store.getters.loading"
@@ -91,7 +90,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-dialog
-        v-if="$store.getters.isStudent"
+        v-if="canEdit"
         :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
         :visible.sync="addMember"
         width="50%"
@@ -149,7 +148,7 @@
       </el-dialog>
     </div>
     <el-dialog
-      v-if="$store.getters.isStudent"
+      v-if="canEdit"
       title="Criar equipe"
       :visible.sync="createTeam"
       width="50%"
@@ -226,6 +225,11 @@ export default {
       project: {}
     }
   },
+  computed: {
+    canEdit () {
+      return this.$store.getters.isStudent && !this.project.finished
+    }
+  },
   created () {
     this.project = JSON.parse(JSON.stringify(this.$store.getters.selectedProject))
   },
@@ -235,10 +239,19 @@ export default {
         .getTeam(this.project.id)
         .then(teams => {
           this.teams = teams
-          if (this.$store.getters.isStudent) {
+          if (this.$store.getters.isStudent && this.teams.length) {
             this.projectUrl = this.teams[0].projectUrl
             this.communicationLink = this.teams[0].communicationLink
           }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$notify({
+            title: 'Ops!',
+            message: 'Ocorreu um erro ao atualizar a equipe.',
+            type: 'error',
+            position: 'bottom-right'
+          })
         })
     },
     getRoles () {
@@ -272,20 +285,29 @@ export default {
         })
         this.createTeam = false
         this.updateTeams()
-          .catch(() => {
+      })
+        .catch(err => {
+          if (err.response.status === 409) {
             this.$notify({
-              title: 'Ops!',
-              message: 'Ocorreu um erro ao criar a equpe.',
+              title: 'Você já pertence a uma equipe!',
+              message: 'Para criar uma nova equipe, é necessário sair da outra.',
               type: 'error',
               position: 'bottom-right'
             })
-          })
-      })
+          } else {
+            this.$notify({
+              title: 'Ops!',
+              message: 'Ocorreu um erro ao criar uma equipe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
+          }
+        })
       this.clear()
     },
     update () {
-      if ((!this.projectUrl.includes('http://') && !this.projectUrl.includes('https://')) || !this.projectUrl ||
-      (!this.communicationLink.includes('http://') && !this.communicationLink.includes('https://')) || !this.communicationLink) {
+      if (this.projectUrl && this.communicationLink && ((!this.projectUrl.includes('http://') && !this.projectUrl.includes('https://')) || !this.projectUrl ||
+      (!this.communicationLink.includes('http://') && !this.communicationLink.includes('https://')) || !this.communicationLink)) {
         this.$notify({
           title: 'Ops!',
           message: 'A url deve conter http:// ou https://.',

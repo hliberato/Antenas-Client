@@ -14,7 +14,7 @@
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
               </el-steps>
-              <el-collapse class="mt-40">
+              <el-collapse v-model="openAnotherInfo" class="mt-40">
                 <el-collapse-item v-if="project.shortDescription" title="Resumo" name="1">
                   {{ project.shortDescription }}
                 </el-collapse-item>
@@ -147,6 +147,9 @@ export default {
     ...mapGetters({
       project: 'selectedProject'
     }),
+    openAnotherInfo () {
+      return (this.$store.getters.isCadi || this.$store.getters.isRepresentative) && this.project.progress === 5 ? ['5'] : []
+    },
     currentStep () {
       return 'Step' + this.project.progress
     },
