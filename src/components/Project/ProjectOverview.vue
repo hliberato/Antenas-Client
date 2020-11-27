@@ -138,7 +138,7 @@ export default {
         'Reunião',
         'Designar professor',
         'Entrega',
-        // 'Avaliação',
+        // 'Avaliação dos Alunos',
         'Finalizado'
       ]
     }
