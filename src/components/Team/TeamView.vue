@@ -293,9 +293,19 @@ export default {
         })
         .catch((err) => {
           if (err.response.status === 409) {
-            alert('Este aluno já pertence a uma equpe.')
+            this.$notify({
+              title: 'Ops!!',
+              message: 'Este aluno já pertence a uma equpe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
           } else {
-            alert('Ocorreu um erro ao atualizar a equipe')
+            this.$notify({
+              title: 'Ops!!',
+              message: 'Ocorreu um erro ao atualizar a equipe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
           }
         })
       this.clear()
