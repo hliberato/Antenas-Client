@@ -90,7 +90,7 @@
           Selecione um projeto ao lado para saber mais<span v-if="!$store.getters.isRepresentative">.</span>
           <span v-if="$store.getters.isRepresentative">
             ou
-            <el-link type="primary">crie um novo projeto</el-link>.
+            <el-link type="primary" @click="showProjectModal">crie um novo projeto</el-link>.
           </span>
         </div>
       </div>
@@ -182,6 +182,9 @@ export default {
       if (tab.label === 'Equipe') {
         this.$refs.teamView.getTeam()
       }
+    },
+    showProjectModal () {
+      this.$store.commit('SET_PROJECT_MODAL', true)
     }
   }
 }
