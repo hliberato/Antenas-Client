@@ -14,7 +14,7 @@
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
               </el-steps>
-              <el-collapse class="mt-40">
+              <el-collapse v-model="openAnotherInfo" class="mt-40">
                 <el-collapse-item v-if="project.shortDescription" title="Resumo" name="1">
                   {{ project.shortDescription }}
                 </el-collapse-item>
@@ -90,7 +90,7 @@
           Selecione um projeto ao lado para saber mais<span v-if="!$store.getters.isRepresentative">.</span>
           <span v-if="$store.getters.isRepresentative">
             ou
-            <el-link type="primary">crie um novo projeto</el-link>.
+            <el-link type="primary" @click="showProjectModal">crie um novo projeto</el-link>.
           </span>
         </div>
       </div>
@@ -147,6 +147,9 @@ export default {
     ...mapGetters({
       project: 'selectedProject'
     }),
+    openAnotherInfo () {
+      return (this.$store.getters.isCadi || this.$store.getters.isRepresentative) && this.project.progress === 5 ? ['5'] : []
+    },
     currentStep () {
       return 'Step' + this.project.progress
     },
@@ -179,6 +182,9 @@ export default {
       if (tab.label === 'Equipe') {
         this.$refs.teamView.getTeam()
       }
+    },
+    showProjectModal () {
+      this.$store.commit('SET_PROJECT_MODAL', true)
     }
   }
 }

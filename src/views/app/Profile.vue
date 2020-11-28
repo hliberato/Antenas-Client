@@ -16,7 +16,7 @@
           </el-row>
           <div>
             <i class="el-icon-trophy" />
-            10 projetos concluídos
+            {{ user.completedProjects }} projetos concluídos
           </div>
           <div>
             <i class="el-icon-message" />
@@ -64,7 +64,45 @@
     <br>
     <div>
       <el-card class="profile-view h100" :shadow="'always'">
-        projetos
+        <h2>projetos</h2>
+        <br>
+        <el-row :gutter="40">
+          <el-col :span="4">
+            <div v-for="studentTeam in user.studentTeam" :key="studentTeam.team.project.title" @click="currentProject = studentTeam">
+              {{ studentTeam.team.project.title }}
+              <div class="description">
+                {{ studentTeam.team.project.shortDescription }}
+              </div>
+              <br><hr><br>
+            </div>
+          </el-col>
+          <el-col :span="9">
+            <div v-if="currentProject !== undefined">
+              <h3> {{ currentProject.team.project.title }} </h3>
+
+              <div>
+                <strong> Resumo: </strong> {{ currentProject.team.project.shortDescription }}
+                <br>
+                <strong> Descrição completa: </strong> {{ currentProject.team.project.completeDescription }}
+                <br>
+                <strong> Descrição da tecnologia: </strong> {{ currentProject.team.project.technologyDescription }}
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="11">
+            <div v-if="currentProject !== undefined">
+              <h3> Desempenho </h3>
+
+              <div>
+                <strong> Resumo: </strong> {{ currentProject.team.project.shortDescription }}
+                <br>
+                <strong> Descrição completa: </strong> {{ currentProject.team.project.completeDescription }}
+                <br>
+                <strong> Descrição da tecnologia: </strong> {{ currentProject.team.project.technologyDescription }}
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </el-card>
     </div>
   </div>
@@ -76,13 +114,14 @@ import UserService from '@/services/UserService.js'
 export default {
   data () {
     return {
+      currentProject: undefined,
       user: {}
     }
   },
 
   beforeMount () {
     this.$store.commit('SHOW_LOADING')
-    UserService.getUser()
+    UserService.getProfileInfo()
       .then((res) => {
         this.user = res
       })
@@ -114,6 +153,11 @@ export default {
 
 .profile {
   margin: 20px;
+}
+.description {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 </style>

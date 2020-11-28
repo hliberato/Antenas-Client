@@ -9,7 +9,7 @@
         show-icon
       />
       <el-alert
-        v-if="$store.getters.isStudent && teams.length == 0 && !createTeam"
+        v-if="canEdit && teams.length == 0 && !createTeam"
         center
         type="warning"
         prominent
@@ -33,22 +33,19 @@
                   <div class="member-name">{{ member.student.name }}</div>
                   <div class="role-view">{{ formatStudentRoles(member) }}</div>
                 </div>
-                <i
-                  v-if="$store.getters.isStudent"
-                  class="el-icon-close"
-                  @click="removeStudent(member)"
-                />
-                <div v-if="$store.getters.isStudent" class="overlay">
-                  <a class="icon" @click="editMember(member)">
+                <div v-if="canEdit" class="overlay">
+                  <div class="icon" @click="editMember(member)">
                     <i class="el-icon-edit-outline" /> Editar
-                  </a>
+                  </div>
+                  <div class="icon close" @click="removeStudent(member)">
+                    <i class="el-icon-close" /> Remover
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="$store.getters.isStudent" class="justify-end d-flex">
+          <div v-if="canEdit" class="justify-end d-flex">
             <el-button
-              v-if="$store.getters.isStudent"
               icon="el-icon-plus"
               type="text"
               @click="addMember = !addMember"
@@ -57,7 +54,7 @@
             </el-button>
           </div>
           <br><br>
-          <div v-if="$store.getters.isStudent">
+          <div v-if="canEdit">
             <el-form
               ref="form"
               v-loading="$store.getters.loading"
@@ -93,7 +90,7 @@
         </el-collapse-item>
       </el-collapse>
       <el-dialog
-        v-if="$store.getters.isStudent"
+        v-if="canEdit"
         :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
         :visible.sync="addMember"
         width="50%"
@@ -151,7 +148,7 @@
       </el-dialog>
     </div>
     <el-dialog
-      v-if="$store.getters.isStudent"
+      v-if="canEdit"
       title="Criar equipe"
       :visible.sync="createTeam"
       width="50%"
@@ -190,6 +187,12 @@
         <div class="justify-end d-flex">
           <el-button
             plain
+            @click="createTeam = !createTeam"
+          >
+            Cancelar
+          </el-button>
+          <el-button
+            plain
             type="primary"
             @click="save()"
           >
@@ -222,6 +225,11 @@ export default {
       project: {}
     }
   },
+  computed: {
+    canEdit () {
+      return this.$store.getters.isStudent && !this.project.finished
+    }
+  },
   created () {
     this.project = JSON.parse(JSON.stringify(this.$store.getters.selectedProject))
   },
@@ -231,10 +239,19 @@ export default {
         .getTeam(this.project.id)
         .then(teams => {
           this.teams = teams
-          if (this.$store.getters.isStudent) {
+          if (this.$store.getters.isStudent && this.teams.length) {
             this.projectUrl = this.teams[0].projectUrl
             this.communicationLink = this.teams[0].communicationLink
           }
+        })
+        .catch((err) => {
+          console.log(err)
+          this.$notify({
+            title: 'Ops!',
+            message: 'Ocorreu um erro ao atualizar a equipe.',
+            type: 'error',
+            position: 'bottom-right'
+          })
         })
     },
     getRoles () {
@@ -260,40 +277,79 @@ export default {
           name: this.teamName,
           roles: this.getRoleObject()
         }).then(() => {
-        alert('Equipe criada')
+        this.$notify({
+          title: 'Equipe criada',
+          message: 'A equipe foi criada com sucesso!',
+          type: 'success',
+          position: 'bottom-right'
+        })
+        this.createTeam = false
         this.updateTeams()
-          .catch(() => {
-            alert('Ocorreu um erro ao criar a equipe')
-          })
       })
+        .catch(err => {
+          if (err.response.status === 409) {
+            this.$notify({
+              title: 'Você já pertence a uma equipe!',
+              message: 'Para criar uma nova equipe, é necessário sair da outra.',
+              type: 'error',
+              position: 'bottom-right'
+            })
+          } else {
+            this.$notify({
+              title: 'Ops!',
+              message: 'Ocorreu um erro ao criar uma equipe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
+          }
+        })
       this.clear()
     },
     update () {
-      const team = this.teams[0]
-
-      if (this.newTeamMember) {
-        team.studentTeamList.push({
-          role: this.getRoleObject(),
-          student: {
-            id: this.newTeamMember
-          }
+      if (this.projectUrl && this.communicationLink && ((!this.projectUrl.includes('http://') && !this.projectUrl.includes('https://')) || !this.projectUrl ||
+      (!this.communicationLink.includes('http://') && !this.communicationLink.includes('https://')) || !this.communicationLink)) {
+        this.$notify({
+          title: 'Ops!',
+          message: 'A url deve conter http:// ou https://.',
+          type: 'error',
+          position: 'bottom-right'
         })
+      } else {
+        const team = JSON.parse(JSON.stringify(this.teams[0]))
+        if (this.newTeamMember) {
+          team.studentTeamList.push({
+            role: this.getRoleObject(),
+            student: {
+              id: this.newTeamMember
+            }
+          })
+        }
+        team.projectUrl = this.projectUrl
+        team.communicationLink = this.communicationLink
+        team.project = { id: this.project.id }
+        TeamService.updateTeam(team)
+          .then(() => {
+            this.updateTeams()
+          })
+          .catch((err) => {
+            if (err.response.status === 409) {
+              this.$notify({
+                title: 'Ops!',
+                message: 'Este aluno já pertence a uma equpe.',
+                type: 'error',
+                position: 'bottom-right'
+              })
+            } else {
+              this.$notify({
+                title: 'Ops!',
+                message: 'Ocorreu um erro ao atualizar a equipe.',
+                type: 'error',
+                position: 'bottom-right'
+              })
+            }
+          })
+        this.clear()
       }
-      team.projectUrl = this.projectUrl
-      team.communicationLink = this.communicationLink
-      team.project = { id: this.project.id }
-      TeamService.updateTeam(team)
-        .then(() => {
-          this.updateTeams()
-        })
-        .catch((err) => {
-          if (err.response.status === 409) {
-            alert('Este aluno já pertence a uma equpe.')
-          } else {
-            alert('Ocorreu um erro ao atualizar a equipe')
-          }
-        })
-      this.clear()
     },
     formatStudentRoles (member) {
       let roleString = ''
@@ -315,11 +371,21 @@ export default {
         TeamService.removeStudent(student.id)
           .then(() => {
             this.updateTeams()
-            alert(`${student.student.name} foi removido do grupo`)
+            this.$notify({
+              title: 'Sucesso!',
+              message: `${student.student.name} foi removido do grupo`,
+              type: 'success',
+              position: 'bottom-right'
+            })
           })
           .catch(err => {
             this.$throwError(err)
-            alert('Ocorreu um erro ao remover o aluno da equipe')
+            this.$notify({
+              title: 'Ops!',
+              message: 'Ocorreu um erro ao remover o aluno da equipe.',
+              type: 'error',
+              position: 'bottom-right'
+            })
           })
           .finally(() => {
             this.$store.commit('HIDE_LOADING')
@@ -339,9 +405,9 @@ export default {
       this.editingMember = member
       this.addMember = true
       this.newTeamMember = member.student.name
-      console.log(member.role)
-      console.log(this.rolesSelect)
-      this.roles = member.role
+      member.role.forEach(item => {
+        this.roles.push(item.id)
+      })
     },
     clear () {
       this.editingMember = null
@@ -353,10 +419,22 @@ export default {
       this.editingMember.role = this.getRoleObject()
       TeamService.updateStudentTeam(this.editingMember)
         .then(() => {
-          alert('Equipe atualizada')
+          this.$notify({
+            title: 'Sucesso!',
+            message: 'Função do aluno foi alterada.',
+            type: 'success',
+            position: 'bottom-right'
+          })
           this.updateTeams()
         })
-        .catch(() => alert('Ocorreu um erro ao atualizar as informações'))
+        .catch(() => {
+          this.$notify({
+            title: 'Ops!',
+            message: 'Ocorreu um erro ao alterar a função do aluno.',
+            type: 'error',
+            position: 'bottom-right'
+          })
+        })
       this.clear()
     },
     openUrl (url) {
@@ -402,11 +480,6 @@ export default {
 }
 
 // overlay
-.el-icon-close {
-  padding-left: 10px;
-  padding-top: 10px;
-  cursor: pointer;
-}
 .member-view {
   position: relative;
 }
@@ -430,18 +503,14 @@ export default {
   opacity: 1;
 }
 .icon {
-  color: #e6e5e5;
-  font-size: 20px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  -ms-transform: translate(-50%, -50%);
+  color: #d0cccc;
+  font-size: 16px;
   text-align: center;
+  font-weight: 500;
   cursor: pointer;
 }
 .icon:hover {
-  color: #d0cccc;
+  color: #e6e5e5;
 }
 .member-name {
   color: $--color-text-regular;

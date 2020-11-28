@@ -30,7 +30,7 @@ export default {
     ADD_PROJECT (state, project) {
       const status = Vue.prototype.$getProjectStatus(project)
       const labelPhase = Vue.prototype.$getProjectLabelPhase(status, project)
-      state.projects.push({ ...project, status, labelPhase })
+      state.projects.unshift({ ...project, status, labelPhase })
     }
   },
   actions: {

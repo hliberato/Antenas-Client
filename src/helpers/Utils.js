@@ -1,7 +1,6 @@
 import store from '../store/index'
 
 function getProjectStatus (project) {
-  console.log("??")
   const isMeetingPhase = project.progress === 5
   let hasMeeting = false
 
@@ -11,9 +10,6 @@ function getProjectStatus (project) {
 
   const isRefused = project.refused
   const isDeliveryPhase = project.progress === 6
-
-  // let isConcluded = (store.getters.isStudent && project.deliver.some(deliver => deliver.students.includes(store.state.user.id))) ||
-  //     (!store.getters.isTeacher && isDeliveryPhase && project.teacher && project.studentResponsible && project.deliver.length);
 
   const isConcluded = project.finished
 
