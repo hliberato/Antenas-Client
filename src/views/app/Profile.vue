@@ -76,8 +76,8 @@
               <br><hr><br>
             </div>
           </el-col>
-          <el-col :span="9">
-            <div v-if="currentProject !== undefined">
+          <el-col :span="10">
+            <div v-if="currentProject">
               <h3> {{ currentProject.team.project.title }} </h3>
 
               <div>
@@ -89,10 +89,11 @@
               </div>
             </div>
           </el-col>
-          <el-col :span="11">
-            <div v-if="currentProject !== undefined">
-              <highcharts :options="chartOptions" />
-            </div>
+          <el-col v-if="!currentProject" :span="10">
+            <highcharts :options="getChartOptionsAverage()" />
+          </el-col>
+          <el-col :span="10">
+            <highcharts :options="getChartOptions()" />
           </el-col>
         </el-row>
       </el-card>
@@ -111,23 +112,28 @@ export default {
   data () {
     return {
       currentProject: undefined,
-      user: {},
-      chartOptions: {
-        series: [{
-          name: 'Avaliação do professor',
-          data: [2, 4, 2, 5],
-          pointPlacement: 'on'
-        }, {
-          name: 'Avaliação do Master',
-          data: [3, 2, 4, 5],
-          pointPlacement: 'on'
-        }],
+      user: {}
+    }
+  },
+  beforeMount () {
+    this.$store.commit('SHOW_LOADING')
+    UserService.getProfileInfo()
+      .then((res) => {
+        this.user = res
+      })
+      .catch(err => this.$throwError(err))
+      .finally(() => this.$store.commit('HIDE_LOADING'))
+  },
+  methods: {
+    getChartOptions () {
+      return {
+        series: this.getSeries(this.currentProject ? this.currentProject : this.user.studentTeam[0]),
         chart: {
           polar: true,
           type: 'line'
         },
         title: {
-          text: 'Desempenho'
+          text: this.currentProject ? 'Desempenho' : 'Desempenho no último projeto'
         },
         xAxis: {
           categories: ['Proatividade', 'Autonomia', 'Colaboração', 'Entrega de resultados'],
@@ -140,16 +146,58 @@ export default {
           min: 0
         }
       }
-    }
-  },
-  beforeMount () {
-    this.$store.commit('SHOW_LOADING')
-    UserService.getProfileInfo()
-      .then((res) => {
-        this.user = res
+    },
+    getChartOptionsAverage () {
+      return {
+        series: this.getSeriesAverage(),
+        chart: {
+          polar: true,
+          type: 'line'
+        },
+        title: {
+          text: 'Desempenho geral'
+        },
+        xAxis: {
+          categories: ['Proatividade', 'Autonomia', 'Colaboração', 'Entrega de resultados'],
+          tickmarkPlacement: 'on',
+          lineWidth: 0
+        },
+        yAxis: {
+          gridLineInterpolation: 'polygon',
+          lineWidth: 0,
+          min: 0
+        }
+      }
+    },
+    getSeriesAverage () {
+      return [{
+        name: 'Avaliação geral',
+        data: [
+          this.user.average.proactivity,
+          this.user.average.autonomy,
+          this.user.average.collaboration,
+          this.user.average.resultsDeliver
+        ],
+        pointPlacement: 'on'
+      }]
+    },
+    getSeries (project) {
+      const series = []
+
+      project.evaluations.forEach(evaluation => {
+        series.push({
+          name: evaluation.evaluatedBy.authorizations[0].name === 'ROLE_TEACHER' ? 'Avaliação do professor' : 'Avaliação do Scrum Master',
+          data: [
+            evaluation.proactivity,
+            evaluation.autonomy,
+            evaluation.collaboration,
+            evaluation.resultsDeliver
+          ],
+          pointPlacement: 'on'
+        })
       })
-      .catch(err => this.$throwError(err))
-      .finally(() => this.$store.commit('HIDE_LOADING'))
+      return series
+    }
   }
 }
 </script>
