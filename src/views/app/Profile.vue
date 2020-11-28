@@ -105,8 +105,8 @@
               <br><hr><br>
             </div>
           </el-col>
-          <el-col :span="9">
-            <div v-if="currentProject !== undefined">
+          <el-col :span="10">
+            <div v-if="currentProject">
               <h3> {{ currentProject.team.project.title }} </h3>
 
               <div>
@@ -118,10 +118,11 @@
               </div>
             </div>
           </el-col>
-          <el-col :span="11">
-            <div v-if="currentProject !== undefined">
-              <highcharts :options="chartOptions" />
-            </div>
+          <el-col v-if="!currentProject" :span="10">
+            <highcharts :options="getChartOptionsAverage()" />
+          </el-col>
+          <el-col :span="10">
+            <highcharts :options="getChartOptions()" />
           </el-col>
         </el-row>
       </el-card>
@@ -141,40 +142,12 @@ export default {
   data () {
     return {
       currentProject: undefined,
-      user: {},
-      chartOptions: {
-        series: [{
-          name: 'Avaliação do professor',
-          data: [2, 4, 2, 5],
-          pointPlacement: 'on'
-        }, {
-          name: 'Avaliação do Master',
-          data: [3, 2, 4, 5],
-          pointPlacement: 'on'
-        }],
-        chart: {
-          polar: true,
-          type: 'line'
-        },
-        title: {
-          text: 'Desempenho'
-        },
-        xAxis: {
-          categories: ['Proatividade', 'Autonomia', 'Colaboração', 'Entrega de resultados'],
-          tickmarkPlacement: 'on',
-          lineWidth: 0
-        },
-        yAxis: {
-          gridLineInterpolation: 'polygon',
-          lineWidth: 0,
-          min: 0
-        }
-      }
+      user: {}
     }
   },
   beforeMount () {
     this.$store.commit('SHOW_LOADING')
-    UserService.getProfileInfo(this.$route.params.userId)
+    UserService.getProfileInfo()
       .then((res) => {
         this.user = res
       })
@@ -222,14 +195,13 @@ export default {
         yAxis: {
           gridLineInterpolation: 'polygon',
           lineWidth: 0,
-          min: 0,
-          max: 5
+          min: 0
         }
       }
     },
     getSeriesAverage () {
       return [{
-        name: 'Média geral',
+        name: 'Avaliação geral',
         data: [
           this.user.average.proactivity,
           this.user.average.autonomy,
