@@ -105,8 +105,8 @@
               <br><hr><br>
             </div>
           </el-col>
-          <el-col :span="10">
-            <div v-if="currentProject">
+          <el-col :span="9">
+            <div v-if="currentProject !== undefined">
               <h3> {{ currentProject.team.project.title }} </h3>
 
               <div>
@@ -118,11 +118,10 @@
               </div>
             </div>
           </el-col>
-          <el-col v-if="!currentProject" :span="10">
-            <highcharts :options="getChartOptionsAverage()" />
-          </el-col>
-          <el-col :span="10">
-            <highcharts :options="getChartOptions()" />
+          <el-col :span="11">
+            <div v-if="currentProject !== undefined">
+              <highcharts :options="chartOptions" />
+            </div>
           </el-col>
         </el-row>
       </el-card>
@@ -142,7 +141,35 @@ export default {
   data () {
     return {
       currentProject: undefined,
-      user: {}
+      user: {},
+      chartOptions: {
+        series: [{
+          name: 'Avaliação do professor',
+          data: [2, 4, 2, 5],
+          pointPlacement: 'on'
+        }, {
+          name: 'Avaliação do Master',
+          data: [3, 2, 4, 5],
+          pointPlacement: 'on'
+        }],
+        chart: {
+          polar: true,
+          type: 'line'
+        },
+        title: {
+          text: 'Desempenho'
+        },
+        xAxis: {
+          categories: ['Proatividade', 'Autonomia', 'Colaboração', 'Entrega de resultados'],
+          tickmarkPlacement: 'on',
+          lineWidth: 0
+        },
+        yAxis: {
+          gridLineInterpolation: 'polygon',
+          lineWidth: 0,
+          min: 0
+        }
+      }
     }
   },
   beforeMount () {

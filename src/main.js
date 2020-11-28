@@ -3,6 +3,10 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import moment from 'vue-moment'
+import HighchartsVue from 'highcharts-vue'
+import VueHighcharts from 'vue-highcharts'
+import Highcharts from 'highcharts'
+import highchartsMore from 'highcharts/highcharts-more'
 
 // Plugins
 import './plugins/element.js'
@@ -17,8 +21,10 @@ import './styles/index.scss'
 import { Loading } from 'element-ui'
 Vue.prototype.$loading = Loading.service
 
-Vue.use(moment)
-
+// Register global components
+Vue.component('Notification', Notification)
+Vue.use(moment, HighchartsVue, VueHighcharts, { Highcharts })
+highchartsMore(Highcharts)
 Vue.config.productionTip = false
 
 new Vue({
