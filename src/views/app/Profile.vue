@@ -91,15 +91,7 @@
           </el-col>
           <el-col :span="11">
             <div v-if="currentProject !== undefined">
-              <h3> Desempenho </h3>
-
-              <div>
-                <strong> Resumo: </strong> {{ currentProject.team.project.shortDescription }}
-                <br>
-                <strong> Descrição completa: </strong> {{ currentProject.team.project.completeDescription }}
-                <br>
-                <strong> Descrição da tecnologia: </strong> {{ currentProject.team.project.technologyDescription }}
-              </div>
+              <highcharts :options="chartOptions" />
             </div>
           </el-col>
         </el-row>
@@ -109,16 +101,47 @@
 </template>
 
 <script>
+import { Chart } from 'highcharts-vue'
 import UserService from '@/services/UserService.js'
 
 export default {
+  components: {
+    highcharts: Chart
+  },
   data () {
     return {
       currentProject: undefined,
-      user: {}
+      user: {},
+      chartOptions: {
+        series: [{
+          name: 'Avaliação do professor',
+          data: [2, 4, 2, 5],
+          pointPlacement: 'on'
+        }, {
+          name: 'Avaliação do Master',
+          data: [3, 2, 4, 5],
+          pointPlacement: 'on'
+        }],
+        chart: {
+          polar: true,
+          type: 'line'
+        },
+        title: {
+          text: 'Desempenho'
+        },
+        xAxis: {
+          categories: ['Proatividade', 'Autonomia', 'Colaboração', 'Entrega de resultados'],
+          tickmarkPlacement: 'on',
+          lineWidth: 0
+        },
+        yAxis: {
+          gridLineInterpolation: 'polygon',
+          lineWidth: 0,
+          min: 0
+        }
+      }
     }
   },
-
   beforeMount () {
     this.$store.commit('SHOW_LOADING')
     UserService.getProfileInfo()
@@ -139,17 +162,11 @@ export default {
   .title {
     font-size: 1.8rem;
   }
-  // width: 50%;
-  // margin: 20px;
 }
 .image {
   width: 120px;
   border-radius: 20px;
 }
-// .el-card__body {
-//   padding: 38px;
-//   height: 100%;
-// }
 
 .profile {
   margin: 20px;
