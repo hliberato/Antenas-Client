@@ -68,7 +68,6 @@ export default {
   getUser () {
     return http
       .get('user').then(res => {
-        console.log(res.data)
         return res.data
       })
   },

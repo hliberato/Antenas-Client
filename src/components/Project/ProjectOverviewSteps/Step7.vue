@@ -104,10 +104,10 @@ export default {
     update (action) {
       this.$store.commit('SHOW_LOADING')
       const project = JSON.parse(JSON.stringify(this.project))
-      console.log('1')
       if (action === 'open') {
-        project.open = !this.project.open
+        project.open = true
       } else if (action === 'finish') {
+        project.open = false
         project.finished = true
       }
       this.$store.dispatch('updateProject', project)
