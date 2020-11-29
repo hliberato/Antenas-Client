@@ -22,13 +22,13 @@
       finish-status="success"
       process-status="finish"
     >
-      <el-steps :active="0" finish-status="success" simple>
+      <el-steps :active="step" finish-status="success" simple>
         <el-step title="Criar medalha" icon="el-icon-medal" />
         <el-step title="Atribuir medalhas" icon="el-icon-medal-1" />
         <el-step title="Atribuir notas" icon="el-icon-notebook-2" />
       </el-steps>
       <el-row>
-        <el-col :span="10">
+        <el-col v-if="step === 0 || step === 1" :span="10">
           <h3>Medalhas cadastradas</h3>
 
           <el-row>
@@ -49,7 +49,7 @@
             </div>
           </el-row>
         </el-col>
-        <el-col :span="10">
+        <el-col v-if="step === 0" :span="10">
           <h3>Criar / Editar</h3>
 
           <el-form
@@ -72,6 +72,16 @@
                 maxlength="30"
                 show-word-limit
               />
+            </el-form-item>
+            <el-form-item label="Categoria" prop="category">
+              <el-select v-model="currentMedal.category" class="w100">
+                <el-option
+                  v-for="category in categoryList"
+                  :key="category"
+                  :label="category"
+                  :value="category"
+                />
+              </el-select>
             </el-form-item>
             <el-form-item label="Imagem">
               <el-upload
@@ -103,11 +113,23 @@
             </el-col>
           </el-row>
         </el-col>
+        <el-col v-if="step === 1" :span="10">
+          <h3>avaliação</h3>
+        </el-col>
+        <el-col v-if="step === 2" :span="10">
+          <h3>Atribuiçao de medalhas</h3>
+        </el-col>
       </el-row>
-      <div />
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false"> Cancelar </el-button>
-        <el-button type="primary"> Avançar </el-button>
+
+        <el-button icon="el-icon-back" circle @click="step = step > 0 ? step -= 1 : step" />
+        <el-button icon="el-icon-right" circle @click="step = step < 2 ? step += 1 : step" />
+
+        <!-- <i class="el-icon-back" @click="step = step > 0 ? step -= 1 : step" /> -->
+        <!-- <i class="el-icon-right" @click="step = step < 2 ? step += 1 : step" /> -->
+        <!-- <el-button type="primary" @click="sterp = step > 0 ? step -= 1 : step"> Voltar </el-button>
+        <el-button type="primary" @click="step += 1"> {{ step == 2 ? 'finalizar' : 'Avançar' }} </el-button> -->
       </span>
     </el-dialog>
   </div>
@@ -121,6 +143,7 @@ export default {
     return {
       dialogVisible: false,
       medals: [],
+      step: 0,
       currentMedal: {
         name: '',
         id: '',
@@ -128,14 +151,15 @@ export default {
         picture: '',
         category: ''
       },
-      courses: [
+      categoryList: [
         'Análise e Desenvolvimento de Sistemas',
         'Banco de Dados',
         'Gestão da Produção Industrial',
         'Logística',
         'Manufatura Avançada',
         'Manutenção de Aeronaves',
-        'Projetos de Estruturas Aeronáuticas'
+        'Projetos de Estruturas Aeronáuticas',
+        'Outro'
       ]
     }
   },
