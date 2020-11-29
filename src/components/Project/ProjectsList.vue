@@ -140,7 +140,7 @@ export default {
 
 <style lang="scss">
 .project-list {
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 96px);
   .el-card__header {
     padding: 12px 20px;
   }

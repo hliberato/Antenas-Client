@@ -130,7 +130,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import '@/plugins/element/_colors.scss';
+@import '@/styles/_colors.scss';
 
 .project-step-7 {
   .el-alert__title {
