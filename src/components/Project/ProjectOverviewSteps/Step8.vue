@@ -42,7 +42,8 @@
                 </el-col>
                 <el-col :span="19">
                   <div> {{ medal.name }} </div>
-                  <div> Conquista </div>
+                  <div class="medal-description"> {{ medal.description }} </div>
+                  <div> Criada dia </div> {{ medal.creationDate | moment("DD/MM/YYYY") }}
                 </el-col>
               </el-row>
             </div>
@@ -88,6 +89,19 @@
           </el-form>
 
           <h3> Visualização prévia: </h3>
+          <el-row>
+            <el-col :span="5">
+              <v-img
+                :src="currentMedal.picture"
+                class="medal-image"
+              />
+            </el-col>
+            <el-col :span="19">
+              <div> {{ currentMedal.name }} </div>
+              <div class="medal-description"> {{ currentMedal.description }} </div>
+              <div v-if="currentMedal.creationDate"> Criada dia </div>  {{ currentMedal.creationDate | moment("DD/MM/YYYY") }}
+            </el-col>
+          </el-row>
         </el-col>
       </el-row>
       <div />
@@ -209,6 +223,10 @@ export default {
   .el-form-item__content {
     font-size: 10px;
     line-height: 20px;
+  }
+  .medal-description {
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 }
 </style>

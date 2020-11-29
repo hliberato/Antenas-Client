@@ -50,7 +50,7 @@
                       <div>
                         Conquista
                         <br>
-                        {{ medal.studentMedals[0].date | moment("DD/MM/YYYY") }}
+                        <!-- {{ medal.studentMedals[0].date | moment("DD/MM/YYYY") }} -->
                         <!-- {{ medal.description }} -->
                       </div>
                     </div>
