@@ -190,11 +190,11 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
-@import '@/plugins/element/_colors.scss';
+<style lang="scss">
+@import '@/styles/_colors.scss';
 
 .project-overview {
-  max-height: calc(100vh - 100px);
+  max-height: calc(100vh - 96px);
   .title {
     font-size: 1.8rem;
   }
