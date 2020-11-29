@@ -122,14 +122,8 @@
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false"> Cancelar </el-button>
-
         <el-button icon="el-icon-back" circle @click="step = step > 0 ? step -= 1 : step" />
         <el-button icon="el-icon-right" circle @click="step = step < 2 ? step += 1 : step" />
-
-        <!-- <i class="el-icon-back" @click="step = step > 0 ? step -= 1 : step" /> -->
-        <!-- <i class="el-icon-right" @click="step = step < 2 ? step += 1 : step" /> -->
-        <!-- <el-button type="primary" @click="sterp = step > 0 ? step -= 1 : step"> Voltar </el-button>
-        <el-button type="primary" @click="step += 1"> {{ step == 2 ? 'finalizar' : 'Avançar' }} </el-button> -->
       </span>
     </el-dialog>
   </div>
