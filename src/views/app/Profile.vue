@@ -147,7 +147,7 @@ export default {
   },
   beforeMount () {
     this.$store.commit('SHOW_LOADING')
-    UserService.getProfileInfo()
+    UserService.getProfileInfo(this.$route.params.userId)
       .then((res) => {
         this.user = res
       })
@@ -195,13 +195,14 @@ export default {
         yAxis: {
           gridLineInterpolation: 'polygon',
           lineWidth: 0,
-          min: 0
+          min: 0,
+          max: 5
         }
       }
     },
     getSeriesAverage () {
       return [{
-        name: 'Avaliação geral',
+        name: 'Média geral',
         data: [
           this.user.average.proactivity,
           this.user.average.autonomy,
@@ -233,7 +234,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/styles/_colors.scss';
+@import '@/plugins/element/_colors.scss';
 
 .profile-view {
   max-height: calc(100vh - 100px);
