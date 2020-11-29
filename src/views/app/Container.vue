@@ -28,6 +28,14 @@
                 <i class="el-icon-user" />
                 Dados da conta
               </el-dropdown-item>
+              <el-dropdown-item v-if="$store.getters.isStudent" command="profile">
+                <i class="el-icon-s-custom" />
+                Perfil
+              </el-dropdown-item>
+              <el-dropdown-item command="projects">
+                <i class="el-icon-document" />
+                Projetos
+              </el-dropdown-item>
               <el-dropdown-item command="medals">
                 <i class="el-icon-medal" />
                 Medalhas
@@ -84,6 +92,10 @@ export default {
         this.$store.commit('LOGOUT_CURRENT_USER')
         this.$store.commit('CLEAR_PROJECTS')
         this.$router.push('/')
+      } else if (action === 'projects') {
+        this.$router.push('/projects')
+      } else if (action === 'profile') {
+        this.$router.push(`/${this.$store.getters.userName.replace(' ', '.').replace(' ', '')}-${this.$store.getters.userId}`)
       }
     }
   }

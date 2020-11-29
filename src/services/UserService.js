@@ -72,9 +72,9 @@ export default {
       })
   },
 
-  getProfileInfo () {
+  getProfileInfo (id) {
     return http
-      .get('student/profile-info').then(res => {
+      .get(`student/profile-info/${id}`).then(res => {
         return res.data
       })
   },

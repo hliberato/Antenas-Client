@@ -190,7 +190,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/plugins/element/_colors.scss';
 
 .project-overview {

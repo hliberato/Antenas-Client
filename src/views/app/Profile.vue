@@ -29,12 +29,43 @@
           <br>
         </el-card>
         <br>
-        <el-card class="profile-view h100" :shadow="'always'">
-          Medalhas
+        <el-card class="profile-view h100 medal" shadow="always">
+          <h3> Medalhas </h3>
+          <br>
+          <div class="medal-list">
+            <el-row :gutter="10">
+              <el-col v-for="medal in user.medals" :key="medal.id" :span="5">
+                <el-row :gutter="5">
+                  <el-col :span="8">
+                    <v-img
+                      :src="medal.picture"
+                      class="medal-image"
+                    />
+                  </el-col>
+                  <el-col :span="16">
+                    <div>
+                      <div>
+                        {{ medal.name }}
+                      </div>
+                      <div>
+                        Conquista
+                        <br>
+                        {{ medal.studentMedals[0].date | moment("DD/MM/YYYY") }}
+                        <!-- {{ medal.description }} -->
+                      </div>
+                    </div>
+                  </el-col>
+                </el-row>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="justify-end d-flex">
+            {{ user.medals.length }} medalhas conquistadas.
+          </div>
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card class="profile-view h100" :shadow="'always'">
+        <el-card class="profile-view h100 info" :shadow="'always'">
           <el-tabs type="card">
             <el-tab-pane label="Informaçôes Profissionais">
               <div v-for="professionalInfo in user.professionalInfos" :key="professionalInfo.id">
@@ -58,8 +89,6 @@
           </el-tabs>
         </el-card>
       </el-col>
-      <!-- <el-col :span="12">
-      </el-col> -->
     </el-row>
     <br>
     <div>
@@ -98,6 +127,7 @@
         </el-row>
       </el-card>
     </div>
+    <br>
   </div>
 </template>
 
@@ -117,7 +147,7 @@ export default {
   },
   beforeMount () {
     this.$store.commit('SHOW_LOADING')
-    UserService.getProfileInfo()
+    UserService.getProfileInfo(this.$route.params.userId)
       .then((res) => {
         this.user = res
       })
@@ -165,13 +195,14 @@ export default {
         yAxis: {
           gridLineInterpolation: 'polygon',
           lineWidth: 0,
-          min: 0
+          min: 0,
+          max: 5
         }
       }
     },
     getSeriesAverage () {
       return [{
-        name: 'Avaliação geral',
+        name: 'Média geral',
         data: [
           this.user.average.proactivity,
           this.user.average.autonomy,
@@ -202,7 +233,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/plugins/element/_colors.scss';
 
 .profile-view {
@@ -215,7 +246,6 @@ export default {
   width: 120px;
   border-radius: 20px;
 }
-
 .profile {
   margin: 20px;
 }
@@ -224,5 +254,30 @@ export default {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-
+.medal {
+  &-image {
+    width: 38px;
+    border-radius: 20px;
+  }
+  &-list {
+    font-size: 10px;
+    height: 347px;
+    max-height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+}
+.medal-image {
+  width: 38px;
+  border-radius: 20px;
+}
+.info {
+  height: 757px;
+  max-height: 100%;
+  overflow-y: auto;
+}
+.profile {
+  overflow-y: auto;
+    overflow-x: hidden;
+}
 </style>
