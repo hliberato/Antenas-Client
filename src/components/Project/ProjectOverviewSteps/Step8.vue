@@ -21,6 +21,8 @@
       :visible.sync="dialogVisible"
       finish-status="success"
       process-status="finish"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
     >
       <el-steps :active="step" finish-status="success" simple>
         <el-step title="Criar medalha" icon="el-icon-medal" />
@@ -35,7 +37,7 @@
             <div v-for="medal in medals" :key="medal.id" @click="currentMedal = medal">
               <el-row>
                 <el-col :span="5">
-                  <v-img
+                  <el-image
                     :src="medal.picture"
                     class="medal-image"
                   />
@@ -101,7 +103,7 @@
           <h3> Visualização prévia: </h3>
           <el-row>
             <el-col :span="5">
-              <v-img
+              <el-image
                 :src="currentMedal.picture"
                 class="medal-image"
               />
@@ -114,12 +116,52 @@
           </el-row>
         </el-col>
         <el-col v-if="step === 1" :span="10">
-          <h3>avaliação</h3>
-        </el-col>
-        <el-col v-if="step === 2" :span="10">
           <h3>Atribuiçao de medalhas</h3>
         </el-col>
       </el-row>
+      <div v-if="step === 2" :span="10">
+        <h3>avaliação</h3>
+        <br>
+        <div v-for="team in teams" :key="team.id">
+          <h3> {{ team.name }} </h3>
+          <el-row v-for="studentTeam in team.studentTeamList" :key="studentTeam.id">
+            <el-col :span="24">
+              {{ studentTeam.student.name }}
+              <el-form
+                ref="form"
+                class="edit-project-setp-7"
+                label-position="top"
+                label-width="130px"
+              >
+                <el-row :gutter="10">
+                  <el-col :span="5">
+                    <el-form-item label="Proatividade" prop="proactivity">
+                      <el-input v-model="studentTeam.evaluation.proactivity" type="number" min="0" max="5" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label="Autonomia" prop="autonomy">
+                      <el-input v-model="studentTeam.evaluation.autonomy" type="number" min="0" max="5" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label="Colaboração" prop="collaboration">
+                      <el-input v-model="studentTeam.evaluation.collaboration" type="number" min="0" max="5" />
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label="Entrega de resultados" prop="resultsDeliver">
+                      <el-input v-model="studentTeam.evaluation.resultsDeliver" type="number" min="0" max="5" />
+                    </el-form-item>
+                  </el-col>
+                </el-row>
+              </el-form>
+            </el-col>
+          </el-row>
+          <hr>
+        </div>
+        <el-button @click="evaluate()"> Salvar </el-button>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false"> Cancelar </el-button>
         <el-button icon="el-icon-back" circle @click="step = step > 0 ? step -= 1 : step" />
@@ -131,13 +173,16 @@
 
 <script>
 import MedalService from '@/services/MedalService.js'
+import TeamService from '@/services/TeamService'
+import { mapGetters } from 'vuex'
 
 export default {
   data () {
     return {
       dialogVisible: false,
       medals: [],
-      step: 0,
+      teams: [],
+      step: 2,
       currentMedal: {
         name: '',
         id: '',
@@ -157,20 +202,30 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters({
+      project: 'selectedProject'
+    })
+  },
+  mounted () {
+    this.getTeams()
+  },
   methods: {
-    update (project) {
+    evaluate () {
+      console.log(this.teams)
       this.$store.commit('SHOW_LOADING')
-      this.$store.dispatch('updateProject', project)
+      TeamService.evaluate(this.teams)
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
     },
     openDialog () {
       this.dialogVisible = true
 
+      this.getTeams()
+
       MedalService.getMedals()
         .then(res => {
           this.medals = res
-          console.log(this.medals)
         })
     },
     changePhoto (file) {
@@ -184,13 +239,21 @@ export default {
         reader.readAsDataURL(file.raw)
       }
       return isJPG && isLt2M
+    },
+    getTeams () {
+      TeamService
+        .getTeam(this.project.id)
+        .then(teams => {
+          this.teams = teams
+          console.log(this.teams)
+        })
     }
   }
 }
 </script>
 
 <style lang="scss">
-@import '@/plugins/element/_colors.scss';
+@import '@/styles/_colors.scss';
 
 .project-step-8 {
   .el-alert__title {

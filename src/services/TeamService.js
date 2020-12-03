@@ -7,6 +7,11 @@ export default {
       .then(res => res.data)
   },
 
+  evaluate (teams) {
+    return http.put('/team/evaluate', teams)
+      .then(res => res.data)
+  },
+
   addTeam (team) {
     return http.post('/team', team)
       .then(res => res.data)

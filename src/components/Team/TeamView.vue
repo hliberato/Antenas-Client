@@ -446,7 +446,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '@/plugins/element/_colors.scss';
+@import '@/styles/_colors.scss';
 
 .el-alert .el-alert__description {
   font-size: 14px;

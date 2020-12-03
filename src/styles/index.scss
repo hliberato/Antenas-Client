@@ -1,0 +1,73 @@
+@import '@/styles/_colors.scss';
+
+html {
+  font-family: 'Roboto', sans-serif;
+  background: $--background-color-base;
+  overflow: hidden;
+}
+html, body, body > [class*=-view], .el-container, .el-main {
+  height: 100%;
+}
+.w100 {
+  width: 100%;
+}
+.h100 {
+  height: 100%;
+}
+.d-flex {
+  display: flex !important;
+}
+.justify-end {
+  justify-content: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.align-center {
+  align-items: center;
+}
+.align-end {
+  align-items: flex-end;
+}
+.flex-column {
+  flex-direction: column;
+}
+.text-center {
+  text-align: center;
+}
+.el-header {
+  margin: 20px 0;
+}
+.el-input-number {
+  width: 100% !important;
+}
+.el-aside {
+  width: 400px !important;
+  padding: 20px !important;
+  padding-right: 0 !important;
+}
+.el-form-item {
+  margin-bottom: .75rem !important;
+  &__error {
+    right: 4px;
+    left: initial !important;
+  }
+  &__label {
+    padding: 0 !important;
+  }
+}
+.fade-enter-active, .fade-leave-active{
+  transition:opacity .3s
+}
+.fade-enter-active{
+  display:none
+}
+.fade-enter, .fade-leave-to{
+  opacity:0
+}
+.el-dialog__title {
+  font-weight: 600;
+}

@@ -30,7 +30,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/plugins/element/_colors.scss';
+@import '@/styles/_colors.scss';
 
 .logo {
   display: inline-flex;

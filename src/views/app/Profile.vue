@@ -234,7 +234,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '@/plugins/element/_colors.scss';
+@import '@/styles/_colors.scss';
 
 .profile-view {
   max-height: calc(100vh - 100px);
