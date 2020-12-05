@@ -13,9 +13,9 @@ export default {
       .then(res => res.data)
   },
 
-  saveMedal () {
+  saveMedal (medal) {
     return http
-      .set('/medal')
+      .post('/medal', medal)
       .then(res => res.data)
   }
 }

@@ -114,6 +114,7 @@
               <div v-if="currentMedal.creationDate"> Criada dia </div>  {{ currentMedal.creationDate | moment("DD/MM/YYYY") }}
             </el-col>
           </el-row>
+          <el-button @click="saveMedal()"> Salvar medalha </el-button>
         </el-col>
         <el-col v-if="step === 1" :span="10">
           <h3>Atribuiçao de medalhas</h3>
@@ -182,7 +183,7 @@ export default {
       dialogVisible: false,
       medals: [],
       teams: [],
-      step: 2,
+      step: 0,
       currentMedal: {
         name: '',
         id: '',
@@ -212,7 +213,6 @@ export default {
   },
   methods: {
     evaluate () {
-      console.log(this.teams)
       this.$store.commit('SHOW_LOADING')
       TeamService.evaluate(this.teams)
         .catch(err => this.$throwError(err))
@@ -247,6 +247,13 @@ export default {
           this.teams = teams
           console.log(this.teams)
         })
+    },
+    saveMedal () {
+      console.log('?')
+      // this.$store.commit('SHOW_LOADING')
+      MedalService
+        .saveMedal(this.currentMedal)
+        // .finally(() => this.$store.commit('HIDE_LOADING'))
     }
   }
 }
