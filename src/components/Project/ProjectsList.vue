@@ -108,7 +108,11 @@ export default {
     }
   },
   mounted () {
-    this.filteredProjects = this.projects
+    this.filterStatus = this.availableFilters.filter(status => {
+      return status !== 'Concluído' && status !== 'Recusado'
+    })
+
+    this.searchProjects()
   },
   methods: {
     selectProject (id) {
@@ -122,6 +126,7 @@ export default {
         keys: ['title', 'shortDescription'],
         threshold: 0.2
       }).then(results => {
+        console.log(this.filterStatus)
         let filtered
         if (this.searchTerm) filtered = results
         else filtered = this.projects

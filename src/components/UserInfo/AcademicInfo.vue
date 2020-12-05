@@ -16,7 +16,11 @@
         </div>
       </el-col>
     </el-row>
-    <el-dialog title="Cadastrar empresa" :visible.sync="showDialog">
+    <el-dialog
+      title="Cadastrar empresa"
+      :visible.sync="showDialog"
+      :close-on-click-modal="false"
+    >
       <el-form
         ref="form"
         v-loading="$store.getters.loading"
@@ -138,7 +142,7 @@ export default {
     return {
       showDialog: false,
       form: {
-        id: 0,
+        id: null,
         institution: '',
         course: '',
         start: '',
@@ -170,6 +174,13 @@ export default {
         .finally(() => {
           this.$store.commit('HIDE_LOADING')
           this.showDialog = false
+          this.form = {
+            id: null,
+            institution: '',
+            course: '',
+            start: '',
+            end: ''
+          }
         })
     },
     deleteRow (row) {

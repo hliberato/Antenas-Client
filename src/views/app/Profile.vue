@@ -37,10 +37,10 @@
               <el-col v-for="medal in user.medals" :key="medal.id" :span="5">
                 <el-row :gutter="5">
                   <el-col :span="8">
-                    <v-img
+                    <img
                       :src="medal.picture"
                       class="medal-image"
-                    />
+                    >
                   </el-col>
                   <el-col :span="16">
                     <div>
@@ -214,19 +214,18 @@ export default {
     },
     getSeries (project) {
       const series = []
-
-      project.evaluations.forEach(evaluation => {
+      if (project.evaluation) {
         series.push({
-          name: evaluation.evaluatedBy.authorizations[0].name === 'ROLE_TEACHER' ? 'Avaliação do professor' : 'Avaliação do Scrum Master',
+          name: 'Avaliação do professor',
           data: [
-            evaluation.proactivity,
-            evaluation.autonomy,
-            evaluation.collaboration,
-            evaluation.resultsDeliver
+            project.evaluation.proactivity,
+            project.evaluation.autonomy,
+            project.evaluation.collaboration,
+            project.evaluation.resultsDeliver
           ],
           pointPlacement: 'on'
         })
-      })
+      }
       return series
     }
   }

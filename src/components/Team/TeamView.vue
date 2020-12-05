@@ -28,7 +28,7 @@
               :type="member.type"
               class="team-member member-view"
             >
-              <div class="student-flex-box">
+              <div class="student-flex-box" @click="openStudentProfile(member.student)">
                 <div>
                   <div class="member-name">{{ member.student.name }}</div>
                   <div class="role-view">{{ formatStudentRoles(member) }}</div>
@@ -440,6 +440,9 @@ export default {
     openUrl (url) {
       const win = window.open(url, '_blank')
       win.focus()
+    },
+    openStudentProfile (student) {
+      this.$router.push(`/${student.name.replace(' ', '.').replace(' ', '')}-${student.id}`)
     }
   }
 }
