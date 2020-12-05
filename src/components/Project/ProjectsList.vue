@@ -150,6 +150,7 @@ export default {
     padding: 12px 20px;
   }
   > .el-card__body {
+    max-height: calc(100vh - 130px);
     height: 100%;
   }
   .list {
@@ -157,6 +158,8 @@ export default {
     overflow-y: auto;
     overflow-x: hidden;
     margin-top: 12px;
+    margin-right: -20px;
+    padding-right: 8px;
   }
   .new {
     font-size: .9rem;

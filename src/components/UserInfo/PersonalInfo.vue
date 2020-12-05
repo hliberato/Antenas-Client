@@ -3,7 +3,6 @@
     <h2>Informações pessoais</h2>
     <el-form
       ref="form"
-      v-loading="$store.getters.loading"
       :model="form"
       :rules="rules"
       class="login-form"
@@ -67,7 +66,7 @@
         </el-upload>
         <div class="info">Formato JPG e PNG, tamanho máximo de 2 MB.</div>
       </el-form-item>
-      <el-button type="primary" :disabled="buttonDisabled()" @click="update">
+      <el-button type="primary" @click="update">
         Salvar
       </el-button>
     </el-form>
@@ -80,8 +79,6 @@ import { mask } from 'vue-the-mask'
 
 export default {
   directives: { mask },
-  components: {
-  },
   props: {
     user: {
       type: Object,
@@ -139,17 +136,12 @@ export default {
       if (!isLt2M) this.$message.error('Foto de perfil não pode exceder 2 MB.')
       if (isJPG && isLt2M) {
         const reader = new FileReader()
-        reader.onload = e => { this.form.photo = e.target.result }
+        reader.onload = e => {
+          this.form.photo = e.target.result
+        }
         reader.readAsDataURL(file.raw)
       }
       return isJPG && isLt2M
-    },
-    buttonDisabled () {
-      let returnValue = this.form.name && this.form.email
-      if (this.$store.getters.isRepresentative) {
-        returnValue = returnValue && this.form.company && this.form.telephone
-      }
-      return !returnValue
     }
   }
 }
@@ -192,5 +184,6 @@ export default {
   width: 178px;
   height: 178px;
   display: block;
+  object-fit: cover;
 }
 </style>
