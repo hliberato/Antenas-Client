@@ -133,17 +133,5 @@ export default {
 @import '@/styles/_colors.scss';
 
 .project-step-7 {
-  .el-alert__title {
-    font-size: 1.17rem;
-    color: $--color-text-regular;
-  }
-  .el-alert__description {
-    margin-top: 24px;
-    text-align: center;
-  }
-  .el-alert__content {
-    padding: 20px;
-    margin: auto;
-  }
 }
 </style>

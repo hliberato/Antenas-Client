@@ -227,6 +227,9 @@ export default {
 
 <style lang="scss">
 .project-step-5 {
+  padding: 28px;
+  border-radius: 4px;
+  background-color: #f4f4f5;
   .el-tag {
     margin: 0 12px 12px 0;
   }
