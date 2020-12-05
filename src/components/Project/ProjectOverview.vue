@@ -229,7 +229,7 @@ export default {
   // Card
   .el-card__body {
     padding: 38px;
-    height: 100%;
+    height: 92%;
     overflow-y: auto;
     > div {
       height: 100%;

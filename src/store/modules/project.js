@@ -63,6 +63,19 @@ export default {
           })
       })
     },
+    closeProject ({ commit }, project) {
+      return new Promise((resolve, reject) => {
+        ProjectService
+          .closeProject(project)
+          .then(res => {
+            commit('UPDATE_PROJECT', res)
+            resolve()
+          })
+          .catch(err => {
+            reject(err)
+          })
+      })
+    },
     saveProject ({ commit }, project) {
       return new Promise((resolve, reject) => {
         ProjectService

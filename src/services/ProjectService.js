@@ -13,7 +13,14 @@ export default {
   },
 
   updateProject (project) {
-    return http.post('/project/update', project)
+    console.log('update')
+    return http.put('/project', project)
+      .then(res => res.data)
+  },
+
+  closeProject (project) {
+    console.log('close')
+    return http.put('/project/close', project)
       .then(res => res.data)
   },
 

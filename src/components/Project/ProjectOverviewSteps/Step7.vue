@@ -10,7 +10,7 @@
         :type="project.open ? 'danger' : 'primary'"
         class="ml-16"
         :icon="project.open ? 'el-icon-document-checked' : 'el-icon-check'"
-        @click="update(true)"
+        @click="confirmDialog()"
       >
         {{ project.open ? 'Encerrar' : 'Iniciar' }}
       </el-button>
@@ -101,29 +101,29 @@ export default {
     })
   },
   methods: {
-    update (action) {
+    update () {
       this.$store.commit('SHOW_LOADING')
       const project = JSON.parse(JSON.stringify(this.project))
-      if (action) {
-        project.open = !project.open
-      }
       this.$store.dispatch('updateProject', project)
         .catch(err => this.$throwError(err))
         .finally(() => this.$store.commit('HIDE_LOADING'))
     },
-    confirmDialog (openProject) {
-      if (openProject !== undefined) {
-        const confirmMessage = this.project.open ? 'Tem certeza de que deseja encerrar o projeto? Ele ficará invisível para os alunos.' : 'Deseja iniciar o projeto?'
-        this.$confirm(confirmMessage, 'Entrega', {
-          confirmButtonText: this.project.open ? 'Sim, encerrar' : 'Sim, iniciar',
-          cancelButtonText: 'Cancelar',
-          confirmButtonClass: this.project.open ? 'el-button--danger' : 'el-button--success'
-        }).then(() => {
-          this.update(openProject)
-        })
-      } else {
-        this.update(openProject)
-      }
+    confirmDialog () {
+      const confirmMessage = this.project.open ? 'Tem certeza de que deseja encerrar o projeto? Ele ficará invisível para os alunos.' : 'Deseja iniciar o projeto?'
+      this.$confirm(confirmMessage, 'Entrega', {
+        confirmButtonText: this.project.open ? 'Sim, encerrar' : 'Sim, iniciar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonClass: this.project.open ? 'el-button--danger' : 'el-button--success'
+      }).then(() => {
+        if (this.project.open) {
+          const project = JSON.parse(JSON.stringify(this.project))
+          this.$store.dispatch('closeProject', project)
+            .catch(err => this.$throwError(err))
+            .finally(() => this.$store.commit('HIDE_LOADING'))
+        } else {
+          this.update()
+        }
+      })
     }
   }
 }
