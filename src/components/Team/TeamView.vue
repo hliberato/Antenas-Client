@@ -130,14 +130,12 @@
           </el-row>
           <div class="justify-end d-flex">
             <el-button
-              plain
               @click="clear()"
             >
               Cancelar
             </el-button>
             <el-button
               :disabled="!roles.length > 0 || !newTeamMember"
-              plain
               type="success"
               @click="editingMember ? updateRole() : update()"
             >
@@ -186,13 +184,11 @@
         </el-row>
         <div class="justify-end d-flex">
           <el-button
-            plain
             @click="createTeam = !createTeam"
           >
             Cancelar
           </el-button>
           <el-button
-            plain
             type="primary"
             @click="save()"
           >

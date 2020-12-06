@@ -11,7 +11,7 @@
           <!-- <el-badge :value="1" class="notification">
             <i class="el-icon-bell" />
           </el-badge> -->
-          <el-avatar size="medium" class="avatar">
+          <el-avatar size="medium" class="avatar" fit="scale-down">
             <img v-if="userPhoto" :src="userPhoto">
             <span v-else>
               {{ userInitials }}

@@ -37,10 +37,10 @@
               <el-col v-for="medal in user.medals" :key="medal.id" :span="5">
                 <el-row :gutter="5">
                   <el-col :span="8">
-                    <img
+                    <el-avatar
                       :src="medal.picture"
                       class="medal-image"
-                    >
+                    />
                   </el-col>
                   <el-col :span="16">
                     <div>
@@ -108,7 +108,6 @@
           <el-col :span="10">
             <div v-if="currentProject">
               <h3> {{ currentProject.team.project.title }} </h3>
-
               <div>
                 <strong> Resumo: </strong> {{ currentProject.team.project.shortDescription }}
                 <br>
@@ -134,6 +133,9 @@
 <script>
 import { Chart } from 'highcharts-vue'
 import UserService from '@/services/UserService.js'
+import Highcharts from 'highcharts'
+import highchartsMore from 'highcharts/highcharts-more'
+highchartsMore(Highcharts)
 
 export default {
   components: {

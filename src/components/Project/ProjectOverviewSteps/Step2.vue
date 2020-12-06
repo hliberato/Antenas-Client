@@ -6,7 +6,6 @@
       type="info"
     >
       <el-button
-        plain
         type="danger"
         icon="el-icon-close"
         @click="update(true)"
@@ -14,7 +13,6 @@
         Rejeitar
       </el-button>
       <el-button
-        plain
         type="success"
         class="ml-16"
         icon="el-icon-check"
@@ -75,17 +73,5 @@ export default {
 @import '@/styles/_colors.scss';
 
 .project-step-2 {
-  .el-alert__title {
-    font-size: 1.17rem;
-    color: $--color-text-regular;
-  }
-  .el-alert__description {
-    margin-top: 24px;
-    text-align: center;
-  }
-  .el-alert__content {
-    padding: 20px;
-    margin: auto;
-  }
 }
 </style>

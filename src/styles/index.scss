@@ -71,3 +71,18 @@ html, body, body > [class*=-view], .el-container, .el-main {
 .el-dialog__title {
   font-weight: 600;
 }
+
+.el-alert--info {
+  .el-alert__content {
+    padding: 20px;
+    margin: auto;
+  }
+  .el-alert__title{
+    font-size: 1.17rem;
+    color: #606266;
+  }
+  .el-alert__description {
+    margin-top: 24px;
+    text-align: center;
+  }
+}
