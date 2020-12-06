@@ -18,7 +18,7 @@
 
     <el-dialog
       title="Avaliação"
-      width="65%"
+      width="85%"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -34,18 +34,20 @@
       </el-steps>
       <div v-if="!step">
         <el-row :gutter="32" class="ml-12 mr-12">
-          <el-col :span="10" class="medals">
-            <el-button type="primary" class="w100">
-              Criar nova medalha
-            </el-button>
-            <el-input
-              v-model="searchTerm"
-              placeholder="Buscar medalhas"
-              suffix-icon="el-icon-search"
-              class="w100 mt-12"
-              clearable
-              @input="searchMedals"
-            />
+          <el-col :span="12" class="medals">
+            <div class="d-flex">
+              <el-input
+                v-model="searchTerm"
+                placeholder="Buscar medalhas"
+                suffix-icon="el-icon-search"
+                class="w100 mr-12"
+                clearable
+                @input="searchMedals"
+              />
+              <el-button type="primary">
+                Criar nova medalha
+              </el-button>
+            </div>
             <div class="medals-list">
               <div
                 v-for="medal in [{name: 'Teste', color: '28a745'}, {name: 'Medalha foda'}, {name: 'Acertô miseravi', color: 'E6A23C' }]"
@@ -58,7 +60,7 @@
               </div>
             </div>
           </el-col>
-          <el-col :span="14" class="teams">
+          <el-col :span="12" class="teams">
             <div
               v-for="team in ['Time Alfa', 'Time Beta', 'Time Celta']"
               :key="team"
@@ -193,7 +195,7 @@ export default {
     }
   }
   .medals-list {
-    padding: 16px 8px;
+    padding: 40px 8px;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
