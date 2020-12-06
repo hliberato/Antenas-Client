@@ -204,7 +204,7 @@ export default {
     },
     getSeriesAverage () {
       return [{
-        name: 'Média geral',
+        name: 'Avaliação do professor',
         data: [
           this.user.average.proactivity,
           this.user.average.autonomy,
