@@ -6,7 +6,6 @@
       type="info"
     >
       <el-button
-        plain
         type="danger"
         icon="el-icon-close"
         @click="update(true)"
@@ -14,7 +13,6 @@
         Rejeitar
       </el-button>
       <el-button
-        plain
         type="success"
         class="ml-16"
         icon="el-icon-check"

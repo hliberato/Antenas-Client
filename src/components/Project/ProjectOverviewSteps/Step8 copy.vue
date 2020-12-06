@@ -6,7 +6,6 @@
       type="info"
     >
       <el-button
-        plain
         type="primary"
         class="ml-16"
         icon="el-icon-notebook-2"

@@ -10,6 +10,7 @@
                 :active="project.progress - 1"
                 finish-status="success"
                 :process-status="project.progress == 9 ? 'success' : project.refused ? 'error' : 'finish'"
+                class="step"
                 align-center
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
@@ -205,12 +206,12 @@ export default {
     }
   }
   // Step
-  .el-steps {
+  .step {
     margin-top: 1.4rem;
-  }
-  .el-step__title {
-    line-height: 1.2rem;
-    margin-top: 12px;
+    .el-step__title {
+      line-height: 1.2rem;
+      margin-top: 12px;
+    }
   }
   // Tab
   .el-tabs {
