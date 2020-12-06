@@ -23,7 +23,6 @@
     >
       <el-form
         ref="form"
-        v-loading="$store.getters.loading"
         :model="form"
         class="login-form"
         label-position="top"

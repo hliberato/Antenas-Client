@@ -43,6 +43,7 @@ export default {
 
 .project-card {
   position: relative;
+  border: 1px solid $--background-color-base;
   .el-card {
     border: 0;
     border-left-width: 6px;

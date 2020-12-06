@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.getters.isCadi">
+  <div v-if="$store.getters.isCadi" class="project-step-6">
     <div>
       <h3>
         Escolha o professor responsável pelo projeto
@@ -114,4 +114,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.project-step-6 {
+  padding: 28px;
+  border-radius: 4px;
+  background-color: #f4f4f5;
+}
 </style>

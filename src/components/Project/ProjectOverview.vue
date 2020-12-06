@@ -10,6 +10,7 @@
                 :active="project.progress - 1"
                 finish-status="success"
                 :process-status="project.progress == 9 ? 'success' : project.refused ? 'error' : 'finish'"
+                class="step"
                 align-center
               >
                 <el-step v-for="(step, index) in steps" :key="index" :title="step" />
@@ -194,23 +195,23 @@ export default {
 @import '@/styles/_colors.scss';
 
 .project-overview {
-  max-height: calc(100vh - 96px);
+  height: calc(100vh - 96px);
   .title {
     font-size: 1.8rem;
   }
   .empty {
-    padding: 12vw;
+    padding: 0 15vw;
     * {
       font-size: 2rem;
     }
   }
   // Step
-  .el-steps {
+  .step {
     margin-top: 1.4rem;
-  }
-  .el-step__title {
-    line-height: 1.2rem;
-    margin-top: 12px;
+    .el-step__title {
+      line-height: 1.2rem;
+      margin-top: 12px;
+    }
   }
   // Tab
   .el-tabs {
@@ -229,7 +230,7 @@ export default {
   // Card
   .el-card__body {
     padding: 38px;
-    height: 92%;
+    height: calc(100vh - 172px);
     overflow-y: auto;
     > div {
       height: 100%;

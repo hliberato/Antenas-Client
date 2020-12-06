@@ -1,12 +1,12 @@
 <template>
-  <div v-if="$store.getters.isTeacher" class="project-step-8">
+  <div v-if="isTeacher" class="project-step-8">
     <el-alert
       :closable="false"
       title="Avalie e atribua medalhas aos alunos"
       type="info"
     >
       <el-button
-        plain
+        :loading="loading"
         type="primary"
         class="ml-16"
         icon="el-icon-notebook-2"
@@ -18,242 +18,160 @@
 
     <el-dialog
       title="Avaliação"
+      width="85%"
       :visible.sync="dialogVisible"
-      finish-status="success"
-      process-status="finish"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-steps :active="step" finish-status="success" simple>
-        <el-step title="Criar medalha" icon="el-icon-medal" />
+      <el-steps
+        :active="step"
+        finish-status="success"
+        process-status="finish"
+        simple
+      >
         <el-step title="Atribuir medalhas" icon="el-icon-medal-1" />
         <el-step title="Atribuir notas" icon="el-icon-notebook-2" />
       </el-steps>
-      <el-row>
-        <el-col v-if="step === 0 || step === 1" :span="10">
-          <h3>Medalhas cadastradas</h3>
-
-          <el-row>
-            <div v-for="medal in medals" :key="medal.id" @click="currentMedal = medal">
-              <el-row>
-                <el-col :span="5">
-                  <el-image
-                    :src="medal.picture"
-                    class="medal-image"
-                  />
-                </el-col>
-                <el-col :span="19">
-                  <div> {{ medal.name }} </div>
-                  <div class="medal-description"> {{ medal.description }} </div>
-                  <div> Criada dia </div> {{ medal.creationDate | moment("DD/MM/YYYY") }}
-                </el-col>
-              </el-row>
+      <div v-if="!step">
+        <el-row :gutter="32" class="ml-12 mr-12">
+          <el-col :span="12" class="medals">
+            <div class="d-flex">
+              <el-input
+                v-model="searchTerm"
+                placeholder="Buscar medalhas"
+                suffix-icon="el-icon-search"
+                class="w100 mr-12"
+                clearable
+                @input="searchMedals"
+              />
+              <el-button type="primary">
+                Criar nova medalha
+              </el-button>
             </div>
-          </el-row>
-        </el-col>
-        <el-col v-if="step === 0" :span="10">
-          <h3>Criar / Editar</h3>
-
-          <el-form
-            ref="form"
-            v-loading="$store.getters.loading"
-            class="edit-project-setp-7"
-            label-position="top"
-            label-width="130px"
-          >
-            <el-form-item label="Nome" prop="name">
-              <el-input
-                v-model="currentMedal.name"
-                maxlength="15"
-                show-word-limit
-              />
-            </el-form-item>
-            <el-form-item label="Descrição" prop="description">
-              <el-input
-                v-model="currentMedal.description"
-                maxlength="30"
-                show-word-limit
-              />
-            </el-form-item>
-            <el-form-item label="Categoria" prop="category">
-              <el-select v-model="currentMedal.category" class="w100">
-                <el-option
-                  v-for="category in categoryList"
-                  :key="category"
-                  :label="category"
-                  :value="category"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Imagem">
-              <el-upload
-                class="avatar-uploader"
-                action=""
-                :show-file-list="false"
-                :on-change="changePhoto"
-                :auto-upload="false"
+            <div class="medals-list">
+              <div
+                v-for="medal in [{name: 'Teste', color: '28a745'}, {name: 'Medalha foda'}, {name: 'Acertô miseravi', color: 'E6A23C' }]"
+                :key="medal.name"
+                draggable="true"
+                class="drag"
+                @dragstart="dragStart($event, medal)"
               >
-                <img v-if="currentMedal.picture" :src="currentMedal.picture" class="avatar">
-                <i v-else class="el-icon-plus avatar-uploader-icon" />
-              </el-upload>
-              <div class="info">Formato JPG e PNG, tamanho máximo de 2 MB.</div>
-            </el-form-item>
-          </el-form>
-
-          <h3> Visualização prévia: </h3>
-          <el-row>
-            <el-col :span="5">
-              <el-image
-                :src="currentMedal.picture"
-                class="medal-image"
-              />
-            </el-col>
-            <el-col :span="19">
-              <div> {{ currentMedal.name }} </div>
-              <div class="medal-description"> {{ currentMedal.description }} </div>
-              <div v-if="currentMedal.creationDate"> Criada dia </div>  {{ currentMedal.creationDate | moment("DD/MM/YYYY") }}
-            </el-col>
-          </el-row>
-          <el-button @click="saveMedal()"> Salvar medalha </el-button>
-        </el-col>
-        <el-col v-if="step === 1" :span="10">
-          <h3>Atribuiçao de medalhas</h3>
-        </el-col>
-      </el-row>
-      <div v-if="step === 2" :span="10">
-        <h3>avaliação</h3>
-        <br>
-        <div v-for="team in teams" :key="team.id">
-          <h3> {{ team.name }} </h3>
-          <el-row v-for="studentTeam in team.studentTeamList" :key="studentTeam.id">
-            <el-col :span="24">
-              {{ studentTeam.student.name }}
-              <el-form
-                ref="form"
-                class="edit-project-setp-7"
-                label-position="top"
-                label-width="130px"
+                <medal-template :medal="medal" />
+              </div>
+            </div>
+          </el-col>
+          <el-col :span="12" class="teams">
+            <div
+              v-for="team in ['Time Alfa', 'Time Beta', 'Time Celta']"
+              :key="team"
+              class="team"
+              @dragover.prevent
+              @drop="onDropTeam($event, team)"
+            >
+              <h1>{{ team }}</h1>
+              <div
+                v-for="student in ['Aluno Lerdo', 'Aluno Burro', 'Aluno Anta']"
+                :key="student"
+                class="student"
+                @dragover.prevent
+                @drop="onDropStudent($event, student)"
               >
-                <el-row :gutter="10">
-                  <el-col :span="5">
-                    <el-form-item label="Proatividade" prop="proactivity">
-                      <el-input v-model="studentTeam.evaluation.proactivity" type="number" min="0" max="5" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="5">
-                    <el-form-item label="Autonomia" prop="autonomy">
-                      <el-input v-model="studentTeam.evaluation.autonomy" type="number" min="0" max="5" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="5">
-                    <el-form-item label="Colaboração" prop="collaboration">
-                      <el-input v-model="studentTeam.evaluation.collaboration" type="number" min="0" max="5" />
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="5">
-                    <el-form-item label="Entrega de resultados" prop="resultsDeliver">
-                      <el-input v-model="studentTeam.evaluation.resultsDeliver" type="number" min="0" max="5" />
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </el-form>
-            </el-col>
-          </el-row>
-          <hr>
-        </div>
-        <el-button @click="evaluate()"> Salvar </el-button>
+                <div class="d-flex align-center">
+                  <span class="student-name">
+                    {{ student }}
+                  </span>
+                  <div
+                    v-for="medal in [{name: 'Teste', color: '28a745'}, {name: 'Medalha foda'}, {name: 'Acertô miseravi', color: 'E6A23C' }]"
+                    :key="medal.name"
+                    class="medal-student"
+                    @click="removeMedal()"
+                  >
+                    <medal-template :medal="medal" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false"> Cancelar </el-button>
-        <el-button icon="el-icon-back" circle @click="step = step > 0 ? step -= 1 : step" />
-        <el-button icon="el-icon-right" circle @click="step = step < 2 ? step += 1 : step" />
-      </span>
+      <div v-else>
+        a
+      </div>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import MedalTemplate from '@/components/Medal/MedalTemplate'
+
 import MedalService from '@/services/MedalService.js'
 import TeamService from '@/services/TeamService'
 import { mapGetters } from 'vuex'
 
 export default {
+  components: {
+    MedalTemplate
+  },
   data () {
     return {
-      dialogVisible: false,
+      dialogVisible: true,
+      step: 0,
       medals: [],
       teams: [],
-      step: 0,
-      currentMedal: {
-        name: '',
-        id: '',
-        description: '',
-        picture: '',
-        category: ''
-      },
-      categoryList: [
-        'Análise e Desenvolvimento de Sistemas',
-        'Banco de Dados',
-        'Gestão da Produção Industrial',
-        'Logística',
-        'Manufatura Avançada',
-        'Manutenção de Aeronaves',
-        'Projetos de Estruturas Aeronáuticas',
-        'Outro'
-      ]
+      loading: false,
+      searchTerm: ''
     }
   },
   computed: {
     ...mapGetters({
-      project: 'selectedProject'
+      project: 'selectedProject',
+      isTeacher: 'isTeacher'
     })
   },
   mounted () {
     this.getTeams()
   },
   methods: {
-    evaluate () {
-      this.$store.commit('SHOW_LOADING')
-      TeamService.evaluate(this.teams)
-        .catch(err => this.$throwError(err))
-        .finally(() => this.$store.commit('HIDE_LOADING'))
-    },
     openDialog () {
-      this.dialogVisible = true
-
-      this.getTeams()
-
-      MedalService.getMedals()
-        .then(res => {
-          this.medals = res
+      this.loading = true
+      Promise
+        .all([
+          this.getMedals(),
+          this.getTeams()
+        ])
+        .then(response => {
+          this.medals = response[0]
+          this.teams = response[1]
+          this.dialogVisible = true
         })
+        .catch(err => this.$throwError(err))
+        .finally(() => { this.loading = false })
     },
-    changePhoto (file) {
-      const isJPG = ['image/jpeg', 'image/png'].includes(file.raw.type)
-      const isLt2M = file.raw.size / 1024 / 1024 < 2
-      if (!isJPG) this.$message.error('Foto de perfil deve estar no formato JPG ou PNG.')
-      if (!isLt2M) this.$message.error('Foto de perfil não pode exceder 2 MB.')
-      if (isJPG && isLt2M) {
-        const reader = new FileReader()
-        reader.onload = e => { this.currentMedal.picture = e.target.result }
-        reader.readAsDataURL(file.raw)
-      }
-      return isJPG && isLt2M
+    getMedals () {
+      return MedalService.getMedals().then(res => res)
     },
     getTeams () {
-      TeamService
-        .getTeam(this.project.id)
-        .then(teams => {
-          this.teams = teams
-          console.log(this.teams)
-        })
+      return TeamService.getTeam(this.project.id).then(res => res)
     },
-    saveMedal () {
-      console.log('?')
-      // this.$store.commit('SHOW_LOADING')
-      MedalService
-        .saveMedal(this.currentMedal)
-        // .finally(() => this.$store.commit('HIDE_LOADING'))
+    searchMedals () {
+    },
+    dragStart (ev, medal) {
+      ev.dataTransfer.setData('medal', medal)
+      ev.dataTransfer.dropEffect = 'move'
+      ev.dataTransfer.effectAllowed = 'move'
+    },
+    onDropTeam (ev, team) {
+      const medal = ev.dataTransfer.getData('medal')
+      console.log(medal)
+      console.log(team)
+    },
+    onDropStudent (ev, student) {
+      ev.stopPropagation()
+      const medal = ev.dataTransfer.getData('medal')
+      console.log(medal)
+      console.log(student)
+    },
+    removeMedal () {
     }
   }
 }
@@ -263,58 +181,69 @@ export default {
 @import '@/styles/_colors.scss';
 
 .project-step-8 {
-  .el-alert__title {
-    font-size: 1.17rem;
-    color: $--color-text-regular;
+  .el-dialog {
+    min-height: 50vh;
   }
-  .el-alert__description {
-    margin-top: 24px;
-    text-align: center;
+  .medals, .teams {
+    padding: 32px 0;
+    h1 {
+      font-size: 1.17rem;
+    }
+    .student-name {
+      font-size: 1rem;
+      padding: 9px 0;
+    }
   }
-  .el-alert__content {
-    padding: 20px;
-    margin: auto;
+  .medals-list {
+    padding: 40px 8px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
   }
-  .medal-image {
-    width: 38px;
-    border-radius: 20px;
+  .medal-template {
+    flex-basis: 100%;
+    flex: 1;
   }
-  .el-steps--simple {
-    background-color: transparent ;
+  .medal-template + .medal-template {
+    margin-top: 12px;
   }
-  .el-dialog__body {
-    padding: 0px 20px;
+  .team {
+    padding: 12px;
+    border: 1px dashed;
+    border-left: 5px solid;
+    border-radius: 4px;
   }
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
+  .team + .team {
+    margin-top: 20px;
+  }
+  .student {
+    border: 1px dashed;
+    padding: 8px 12px;
+    margin-top: 8px;
+  }
+  .drag {
+    opacity: 0.999;
+  }
+  .medal-student {
+    transform: scale(0.2);
+    width: 40px;
+    height: 34px;
+    display:inline-block;
+    transform-origin: top center;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 100px;
-    height: 100px;
-    line-height: 100px;
-    text-align: center;
-  }
-  .avatar-uploader .avatar {
-    width: 100px;
-    height: 100px;
-    display: block;
-  }
-  .el-form-item__content {
-    font-size: 10px;
-    line-height: 20px;
-  }
-  .medal-description {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    &:hover {
+      &::before {
+        content: "\e7c9";
+        font-family: element-icons !important;
+        font-size: 90px;
+        position: absolute;
+        z-index: 9999;
+        color: #DD2C2C;
+        background-color: #ffffff;
+        padding: 40px 24px;
+      }
+    }
   }
 }
 </style>

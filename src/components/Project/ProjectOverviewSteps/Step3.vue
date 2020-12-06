@@ -1,5 +1,5 @@
 <template>
-  <div v-if="$store.getters.isRepresentative">
+  <div v-if="$store.getters.isRepresentative" class="project-step-3">
     <div>
       <h3>
         Adicione mais informações ao projeto
@@ -72,4 +72,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.project-step-3 {
+  padding: 28px;
+  border-radius: 4px;
+  background-color: #f4f4f5;
+}
 </style>
