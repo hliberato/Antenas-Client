@@ -1,8 +1,8 @@
 <template>
-  <div class="profile">
+  <div class="profile-view">
     <el-row :gutter="30">
       <el-col :span="12">
-        <el-card class="profile-view h100" :shadow="'always'">
+        <el-card class="profile-view__card h100" :shadow="'always'">
           <el-row>
             <el-col :span="6">
               <img class="image" :src="user.photo" alt="Flowers in Chania">
@@ -29,7 +29,7 @@
           <br>
         </el-card>
         <br>
-        <el-card class="profile-view h100 medal" shadow="always">
+        <el-card class="profile-view__card h100 medal" shadow="always">
           <h3> Medalhas </h3>
           <br>
           <div class="medal-list">
@@ -65,7 +65,7 @@
         </el-card>
       </el-col>
       <el-col :span="12">
-        <el-card class="profile-view h100 info" :shadow="'always'">
+        <el-card class="profile-view__card h100 info" :shadow="'always'">
           <el-tabs type="card">
             <el-tab-pane label="Informaçôes Profissionais">
               <div v-for="professionalInfo in user.professionalInfos" :key="professionalInfo.id">
@@ -92,7 +92,7 @@
     </el-row>
     <br>
     <div>
-      <el-card class="profile-view h100" :shadow="'always'">
+      <el-card class="profile-view__card h100" :shadow="'always'">
         <h2>projetos</h2>
         <br>
         <el-row :gutter="40">
@@ -238,6 +238,10 @@ export default {
 @import '@/styles/_colors.scss';
 
 .profile-view {
+  margin: 20px;
+}
+
+.profile-view__card {
   max-height: calc(100vh - 100px);
   .title {
     font-size: 1.8rem;
@@ -247,9 +251,7 @@ export default {
   width: 120px;
   border-radius: 20px;
 }
-.profile {
-  margin: 20px;
-}
+
 .description {
   overflow: hidden;
   white-space: nowrap;

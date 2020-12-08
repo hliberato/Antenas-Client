@@ -78,6 +78,7 @@ export default {
   mounted () {
     this.$store.commit('LOGOUT_CURRENT_USER')
     this.$store.commit('CLEAR_PROJECTS')
+    this.$store.commit('HIDE_LOADING')
   }
 }
 </script>

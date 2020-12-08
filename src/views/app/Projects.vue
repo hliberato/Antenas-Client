@@ -23,8 +23,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.projects-view {
-}
-</style>

@@ -50,8 +50,8 @@
             </div>
             <div class="medals-list">
               <div
-                v-for="medal in [{name: 'Teste', color: '28a745'}, {name: 'Medalha foda'}, {name: 'Acertô miseravi', color: 'E6A23C' }]"
-                :key="medal.name"
+                v-for="medal in medals"
+                :key="medal.id"
                 draggable="true"
                 class="drag"
                 @dragstart="dragStart($event, medal)"
@@ -62,16 +62,16 @@
           </el-col>
           <el-col :span="12" class="teams">
             <div
-              v-for="team in ['Time Alfa', 'Time Beta', 'Time Celta']"
-              :key="team"
+              v-for="team in teams"
+              :key="team.id"
               class="team"
               @dragover.prevent
               @drop="onDropTeam($event, team)"
             >
               <h1>{{ team }}</h1>
               <div
-                v-for="student in ['Aluno Lerdo', 'Aluno Burro', 'Aluno Anta']"
-                :key="student"
+                v-for="student in []"
+                :key="student.id"
                 class="student"
                 @dragover.prevent
                 @drop="onDropStudent($event, student)"
