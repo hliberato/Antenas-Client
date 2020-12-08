@@ -7,25 +7,36 @@
       </el-button>
     </div>
     <el-card class="pl-8 pr-8">
-      <el-row v-if="medals.length" :gutter="28" class="mt-12 mb-12">
-        <el-col v-for="m in medals" :key="m.id" :span="6" class="mb-28">
+      <el-row v-if="medals.length" :gutter="16" class="mt-12 mb-12">
+        <el-col
+          v-for="m in medals"
+          :key="m.id"
+          :md="12"
+          :lg="8"
+          class="mb-28"
+        >
           <div class="d-flex">
             <MedalTemplate :medal="m" />
-            <div class="mt-24 ml-12 mb-24">
+            <div class="mt-12 ml-12 mb-12">
               <div class="d-flex flex-column justify-between h100">
-                <span>
-                  Nome: {{ m.name }} <br>
-                  Descrição: {{ m.description }} <br>
-                  Categoria: {{ m.category }} <br>
-                  Criação: {{ m.name }} <br>
+                <span class="info">
+                  <div>Nome: <strong>{{ m.name }}</strong></div>
+                  <div>Descrição: <strong>{{ m.description }}</strong></div>
+                  <div>Categoria: <strong>{{ m.category }}</strong></div>
+                  <div>Criação: <strong>{{ m.creationDate | moment('DD/MM/YY') }}</strong></div>
                 </span>
                 <span>
-                  <el-button type="primary" size="mini" @click="editMedal(m)">
+                  <el-button
+                    type="primary"
+                    icon="el-icon-edit"
+                    size="mini"
+                    @click="editMedal(m)"
+                  >
                     Editar
                   </el-button>
-                  <el-button type="danger" size="mini" @click="removeMedal(m)">
+                  <!-- <el-button type="danger" size="mini" @click="removeMedal(m)">
                     Excluir
-                  </el-button>
+                  </el-button> -->
                 </span>
               </div>
             </div>
@@ -150,6 +161,12 @@ export default {
   }
   .el-card__body {
     height: calc(100% - 40px);
+  }
+  .info div {
+    margin-bottom: 5px;
+  }
+  strong {
+    font-weight: 500;
   }
 }
 </style>

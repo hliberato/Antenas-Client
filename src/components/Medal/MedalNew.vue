@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     class="medal-new"
-    title="Criar nova medalha"
+    :title="(isNew ? 'Criar nova' : 'Editar') + ' medalha'"
     :visible.sync="dialogVisible"
     :close-on-click-modal="!loading"
     :close-on-press-escape="!loading"
@@ -73,7 +73,9 @@
     </el-form>
     <span slot="footer" class="dialog-footer">
       <el-button :disabled="loading" @click="dialogVisible = false">Cancelar</el-button>
-      <el-button :loading="loading" type="primary" @click="createMedal">Criar medalha</el-button>
+      <el-button :loading="loading" type="primary" @click="createMedal">
+        {{ isNew ? 'Criar' : 'Editar' }} medalha
+      </el-button>
     </span>
   </el-dialog>
 </template>
@@ -116,6 +118,9 @@ export default {
       'medalsCategories',
       'loading'
     ]),
+    isNew () {
+      return !(this.medal && this.medal.id)
+    },
     dialogVisible: {
       get () {
         return this.visible
@@ -158,7 +163,7 @@ export default {
             })
             .catch(err => this.$throwError(err))
             .finally(() => {
-              this.dialogVisible = true
+              this.dialogVisible = false
               this.$store.commit('HIDE_LOADING')
             })
         }
