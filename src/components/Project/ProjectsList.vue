@@ -22,7 +22,7 @@
         @input="searchProjects"
       />
       <el-popover
-        width="220"
+        width="256"
         trigger="click"
       >
         <el-select
@@ -31,6 +31,7 @@
           placeholder="Filtrar por status"
           collapse-tags
           clearable
+          class="w100"
           @change="searchProjects"
         >
           <el-option
@@ -108,7 +109,7 @@ export default {
     }
   },
   mounted () {
-    this.filterStatus = this.availableFilters.filter(status => {
+    this.availableFilters = this.availableFilters.filter(status => {
       return status !== 'Concluído' && status !== 'Recusado'
     })
 
