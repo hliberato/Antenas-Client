@@ -94,6 +94,7 @@
         :title="editingMember ? 'Editar função do membro' : 'Adicionar novo membro' "
         :visible.sync="addMember"
         width="50%"
+        :close-on-click-modal="false"
       >
         <el-form
           ref="form"
@@ -150,6 +151,7 @@
       title="Criar equipe"
       :visible.sync="createTeam"
       width="50%"
+      :close-on-click-modal="false"
     >
       <el-form
         ref="form"
