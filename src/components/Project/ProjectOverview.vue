@@ -53,6 +53,8 @@
                     <strong> Professor responsável: </strong> {{ project.teacher.name }}
                     <br>
                     <strong> Semestre: </strong> {{ project.semester }}º
+                    <br>
+                    <strong> Curso: </strong> {{ project.course }}
                   </div>
                   <div>
                     <div v-if="project.createdBy">

@@ -27,6 +27,7 @@
       title="Editando informações do projeto"
       :visible.sync="editProject"
       width="50%"
+      :close-on-click-modal="false"
     >
       <el-form
         ref="form"
