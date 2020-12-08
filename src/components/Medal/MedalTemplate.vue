@@ -1,21 +1,24 @@
 <template>
-  <div class="medal-template">
-    <div :style="`background: linear-gradient(135deg, #fff 0%, ${color} 50%, #fff 100%);`" class="wrap">
-      <div class="title">
-        <span
-          v-for="(char, index) in name.split('')"
-          :key="index"
-          :style="`transform: rotate(${(anglePerChar * index) - angleOffset}deg)`"
-        >
-          {{ char }}
-        </span>
+  <el-tooltip placement="top">
+    <div slot="content">{{ medal.description }}<br> Criada dia {{ medal.creationDate | moment("DD/MM/YYYY") }} </div>
+    <div class="medal-template">
+      <div :style="`background: linear-gradient(135deg, #fff 0%, ${color} 50%, #fff 100%);`" class="wrap">
+        <div class="title">
+          <span
+            v-for="(char, index) in name.split('')"
+            :key="index"
+            :style="`transform: rotate(${(anglePerChar * index) - angleOffset}deg)`"
+          >
+            {{ char }}
+          </span>
+        </div>
+        <el-avatar :src="medal.picture" :size="80" class="avatar">
+          <i class="el-icon-trophy fallback" />
+        </el-avatar>
       </div>
-      <el-avatar :src="medal.picture" :size="80" class="avatar">
-        <i class="el-icon-trophy fallback" />
-      </el-avatar>
+      <img class="medal" src="@/assets/images/medal.png">
     </div>
-    <img class="medal" src="@/assets/images/medal.png">
-  </div>
+  </el-tooltip>
 </template>
 
 <script>

@@ -3,6 +3,7 @@
     title="Criar novo projeto"
     :visible.sync="dialogVisible"
     width="50%"
+    :close-on-click-modal="false"
   >
     <el-form
       ref="form"
