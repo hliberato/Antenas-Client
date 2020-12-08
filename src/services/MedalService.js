@@ -17,5 +17,11 @@ export default {
     return http
       .post('/medal', medal)
       .then(res => res.data)
+  },
+
+  removeMedal (medal) {
+    return http
+      .delete('/medal', medal)
+      .then(res => res.data)
   }
 }

@@ -48,6 +48,7 @@ export default {
             console.log(err)
             reject(err)
           })
+          .finally(() => commit('HIDE_LOADING'))
       })
     },
     updateProject ({ commit }, project) {

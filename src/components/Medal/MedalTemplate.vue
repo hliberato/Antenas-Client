@@ -1,6 +1,6 @@
 <template>
   <div class="medal-template">
-    <div :style="`background: linear-gradient(135deg, #fff 0%, #${color} 50%, #fff 100%);`" class="wrap">
+    <div :style="`background: linear-gradient(135deg, #fff 0%, ${color} 50%, #fff 100%);`" class="wrap">
       <div class="title">
         <span
           v-for="(char, index) in name.split('')"
@@ -31,7 +31,7 @@ export default {
       return this.medal.name.toUpperCase()
     },
     color () {
-      return this.medal.color || '4472E9'
+      return this.medal.color ? this.medal.color : '#4472E9'
     },
     anglePerChar () {
       return (16 * this.name.length) / this.name.length

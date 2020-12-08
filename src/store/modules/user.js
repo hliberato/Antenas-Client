@@ -70,7 +70,7 @@ export default {
         UserService.getUserInfo()
           .then(auth => {
             if (!auth) {
-              reject(new Error('DEU PAU MANO'))
+              reject(new Error())
             }
             commit('SET_CURRENT_USER', auth)
             resolve()

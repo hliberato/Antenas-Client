@@ -8,6 +8,7 @@ const External = () => import(/* webpackChunkName: "external-view" */ '@/views/e
 const RegistrationInfo = () => import(/* webpackChunkName: "registration-info-view" */ '@/views/app/RegistrationInfo.vue')
 const Container = () => import(/* webpackChunkName: "container-view" */ '@/views/app/Container.vue')
 const Projects = () => import(/* webpackChunkName: "projects-view" */ '@/views/app/Projects.vue')
+const Medals = () => import(/* webpackChunkName: "medals-view" */ '@/views/app/Medals.vue')
 const Profile = () => import(/* webpackChunkName: "profile" */ '@/views/app/Profile.vue')
 
 Vue.use(VueRouter)
@@ -32,6 +33,14 @@ const routes = [
         path: '/projects',
         name: 'Projects',
         component: Projects,
+        meta: {
+          public: false
+        }
+      },
+      {
+        path: '/medals',
+        name: 'medals',
+        component: Medals,
         meta: {
           public: false
         }

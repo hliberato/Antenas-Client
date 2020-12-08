@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
 import project from './modules/project'
+import medals from './modules/medals'
 import 'vue-datetime/dist/vue-datetime.css'
 
 Vue.use(Vuex)
@@ -43,7 +44,8 @@ const getters = {
 
 const modules = {
   user,
-  project
+  project,
+  medals
 }
 
 export default new Vuex.Store({
