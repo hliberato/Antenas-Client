@@ -35,7 +35,7 @@
           @change="searchProjects"
         >
           <el-option
-            v-for="filter in availableFilters"
+            v-for="filter in projectsAvailableFilters"
             :key="filter"
             :label="filter"
             :value="filter"
@@ -91,6 +91,7 @@ export default {
     return {
       searchTerm: '',
       filterStatus: [],
+      projectsAvailableFilters: [],
       filteredProjects: []
     }
   },
@@ -103,13 +104,13 @@ export default {
       get () {
         return this.$store.getters.selectedProject?.id || 0
       },
-      set (value) {
-        this.$store.commit('SET_SELECTED_PROJECT_ID', value)
+      set (id) {
+        this.$store.commit('SET_SELECTED_PROJECT_ID', id)
       }
     }
   },
   mounted () {
-    this.availableFilters = this.availableFilters.filter(status => {
+    this.projectsAvailableFilters = this.availableFilters.filter(status => {
       return status !== 'Concluído' && status !== 'Recusado'
     })
 
@@ -127,7 +128,6 @@ export default {
         keys: ['title', 'shortDescription'],
         threshold: 0.2
       }).then(results => {
-        console.log(this.filterStatus)
         let filtered
         if (this.searchTerm) filtered = results
         else filtered = this.projects

@@ -86,6 +86,7 @@ export default {
   },
   getters: {
     medals: state => state.medals,
-    medalsCategories: state => state.categories
+    medalsCategories: state => state.categories,
+    getMedalById: state => id => state.medals.find(m => m.id.toString() === id)
   }
 }

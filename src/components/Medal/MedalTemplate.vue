@@ -54,6 +54,7 @@ export default {
   display: inline-block;
   margin: 6px 6px 40px;
   max-width: 124px;
+  text-align: left;
   .wrap {
     width: 118px;
     height: 118px;

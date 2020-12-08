@@ -18,7 +18,7 @@
 
     <el-dialog
       title="Avaliação"
-      width="85%"
+      width="80%"
       :visible.sync="dialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -33,8 +33,8 @@
         <el-step title="Atribuir notas" icon="el-icon-notebook-2" />
       </el-steps>
       <div v-if="!step">
-        <el-row :gutter="32" class="ml-12 mr-12">
-          <el-col :span="12" class="medals">
+        <el-row :gutter="32">
+          <el-col :span="10" class="medals">
             <div class="d-flex">
               <el-input
                 v-model="searchTerm"
@@ -42,46 +42,55 @@
                 suffix-icon="el-icon-search"
                 class="w100 mr-12"
                 clearable
-                @input="searchMedals"
               />
-              <el-button type="primary">
+              <el-button type="primary" @click="newMedalVisible = true">
                 Criar nova medalha
               </el-button>
             </div>
             <div class="medals-list">
-              <div
-                v-for="medal in medals"
-                :key="medal.id"
-                draggable="true"
-                class="drag"
-                @dragstart="dragStart($event, medal)"
-              >
-                <medal-template :medal="medal" />
-              </div>
+              <el-row>
+                <div
+                  v-for="medal in filteredMedals"
+                  :key="medal.id"
+                  draggable="true"
+                  class="drag"
+                  @dragstart="dragStart($event, medal.id)"
+                >
+                  <el-col :span="8" class="text-center mt-16">
+                    <medal-template :medal="medal" style="pointer-events: none;" />
+                  </el-col>
+                </div>
+              </el-row>
             </div>
           </el-col>
-          <el-col :span="12" class="teams">
+          <el-col :span="14" class="teams">
             <div
               v-for="team in teams"
+              :id="`team-${team.id}`"
               :key="team.id"
               class="team"
               @dragover.prevent
-              @drop="onDropTeam($event, team)"
+              @dragenter="onDragEnter($event, `team-${team.id}`)"
+              @dragleave="onDragLeave($event, `team-${team.id}`)"
+              @drop="onDropTeam($event, team, `team-${team.id}`)"
             >
-              <h1>{{ team }}</h1>
+              <h1>{{ team.name }}</h1>
               <div
-                v-for="student in []"
+                v-for="student in team.studentTeamList"
+                :id="`student-${student.id}`"
                 :key="student.id"
                 class="student"
                 @dragover.prevent
-                @drop="onDropStudent($event, student)"
+                @dragenter="onDragEnter($event, `student-${student.id}`)"
+                @dragleave="onDragLeave($event, `student-${student.id}`)"
+                @drop="onDropStudent($event, student, `student-${student.id}`)"
               >
                 <div class="d-flex align-center">
                   <span class="student-name">
-                    {{ student }}
+                    {{ student.student.name }}
                   </span>
                   <div
-                    v-for="medal in [{name: 'Teste', color: '28a745'}, {name: 'Medalha foda'}, {name: 'Acertô miseravi', color: 'E6A23C' }]"
+                    v-for="medal in student.student.studentMedals"
                     :key="medal.name"
                     class="medal-student"
                     @click="removeMedal()"
@@ -97,81 +106,95 @@
       <div v-else>
         a
       </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">Cancelar</el-button>
+        <el-button v-if="step === 1" icon="el-icon-back" circle @click="step = 0" />
+        <el-button v-if="step === 0" icon="el-icon-right" circle @click="step = 1" />
+        <el-button v-if="step === 1" type="primary" @click="dialogVisible = false">Salvar Avaliação</el-button>
+      </span>
     </el-dialog>
+    <MedalNew :visible.sync="newMedalVisible" />
   </div>
 </template>
 
 <script>
 import MedalTemplate from '@/components/Medal/MedalTemplate'
+import MedalNew from '@/components/Medal/MedalNew'
 
-import MedalService from '@/services/MedalService.js'
 import TeamService from '@/services/TeamService'
+
 import { mapGetters } from 'vuex'
 
 export default {
   components: {
-    MedalTemplate
+    MedalTemplate,
+    MedalNew
   },
   data () {
     return {
-      dialogVisible: true,
+      newMedalVisible: false,
+      dialogVisible: false,
       step: 0,
-      medals: [],
-      teams: [],
       loading: false,
-      searchTerm: ''
+      searchTerm: '',
+      teams: []
     }
   },
   computed: {
-    ...mapGetters({
-      project: 'selectedProject',
-      isTeacher: 'isTeacher'
-    })
-  },
-  mounted () {
-    this.getTeams()
+    ...mapGetters([
+      'selectedProject',
+      'isTeacher',
+      'medals',
+      'getMedalById'
+    ]),
+    filteredMedals () {
+      return this.searchTerm ? this.medals.filter(m => m.name.includes(this.searchTerm)) : this.medals
+    }
   },
   methods: {
     openDialog () {
       this.loading = true
-      Promise
-        .all([
-          this.getMedals(),
-          this.getTeams()
-        ])
+      this.getTeams()
         .then(response => {
-          this.medals = response[0]
-          this.teams = response[1]
+          this.teams = response
           this.dialogVisible = true
         })
         .catch(err => this.$throwError(err))
         .finally(() => { this.loading = false })
     },
-    getMedals () {
-      return MedalService.getMedals().then(res => res)
-    },
     getTeams () {
-      return TeamService.getTeam(this.project.id).then(res => res)
+      return TeamService.getTeam(this.selectedProject.id).then(res => res)
     },
     searchMedals () {
     },
-    dragStart (ev, medal) {
-      ev.dataTransfer.setData('medal', medal)
+    dragStart (ev, medalId) {
+      ev.dataTransfer.setData('medalId', medalId)
       ev.dataTransfer.dropEffect = 'move'
       ev.dataTransfer.effectAllowed = 'move'
     },
-    onDropTeam (ev, team) {
-      const medal = ev.dataTransfer.getData('medal')
-      console.log(medal)
-      console.log(team)
-    },
-    onDropStudent (ev, student) {
+    onDropTeam (ev, team, elIdd) {
       ev.stopPropagation()
-      const medal = ev.dataTransfer.getData('medal')
-      console.log(medal)
-      console.log(student)
+      document.getElementById(elIdd).classList.remove('is-dragging')
+      const medal = this.getMedalById(ev.dataTransfer.getData('medalId'))
+      team.studentTeamList.forEach(s => {
+        const medalExists = s.student.studentMedals.find(m => m.id === medal.id)
+        if (!medalExists) s.student.studentMedals.push(medal)
+      })
     },
-    removeMedal () {
+    onDropStudent (ev, student, elIdd) {
+      ev.stopPropagation()
+      document.getElementById(elIdd).classList.remove('is-dragging')
+      const medal = this.getMedalById(ev.dataTransfer.getData('medalId'))
+      const medalExists = student.student.studentMedals.find(m => m.id === medal.id)
+      if (!medalExists) student.student.studentMedals.push(medal)
+    },
+    onDragEnter (ev, id) {
+      ev.stopPropagation()
+      document.getElementById(id).classList.add('is-dragging')
+    },
+    onDragLeave (ev, id) {
+      ev.stopPropagation()
+      document.getElementById(id).classList.remove('is-dragging')
     }
   }
 }
@@ -185,25 +208,19 @@ export default {
     min-height: 50vh;
   }
   .medals, .teams {
-    padding: 32px 0;
+    padding: 32px 0 0;
     h1 {
       font-size: 1.17rem;
+      pointer-events: none;
     }
     .student-name {
       font-size: 1rem;
       padding: 9px 0;
+      pointer-events: none;
     }
   }
   .medals-list {
-    padding: 40px 8px;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .medal-template {
-    flex-basis: 100%;
-    flex: 1;
+    padding-top: 16px;
   }
   .medal-template + .medal-template {
     margin-top: 12px;
@@ -213,6 +230,11 @@ export default {
     border: 1px dashed;
     border-left: 5px solid;
     border-radius: 4px;
+    background-color: white;
+    &.is-dragging {
+      background-color: #F5F7FA;
+      border-color: #4472E9;
+    }
   }
   .team + .team {
     margin-top: 20px;
@@ -221,6 +243,14 @@ export default {
     border: 1px dashed;
     padding: 8px 12px;
     margin-top: 8px;
+    background-color: white;
+    &.is-dragging {
+      border-color: #4472E9;
+      background-color: #F5F7FA;
+    }
+    > div {
+      pointer-events: none;
+    }
   }
   .drag {
     opacity: 0.999;
