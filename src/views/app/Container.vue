@@ -24,6 +24,10 @@
           <el-dropdown @command="dropdownClick">
             <i class="menu el-icon-more" />
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="projects">
+                <i class="el-icon-document" />
+                Projetos
+              </el-dropdown-item>
               <el-dropdown-item command="account">
                 <i class="el-icon-user" />
                 Dados da conta
@@ -32,11 +36,7 @@
                 <i class="el-icon-s-custom" />
                 Perfil
               </el-dropdown-item>
-              <el-dropdown-item command="projects">
-                <i class="el-icon-document" />
-                Projetos
-              </el-dropdown-item>
-              <el-dropdown-item command="medals">
+              <el-dropdown-item v-if="$store.getters.isTeacher" command="medals">
                 <i class="el-icon-medal" />
                 Medalhas
               </el-dropdown-item>

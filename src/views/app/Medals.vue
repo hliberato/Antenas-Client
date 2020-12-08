@@ -1,15 +1,35 @@
 <template>
   <div class="profile-view h100">
-    <div class="d-flex justify-between align-center mt-8 mb-24">
-      <h1 class="ml-8">Medalhas</h1>
-      <el-button type="primary" icon="el-icon-medal" @click="newMedal">
-        Criar nova medalha
-      </el-button>
-    </div>
-    <el-card class="pl-8 pr-8">
-      <el-row v-if="medals.length" :gutter="16" class="mt-12 mb-12">
+    <el-card class="">
+      <div class="d-flex justify-between align-center mb-44">
+        <h1>Medalhas</h1>
+        <div>
+          <el-select
+            v-model="categoryFilter"
+            clearable
+            placeholder="Filtrar por categoria"
+            style="width: 300px;"
+          >
+            <el-option
+              v-for="(category, index) in medalsCategories"
+              :key="index"
+              :label="category"
+              :value="category"
+            />
+          </el-select>
+          <el-button
+            type="primary"
+            icon="el-icon-medal"
+            class="ml-12"
+            @click="newMedal"
+          >
+            Criar nova medalha
+          </el-button>
+        </div>
+      </div>
+      <el-row v-if="filteredMedals.length" :gutter="16" class="mt-12 mb-12">
         <el-col
-          v-for="m in medals"
+          v-for="m in filteredMedals"
           :key="m.id"
           :md="12"
           :lg="8"
@@ -43,11 +63,14 @@
           </div>
         </el-col>
       </el-row>
-      <div v-else class="h100 d-flex justify-center align-center">
-        <p class="text-center">
+      <div v-else class="empty">
+        <span v-if="filteredMedals">
+          Não foram encontrados resultados para o filtro selecionado.
+        </span>
+        <span v-else>
           Ainda não existem medalhas. <br>
           <el-link type="primary" @click="newMedal">Crie a primeira!</el-link>
-        </p>
+        </span>
       </div>
     </el-card>
     <MedalNew :visible.sync="dialogVisible" :medal="medal" />
@@ -64,14 +87,19 @@ export default {
   data () {
     return {
       medal: {},
-      dialogVisible: false
+      dialogVisible: false,
+      categoryFilter: ''
     }
   },
   computed: {
     ...mapGetters([
       'medals',
+      'medalsCategories',
       'loading'
-    ])
+    ]),
+    filteredMedals () {
+      return this.categoryFilter ? this.medals.filter(m => m.category === this.categoryFilter) : this.medals
+    }
   },
   methods: {
     newMedal () {
@@ -157,13 +185,21 @@ export default {
     font-size: 1.2rem;
   }
   .el-card {
-    height: calc(100% - 74px);
-  }
-  .el-card__body {
-    height: calc(100% - 40px);
+    position: relative;
+    height: 100%;
   }
   .info div {
     margin-bottom: 5px;
+  }
+  .empty {
+    position: absolute;
+    left: 0;
+    top: 112px;
+    right: 0;
+    bottom: 112px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   strong {
     font-weight: 500;
